@@ -21,9 +21,9 @@ class HomePage extends React.Component {
         const mostRecentUploadId = this.props.mostRecentUpload.id;
         const mostRecentUploadUrl = "https://www.youtube.com/embed/" + mostRecentUploadId;
         return(
-            <div>
+            <div id="home-page">
                 <h1>My App</h1>
-                <iframe width="420" height="315" src={mostRecentUploadUrl}>
+                <iframe width="640" height="360" src={mostRecentUploadUrl}>
                 </iframe>
             </div>
         );

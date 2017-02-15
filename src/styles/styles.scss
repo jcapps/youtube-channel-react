@@ -1,5 +1,18 @@
+@import 'header';
+@import 'home';
+
 #app {
+    width: 100%;
+    margin: 0 auto;
+    background-color: lightgray;
+
     .hidden {
         display: hidden;
+    }
+
+    #content {
+        margin: 80px auto 0 auto;
+        width: 1000px;
+        text-align: center;
     }
 }
