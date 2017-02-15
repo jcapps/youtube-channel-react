@@ -3,3 +3,6 @@
 
 #Ignore dist folder
 [Dd]ist/
+
+#Ignore private information
+[Pp]rivate/
