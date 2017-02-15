@@ -3,6 +3,14 @@ import * as types from './actionTypes';
 import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 import * as youtubeActions from './youtubeActions';
 
+export function getRecentUploadsPlaylistSuccess(playlist) {
+    return { type: types.GET_RECENT_UPLOADS_PLAYLIST_SUCCESS, playlist };
+}
+
+export function getMostRecentUploadSuccess(video) {
+    return { type: types.GET_MOST_RECENT_UPLOAD_SUCCESS, video };
+}
+
 export function getRecentUploadsPlaylist() {
     return function(dispatch) {
         const apiActions = bindActionCreators(youtubeActions, dispatch);
@@ -12,6 +20,7 @@ export function getRecentUploadsPlaylist() {
             let playlistId = channelInfo.contentDetails.relatedPlaylists.uploads;
             dispatch(beginAjaxCall());
             return apiActions.getPlaylistInfo(playlistId).then(playlist => {
+                dispatch(getRecentUploadsPlaylistSuccess(playlist));
                 return playlist;
             });
         });
@@ -28,7 +37,7 @@ export function getMostRecentUpload() {
             let videoId = playlist[0].snippet.resourceId.videoId;
             dispatch(beginAjaxCall());
             return apiActions.getVideoInfo(videoId).then(video => {
-                return video;
+                dispatch(getMostRecentUploadSuccess(video));
             });
         });
     };

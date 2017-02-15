@@ -5,8 +5,10 @@ import {connect} from 'react-redux';
 class App extends React.Component {
     render() {
         return (
-            <div className="container-fluid">
-                {this.props.children}
+            <div>
+                <div id="content">
+                    {this.props.children}
+                </div>
             </div>
         );
     }
@@ -16,4 +18,4 @@ App.propTypes = {
     children: PropTypes.object.isRequired
 };
 
-export default connect(null)(App);
+export default App;
