@@ -1,18 +1,12 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as youtubeActions from '../../actions/youtubeActions';
+import * as recentUploadsActions from '../../actions/recentUploadsActions';
 
 class HomePage extends React.Component {
     render() {
-        this.props.actions.getChannelInfo().then(channelInfo => {
-            let playlistId = channelInfo.contentDetails.relatedPlaylists.uploads;
-            this.props.actions.getPlaylistInfo(playlistId).then(playlist => {
-                let videoId = playlist[0].snippet.resourceId.videoId;
-                this.props.actions.getVideoInfo(videoId).then(video => {
-                    console.log(video.snippet.title);
-                });
-            });
+        this.props.actions.getMostRecentUpload().then(video => {
+            console.log(video.snippet.title);
         });
         return(
             <div>
@@ -27,7 +21,7 @@ HomePage.propTypes = {
 };
 
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators(youtubeActions, dispatch) };
+    return { actions: bindActionCreators(recentUploadsActions, dispatch) };
 }
 
 export default connect(null, mapDispatchToProps)(HomePage);
