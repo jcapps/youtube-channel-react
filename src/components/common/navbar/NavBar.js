@@ -1,0 +1,58 @@
+import React, {PropTypes} from 'react';
+import {Link, IndexLink} from 'react-router';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as playlistActions from '../../../actions/playlistActions';
+import PlaylistLink from './PlaylistLink';
+
+class NavBar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            allPlaylists: Object.assign([], props.allPlaylists)
+        };
+    }
+
+    componentDidMount() {
+        let lis = document.getElementsByClassName("has-submenu");
+        for (let li of lis) {
+            li.onmouseover = () => {
+                li.children[1].classList.remove("hidden");
+            };
+            li.onmouseout = () => {
+                li.children[1].classList.add("hidden");
+            };
+        }
+    }
+
+    render() {
+        let allPlaylists = this.props.allPlaylists;
+        return (
+            <nav>
+                <ul>
+                    <li><IndexLink to="/" activeClassName="active"><div>Home</div></IndexLink></li>
+                    <li className="has-submenu">
+                        <Link to="/" activeClassName="active"><div>Playlists</div></Link>
+                        <ul className="hidden">
+                            {allPlaylists.map(playlist => <PlaylistLink key={playlist.id} playlist={playlist} />)}
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        );
+    }
+}
+
+NavBar.propTypes = {
+    allPlaylists: PropTypes.array.isRequired
+};
+
+function mapStateToProps(state) {
+    return { allPlaylists: state.allPlaylists };
+}
+
+function mapDispatchToProps(dispatch) {
+    return { actions: bindActionCreators(playlistActions, dispatch) };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
