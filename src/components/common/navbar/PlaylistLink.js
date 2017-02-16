@@ -3,7 +3,7 @@ import {Link, IndexLink} from 'react-router';
 
 const PlaylistLink = ({playlist}) => {
     return (
-        <li><Link to="/"><div>{playlist.snippet.title}</div></Link></li>
+        <li><Link to={'/playlist/' + playlist.id}><div>{playlist.snippet.title}</div></Link></li>
     );
 };
 

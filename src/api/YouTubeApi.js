@@ -56,7 +56,8 @@ class YouTubeApi {
         const playlistParams = {
             key: KEY,
             playlistId: id,
-            part: 'snippet'
+            part: 'snippet',
+            maxResults: 50
         };
 
         return new Promise((resolve, reject) => {
