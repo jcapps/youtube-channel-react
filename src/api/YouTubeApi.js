@@ -42,7 +42,8 @@ class YouTubeApi {
         const playlistsParams = {
             key: KEY,
             channelId: CHANNEL_ID,
-            part: 'snippet'
+            part: 'snippet',
+            maxResults: 10
         };
 
         return new Promise((resolve, reject) => {
