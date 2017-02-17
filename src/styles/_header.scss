@@ -13,47 +13,4 @@ header {
             padding-left: 20px;
         }
     }
-
-    nav {
-        height: 40px;
-
-        ul {
-            margin: 0;
-            padding: 0;
-        }
-
-        li {
-            a, a:active, a:visited, a:focus {
-                text-decoration: none;
-                color: white;
-
-                div {
-                    padding: 10px 25px;
-                }
-            }
-
-            a:hover {
-                text-decoration: none;
-
-                div {
-                    background-color: white;
-                    color: #1a1a1a
-                }
-            }
-        }
-        
-        & > ul > li {
-            display: inline-block;
-            vertical-align: top;
-
-            & > ul { 
-                background-color: #1a1a1a;
-                position: absolute;
-
-                & > li {
-                    display: block;
-                }
-            }
-        }
-    }
 }
