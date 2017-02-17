@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
@@ -21,7 +22,13 @@ class AllPlaylistsPage extends React.Component {
         return (
             <div id="playlists-page">
                 <h2>Playlists</h2>
-                {playlists.map(playlist => <PlaylistThumbnail key={playlist.id} playlist={playlist}/>)}
+                <div id="playlists-list">
+                    {playlists.map(playlist =>
+                        <Link to={"/playlist/" + playlist.id} key={playlist.id}>
+                            <PlaylistThumbnail playlist={playlist}/>
+                        </Link>
+                    )}
+                </div>
             </div>
         );
     }
