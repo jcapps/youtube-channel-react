@@ -1,4 +1,12 @@
 #playlist-page {
+    #video-list {
+        overflow-x: scroll;
+        white-space: nowrap;
+        margin: 0 auto;
+        width: 640px;
+        text-align: left;
+    }
+
     div.playlist-video {
         display: inline-block;
         margin: 5px;

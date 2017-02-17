@@ -31,10 +31,12 @@ class PlaylistPage extends React.Component {
                 <div id="playlist-page">
                     <VideoPlayer videoId={this.state.playlist[0].snippet.resourceId.videoId}/>
                     <br/>
-                    {this.state.playlist.map(playlistItem => {
-                        let id = playlistItem.snippet.resourceId.videoId;
-                        return <VideoThumbnail key={id} videoId={id}/>;
-                    })}
+                    <div id="video-list">
+                        {this.state.playlist.map(playlistItem => {
+                            let id = playlistItem.snippet.resourceId.videoId;
+                            return <VideoThumbnail key={id} videoId={id}/>;
+                        })}
+                    </div>
                 </div>
             );
         }
