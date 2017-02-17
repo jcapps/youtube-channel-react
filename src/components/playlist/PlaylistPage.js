@@ -2,14 +2,13 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
+import VideoPlayer from '../common/VideoPlayer';
+import VideoThumbnail from '../common/VideoThumbnail';
 
 class PlaylistPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            playlist: Object.assign([], props.playlist),
-            playlistId: props.playlistId
-        };
+        this.state = { playlist: Object.assign([], props.playlist) };
     }
 
     componentWillMount() {
@@ -27,12 +26,19 @@ class PlaylistPage extends React.Component {
     }
 
     render() {
-        return(
-            <div id="playlist-page">
-                {this.state.playlist.map(playlistItem => 
-                    <div key={playlistItem.snippet.resourceId.videoId}>{playlistItem.snippet.title}</div>)}
-            </div>
-        );
+        if (this.state.playlist.length > 0) {
+            return(
+                <div id="playlist-page">
+                    <VideoPlayer videoId={this.state.playlist[0].snippet.resourceId.videoId}/>
+                    <br/>
+                    {this.state.playlist.map(playlistItem => {
+                        let id = playlistItem.snippet.resourceId.videoId;
+                        return <VideoThumbnail key={id} videoId={id}/>;
+                    })}
+                </div>
+            );
+        }
+        return <div>(No videos found for this playlist.)</div>;
     }
 }
 

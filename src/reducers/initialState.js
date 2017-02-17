@@ -3,5 +3,6 @@ export default {
     recentUploadsPlaylist: [],
     allPlaylists: [],
     playlist: [],
+    video: {},
     ajaxCallsInProgress: 0
 };

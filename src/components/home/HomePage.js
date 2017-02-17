@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as recentUploadsActions from '../../actions/recentUploadsActions';
+import VideoPlayer from '../common/VideoPlayer';
 
 class HomePage extends React.Component {
     constructor(props) {
@@ -18,13 +19,10 @@ class HomePage extends React.Component {
     }
 
     render() {
-        const mostRecentUploadId = this.props.mostRecentUpload.id;
-        const mostRecentUploadUrl = "https://www.youtube.com/embed/" + mostRecentUploadId;
         return(
             <div id="home-page">
                 <h2>Most Recent Upload</h2>
-                <iframe width="640" height="360" src={mostRecentUploadUrl}>
-                </iframe>
+                <VideoPlayer videoId={this.props.mostRecentUpload.id}/>
             </div>
         );
     }
