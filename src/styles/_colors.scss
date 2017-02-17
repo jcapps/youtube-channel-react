@@ -3,6 +3,8 @@ $lightgray: lightgray;
 $gray: gray;
 $black: #1a1a1a;
 
+$anchorBlue: dodgerblue;
+
 /* Page default colors */
 $page-background: $lightgray;
 
@@ -10,3 +12,6 @@ $page-background: $lightgray;
 $header-primary: $black;
 $header-contrast: $white;
 $header-title: $gray;
+
+/* Selected video's shadow color */
+$selected-shadow: $anchorBlue;

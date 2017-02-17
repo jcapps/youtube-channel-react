@@ -19,9 +19,7 @@ class VideoThumbnail extends React.Component {
         let video = this.state.video;
         if (video.snippet) {
             return (
-                <div className="playlist-video">
-                    <img height="90" width="160" src={video.snippet.thumbnails.medium.url} alt={video.snippet.title}/>
-                </div>
+                <img height="90" width="160" src={video.snippet.thumbnails.medium.url} alt={video.snippet.title}/>
             );
         }
         return <div>(Can't find video)</div>;

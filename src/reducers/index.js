@@ -5,6 +5,7 @@ import recentUploadsPlaylist from './recentUploadsPlaylistReducer';
 import allPlaylists from './allPlaylistsReducer';
 import playlist from './playlistReducer';
 import video from './videoReducer';
+import videoInPlaylist from './videoInPlaylistReducer';
 
 const rootReducer = combineReducers({
     ajaxCallsInProgress,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     recentUploadsPlaylist,
     allPlaylists,
     playlist,
-    video
+    video,
+    videoInPlaylist
 });
 
 export default rootReducer;

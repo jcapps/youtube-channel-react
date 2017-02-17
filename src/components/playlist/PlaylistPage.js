@@ -8,7 +8,11 @@ import VideoThumbnail from '../common/VideoThumbnail';
 class PlaylistPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { playlist: Object.assign([], props.playlist) };
+        this.state = { 
+            playlist: Object.assign([], props.playlist),
+            videoInPlaylist: props.videoInPlaylist
+        };
+        this.changeVideo = this.changeVideo.bind(this);
     }
 
     componentWillMount() {
@@ -25,16 +29,33 @@ class PlaylistPage extends React.Component {
         }
     }
 
+    changeVideo(e) {
+        this.setState({ videoInPlaylist: e.target.parentNode.id });
+    }
+
     render() {
-        if (this.state.playlist.length > 0) {
+        const playlist = this.state.playlist;
+        const nowPlaying = this.state.videoInPlaylist;
+        if (playlist.length > 0) {
             return(
                 <div id="playlist-page">
-                    <VideoPlayer videoId={this.state.playlist[0].snippet.resourceId.videoId}/>
+                    <VideoPlayer videoId={playlist[nowPlaying].snippet.resourceId.videoId}/>
                     <br/>
                     <div id="video-list">
-                        {this.state.playlist.map(playlistItem => {
-                            let id = playlistItem.snippet.resourceId.videoId;
-                            return <VideoThumbnail key={id} videoId={id}/>;
+                        {playlist.map(playlistItem => {
+                            let video = playlistItem.snippet;
+                            if (video.position == nowPlaying) {
+                                return (
+                                    <div className="playlist-video selected" id={nowPlaying} key={nowPlaying} onClick={this.changeVideo}>
+                                        <VideoThumbnail videoId={video.resourceId.videoId}/>
+                                    </div>
+                                );
+                            }
+                            return (
+                                <div className="playlist-video" id={video.position} key={video.position} onClick={this.changeVideo}>
+                                    <VideoThumbnail videoId={video.resourceId.videoId}/>
+                                </div>
+                            );
                         })}
                     </div>
                 </div>
@@ -47,13 +68,15 @@ class PlaylistPage extends React.Component {
 PlaylistPage.propTypes = {
     playlist: PropTypes.array.isRequired,
     playlistId: PropTypes.string.isRequired,
+    videoInPlaylist: PropTypes.number.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
     return { 
         playlist: state.playlist,
-        playlistId: ownProps.params.id
+        playlistId: ownProps.params.id,
+        videoInPlaylist: state.videoInPlaylist
     };
 }
 

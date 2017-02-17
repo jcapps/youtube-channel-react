@@ -4,5 +4,6 @@ export default {
     allPlaylists: [],
     playlist: [],
     video: {},
+    videoInPlaylist: 0,
     ajaxCallsInProgress: 0
 };

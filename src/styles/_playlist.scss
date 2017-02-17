@@ -10,5 +10,10 @@
     div.playlist-video {
         display: inline-block;
         margin: 5px;
+        cursor: pointer;
+    }
+
+    div.playlist-video:hover, div.selected {
+        box-shadow: 0 0 10px $selected-shadow;
     }
 }
