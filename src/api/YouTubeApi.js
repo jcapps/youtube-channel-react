@@ -43,7 +43,7 @@ class YouTubeApi {
             key: KEY,
             channelId: CHANNEL_ID,
             part: 'snippet',
-            maxResults: 10
+            maxResults: 5
         };
 
         return new Promise((resolve, reject) => {
