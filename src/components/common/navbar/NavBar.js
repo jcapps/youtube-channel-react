@@ -30,11 +30,12 @@ class NavBar extends React.Component {
         return (
             <nav>
                 <ul>
-                    <li><IndexLink to="/" activeClassName="active"><div>Home</div></IndexLink></li>
+                    <li><IndexLink to="/"><div>Home</div></IndexLink></li>
                     <li className="has-submenu">
-                        <Link to="/" activeClassName="active"><div>Playlists</div></Link>
+                        <Link to="/"><div>Playlists</div></Link>
                         <ul className="hidden">
                             {allPlaylists.map(playlist => <PlaylistLink key={playlist.id} playlist={playlist} />)}
+                            <li><Link to={'/'}><div>View All</div></Link></li>
                         </ul>
                     </li>
                 </ul>
