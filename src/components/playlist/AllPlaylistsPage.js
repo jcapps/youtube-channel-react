@@ -19,7 +19,8 @@ class AllPlaylistsPage extends React.Component {
     render() {
         const playlists = this.state.playlists;
         return (
-            <div>
+            <div id="playlists-page">
+                <h2>Playlists</h2>
                 {playlists.map(playlist => <PlaylistThumbnail key={playlist.id} playlist={playlist}/>)}
             </div>
         );

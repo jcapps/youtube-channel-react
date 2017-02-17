@@ -2,9 +2,12 @@ import React, {PropTypes} from 'react';
 
 const PlaylistThumbnail = ({playlist}) => {
     return (
-        <div>
-            <img src={playlist.snippet.thumbnails.medium.url} alt={playlist.snippet.title}/>
-            <h3>{playlist.snippet.title}</h3>
+        <div className="playlist-thumbnail">
+            <img height="90" width="160" src={playlist.snippet.thumbnails.medium.url} alt={playlist.snippet.title}/>
+            <div>
+                <h3>{playlist.snippet.title}</h3>
+                <p>{playlist.snippet.description}</p>
+            </div>
         </div>
     );
 };

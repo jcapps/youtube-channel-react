@@ -1,0 +1,16 @@
+#playlists-page {
+    div.playlist-thumbnail {
+        text-align: left;
+        border: 1px solid $gray;
+
+        & > * {
+            display: inline-block;
+            margin: 10px;
+            vertical-align: middle;
+        }
+
+        &:hover {
+            background-color: $white;
+        }
+    }
+}
