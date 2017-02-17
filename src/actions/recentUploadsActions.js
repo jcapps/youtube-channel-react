@@ -19,7 +19,7 @@ export function getRecentUploadsPlaylist() {
         return apiActions.getChannelContent().then(channelContent => {
             let playlistId = channelContent.contentDetails.relatedPlaylists.uploads;
             dispatch(beginAjaxCall());
-            return apiActions.getPlaylistInfo(playlistId).then(playlist => {
+            return apiActions.getPlaylist(playlistId).then(playlist => {
                 dispatch(getRecentUploadsPlaylistSuccess(playlist));
                 return playlist;
             });

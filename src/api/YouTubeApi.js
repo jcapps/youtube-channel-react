@@ -68,6 +68,20 @@ class YouTubeApi {
         });
     }
 
+    static getPlaylistInfo(id) {
+        const playlistParams = {
+            key: KEY,
+            id: id,
+            part: 'snippet'
+        };
+
+        return new Promise((resolve, reject) => {
+            axios.get(playlistsUrl, {params: playlistParams}).then(res => {
+                resolve(res.data.items[0]);
+            });
+        });
+    }
+
     static getVideo(id) {
         const videoParams = {
             key: KEY,

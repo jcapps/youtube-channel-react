@@ -11,6 +11,10 @@ export function getPlaylistSuccess(playlist) {
     return { type: types.GET_PLAYLIST_SUCCESS, playlist };
 }
 
+export function getPlaylistInfoSuccess(playlistInfo) {
+    return { type: types.GET_PLAYLIST_INFO_SUCCESS, playlistInfo };
+}
+
 export function getAllPlaylists() {
     return function(dispatch) {
         const apiActions = bindActionCreators(youtubeActions, dispatch);
@@ -27,8 +31,19 @@ export function getPlaylist(id) {
         const apiActions = bindActionCreators(youtubeActions, dispatch);
 
         dispatch(beginAjaxCall());
-        return apiActions.getPlaylistInfo(id).then(playlist => {
+        return apiActions.getPlaylist(id).then(playlist => {
             dispatch(getPlaylistSuccess(playlist));
+        });
+    };
+}
+
+export function getPlaylistInfo(id) {
+    return function(dispatch) {
+        const apiActions = bindActionCreators(youtubeActions, dispatch);
+
+        dispatch(beginAjaxCall());
+        return apiActions.getPlaylistInfo(id).then(playlist => {
+            dispatch(getPlaylistInfoSuccess(playlist));
         });
     };
 }

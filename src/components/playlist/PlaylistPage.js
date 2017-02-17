@@ -10,6 +10,7 @@ class PlaylistPage extends React.Component {
         super(props);
         this.state = { 
             playlist: Object.assign([], props.playlist),
+            playlistInfo: Object.assign({}, props.playlistInfo),
             videoInPlaylist: props.videoInPlaylist
         };
         this.changeVideo = this.changeVideo.bind(this);
@@ -19,12 +20,18 @@ class PlaylistPage extends React.Component {
         this.props.actions.getPlaylist(this.props.playlistId).then(() => {
             this.setState({ playlist: Object.assign([], this.props.playlist) });
         });
+        this.props.actions.getPlaylistInfo(this.props.playlistId).then(() => {
+            this.setState({ playlistInfo: Object.assign({}, this.props.playlistInfo) });
+        });
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.playlistId != nextProps.params.id) {
             this.props.actions.getPlaylist(nextProps.params.id).then(() => {
                 this.setState({ playlist: Object.assign([], this.props.playlist) });
+            });
+            this.props.actions.getPlaylistInfo(nextProps.params.id).then(() => {
+                this.setState({ playlistInfo: Object.assign({}, this.props.playlistInfo) });
             });
         }
     }
@@ -39,7 +46,8 @@ class PlaylistPage extends React.Component {
         if (playlist.length > 0) {
             return(
                 <div id="playlist-page">
-                    <VideoPlayer videoId={playlist[nowPlaying].snippet.resourceId.videoId}/>
+                    <h2>{this.state.playlistInfo.snippet.title}</h2>
+                    <VideoPlayer videoId={playlist[nowPlaying].snippet.resourceId.videoId} videoTitle={playlist[nowPlaying].snippet.title}/>
                     <br/>
                     <div id="video-list">
                         {playlist.map(playlistItem => {
@@ -67,6 +75,7 @@ class PlaylistPage extends React.Component {
 
 PlaylistPage.propTypes = {
     playlist: PropTypes.array.isRequired,
+    playlistInfo: PropTypes.object.isRequired,
     playlistId: PropTypes.string.isRequired,
     videoInPlaylist: PropTypes.number.isRequired,
     actions: PropTypes.object.isRequired
@@ -75,6 +84,7 @@ PlaylistPage.propTypes = {
 function mapStateToProps(state, ownProps) {
     return { 
         playlist: state.playlist,
+        playlistInfo: state.playlistInfo,
         playlistId: ownProps.params.id,
         videoInPlaylist: state.videoInPlaylist
     };

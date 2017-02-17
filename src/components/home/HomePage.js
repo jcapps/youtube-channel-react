@@ -19,11 +19,12 @@ class HomePage extends React.Component {
     }
 
     render() {
-        if (this.state.mostRecentUpload.id) {
+        const mostRecentUpload = this.state.mostRecentUpload;
+        if (mostRecentUpload.id) {
             return(
                 <div id="home-page">
                     <h2>Most Recent Upload</h2>
-                    <VideoPlayer videoId={this.state.mostRecentUpload.id}/>
+                    <VideoPlayer videoId={mostRecentUpload.id} videoTitle={mostRecentUpload.snippet.title}/>
                 </div>
             );
         }

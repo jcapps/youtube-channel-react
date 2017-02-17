@@ -50,7 +50,7 @@ export function getAllPlaylists() {
 /**
  * Retrieve videos in a playlist given the playlist ID
  */
-export function getPlaylistInfo(playlistId) {
+export function getPlaylist(playlistId) {
     return function(dispatch) {
         dispatch(beginAjaxCall());
         return YouTubeApi.getPlaylist(playlistId).then(playlist => {
@@ -62,7 +62,21 @@ export function getPlaylistInfo(playlistId) {
 }
 
 /**
- * Retrieve information related to a video given its ID
+ * Retrieve playlist information given the playlist ID
+ */
+export function getPlaylistInfo(playlistId) {
+    return function(dispatch) {
+        dispatch(beginAjaxCall());
+        return YouTubeApi.getPlaylistInfo(playlistId).then(playlist => {
+            return playlist;
+        }).catch(error => {
+            throw(error);
+        });
+    };
+}
+
+/**
+ * Retrieve video information given its ID
  */
 export function getVideoInfo(videoId) {
     return function(dispatch) {
