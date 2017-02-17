@@ -13,18 +13,21 @@ class HomePage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.mostRecentUpload) {
+        if (!this.props.mostRecentUpload.id) {
             this.setState({ mostRecentUpload: Object.assign({}, nextProps.mostRecentUpload) });
         }
     }
 
     render() {
-        return(
-            <div id="home-page">
-                <h2>Most Recent Upload</h2>
-                <VideoPlayer videoId={this.props.mostRecentUpload.id}/>
-            </div>
-        );
+        if (this.state.mostRecentUpload.id) {
+            return(
+                <div id="home-page">
+                    <h2>Most Recent Upload</h2>
+                    <VideoPlayer videoId={this.state.mostRecentUpload.id}/>
+                </div>
+            );
+        }
+        return <div>(Video not found.)</div>;
     }
 }
 
