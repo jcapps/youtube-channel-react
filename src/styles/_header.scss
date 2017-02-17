@@ -2,8 +2,8 @@ header {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #1a1a1a;
-    color: gray;
+    background-color: $header-primary;
+    color: $header-title;
     width: 100%;
 
     #titlebar {

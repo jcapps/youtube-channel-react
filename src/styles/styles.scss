@@ -1,3 +1,4 @@
+@import 'colors';
 @import 'header';
 @import 'home';
 @import 'navbar';
@@ -5,7 +6,7 @@
 #app {
     width: 100%;
     margin: 0 auto;
-    background-color: lightgray;
+    background-color: $page-background;
 
     .hidden {
         display: hidden;

@@ -35,7 +35,7 @@ class NavBar extends React.Component {
                         <Link to="/"><div>Playlists</div></Link>
                         <ul className="hidden">
                             {allPlaylists.map(playlist => <PlaylistLink key={playlist.id} playlist={playlist} />)}
-                            <li><Link to={'/'}><div>View All</div></Link></li>
+                            <li><Link to={'/'}><div className="nav-view-all">View All</div></Link></li>
                         </ul>
                     </li>
                 </ul>

@@ -10,7 +10,7 @@ nav {
     li {
         a, a:active, a:visited, a:focus {
             text-decoration: none;
-            color: white;
+            color: $header-contrast;
 
             div {
                 padding: 10px 25px;
@@ -21,8 +21,8 @@ nav {
             text-decoration: none;
 
             div {
-                background-color: white;
-                color: #1a1a1a
+                background-color: $header-contrast;
+                color: $header-primary;
             }
         }
     }
@@ -32,12 +32,16 @@ nav {
         vertical-align: top;
 
         & > ul { 
-            background-color: #1a1a1a;
+            background-color: $header-primary;
             position: absolute;
 
             & > li {
                 display: block;
             }
         }
+    }
+
+    .nav-view-all {
+        border-top: 1px solid $header-contrast;
     }
 }
