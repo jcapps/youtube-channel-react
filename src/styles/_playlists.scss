@@ -1,11 +1,15 @@
 #playlists-page {
     #playlists-list {
-        border: 1px solid $gray;
+        border: 1px solid $grid-border;
+
+        a {
+            color: $primary;
+        }
     }
 
     div.playlist-thumbnail {
         text-align: left;
-        border: 1px solid $gray;
+        border: 1px solid $grid-border;
 
         & > * {
             display: inline-block;
@@ -14,7 +18,7 @@
         }
 
         &:hover {
-            background-color: $white;
+            background-color: $contrast;
         }
     }
 }
