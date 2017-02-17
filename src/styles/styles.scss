@@ -3,10 +3,13 @@
 @import 'home';
 @import 'navbar';
 
+html, #app {
+    background-color: $page-background;
+}
+
 #app {
     width: 100%;
     margin: 0 auto;
-    background-color: $page-background;
 
     .hidden {
         display: hidden;
