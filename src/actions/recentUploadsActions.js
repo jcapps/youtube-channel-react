@@ -34,7 +34,7 @@ export function getMostRecentUpload() {
 
         dispatch(beginAjaxCall());
         return getRecentUploadsAction().then(playlist => {
-            let videoId = playlist[0].snippet.resourceId.videoId;
+            let videoId = playlist.items[0].snippet.resourceId.videoId;
             dispatch(beginAjaxCall());
             return apiActions.getVideoInfo(videoId).then(video => {
                 dispatch(getMostRecentUploadSuccess(video));

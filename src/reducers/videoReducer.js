@@ -4,7 +4,7 @@ import initialState from './initialState';
 export default function videoReducer(state = initialState.video, action) {
     switch(action.type) {
         case types.GET_VIDEO_SUCCESS:
-            return action.video;
+            return action.video.items[0];
         default:
             return state;
     }

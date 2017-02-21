@@ -4,7 +4,7 @@ import initialState from './initialState';
 export default function recentUploadsPlaylistReducer(state = initialState.recentUploadsPlaylist, action) {
     switch(action.type) {
         case types.GET_RECENT_UPLOADS_PLAYLIST_SUCCESS:
-            return action.playlist;
+            return action.playlist.items;
         default:
             return state;
     }

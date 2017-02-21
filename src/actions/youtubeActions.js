@@ -54,7 +54,7 @@ export function getPlaylist(playlistId) {
     return function(dispatch) {
         dispatch(beginAjaxCall());
         return YouTubeApi.getPlaylist(playlistId).then(playlist => {
-            return playlist.items;
+            return playlist;
         }).catch(error => {
             throw(error);
         });
@@ -68,7 +68,7 @@ export function getPlaylistInfo(playlistId) {
     return function(dispatch) {
         dispatch(beginAjaxCall());
         return YouTubeApi.getPlaylistInfo(playlistId).then(playlist => {
-            return playlist.items[0];
+            return playlist;
         }).catch(error => {
             throw(error);
         });

@@ -92,7 +92,7 @@ class YouTubeApi {
 
         return new Promise((resolve, reject) => {
             axios.get(videoUrl, {params: videoParams}).then(res => {
-                resolve(res.data.items[0]);
+                resolve(res.data);
             });
         });
     }

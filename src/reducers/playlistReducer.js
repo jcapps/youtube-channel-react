@@ -4,7 +4,7 @@ import initialState from './initialState';
 export default function playlistReducer(state = initialState.playlist, action) {
     switch(action.type) {
         case types.GET_PLAYLIST_SUCCESS:
-            return action.playlist;
+            return action.playlist.items;
         default:
             return state;
     }
