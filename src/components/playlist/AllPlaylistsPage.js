@@ -8,13 +8,40 @@ import PlaylistThumbnail from '../common/PlaylistThumbnail';
 class AllPlaylistsPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { playlists: Object.assign([], props.playlists) };
+        this.state = { 
+            playlists: Object.assign([], props.playlists),
+            playlistPageToken: Object.assign({}, props.playlistPageToken)
+        };
+        this.loadMorePlaylists = this.loadMorePlaylists.bind(this);
     }
 
     componentWillMount() {
         this.props.actions.getAllPlaylists().then(() => {
-            this.setState({ playlists: Object.assign([], this.props.playlists) });
+            this.setState({ 
+                playlists: Object.assign([], this.props.playlists),
+                playlistPageToken: Object.assign({}, this.props.playlistPageToken)
+            });
         });
+    }
+
+    loadMorePlaylists() {
+        const nextPageToken = this.state.playlistPageToken.nextPageToken;
+        this.props.actions.getNextPlaylists(nextPageToken).then(() => {
+            this.setState({ 
+                playlists: Object.assign([], this.props.playlists),
+                playlistPageToken: Object.assign({}, this.props.playlistPageToken)
+            });
+        });
+    }
+
+    renderViewMore() {
+        if (this.state.playlistPageToken.nextPageToken) {
+            return (
+                <a id="view-more" onClick={this.loadMorePlaylists}>
+                    <div>View More</div>
+                </a>
+            );
+        }
     }
 
     render() {
@@ -28,6 +55,7 @@ class AllPlaylistsPage extends React.Component {
                             <PlaylistThumbnail playlist={playlist}/>
                         </Link>
                     )}
+                    {this.renderViewMore()}
                 </div>
             </div>
         );
@@ -36,11 +64,15 @@ class AllPlaylistsPage extends React.Component {
 
 AllPlaylistsPage.propTypes = {
     playlists: PropTypes.array.isRequired,
+    playlistPageToken: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
-    return { playlists: state.allPlaylists };
+    return { 
+        playlists: state.allPlaylists,
+        playlistPageToken: state.playlistPageToken
+    };
 }
 
 function mapDispatchToProps(dispatch) {

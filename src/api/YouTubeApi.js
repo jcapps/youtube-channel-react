@@ -19,7 +19,7 @@ class YouTubeApi {
 
         return new Promise((resolve, reject) => {
             axios.get(channelUrl, {params: channelParams}).then(res => {
-                resolve(res.data.items[0]);
+                resolve(res.data);
             });
         });
     }
@@ -33,22 +33,23 @@ class YouTubeApi {
 
         return new Promise((resolve, reject) => {
             axios.get(channelUrl, {params: channelParams}).then(res => {
-                resolve(res.data.items[0]);
+                resolve(res.data);
             });
         });
     }
 
-    static getAllPlaylists() {
+    static getAllPlaylists(pageToken = "") {
         const playlistsParams = {
             key: KEY,
             channelId: CHANNEL_ID,
             part: 'snippet',
-            maxResults: 5
+            maxResults: 5,
+            pageToken: pageToken
         };
 
         return new Promise((resolve, reject) => {
             axios.get(playlistsUrl, {params: playlistsParams}).then(res => {
-                resolve(res.data.items);
+                resolve(res.data);
             });
         });
     }
@@ -63,7 +64,7 @@ class YouTubeApi {
 
         return new Promise((resolve, reject) => {
             axios.get(playlistUrl, {params: playlistParams}).then(res => {
-                resolve(res.data.items);
+                resolve(res.data);
             });
         });
     }
@@ -77,7 +78,7 @@ class YouTubeApi {
 
         return new Promise((resolve, reject) => {
             axios.get(playlistsUrl, {params: playlistParams}).then(res => {
-                resolve(res.data.items[0]);
+                resolve(res.data);
             });
         });
     }

@@ -18,9 +18,14 @@ html, #app {
         display: hidden;
     }
 
+    a:hover {
+        cursor: pointer;
+    }
+
     #content {
         margin: 0 auto;
         padding-top: 100px;
+        margin-bottom: 20px;
         width: 1000px;
         text-align: center;
     }

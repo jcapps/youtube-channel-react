@@ -19,6 +19,24 @@
 
         &:hover {
             background-color: $contrast;
+            color: $anchor;
+        }
+    }
+
+    a#view-more {
+        div {
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid $grid-border;
+
+            &:hover {
+                background-color: $contrast;
+            }
+        }
+
+        &:hover {
+            text-decoration: none;
+            color: $anchor;
         }
     }
 }

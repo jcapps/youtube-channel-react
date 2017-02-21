@@ -7,6 +7,10 @@ export function getAllPlaylistsSuccess(playlists) {
     return { type: types.GET_ALL_PLAYLISTS_SUCCESS, playlists };
 }
 
+export function getNextPlaylistsSuccess(playlists) {
+    return { type: types.GET_NEXT_PLAYLISTS_SUCCESS, playlists };
+}
+
 export function getPlaylistSuccess(playlist) {
     return { type: types.GET_PLAYLIST_SUCCESS, playlist };
 }
@@ -22,6 +26,20 @@ export function getAllPlaylists() {
         dispatch(beginAjaxCall());
         return apiActions.getAllPlaylists().then(playlists => {
             dispatch(getAllPlaylistsSuccess(playlists));
+        });
+    };
+}
+
+export function getNextPlaylists(nextPageToken) {
+    return function(dispatch, getState) {
+        const apiActions = bindActionCreators(youtubeActions, dispatch);
+
+        dispatch(beginAjaxCall());
+        return apiActions.getAllPlaylists(nextPageToken).then(playlists => {
+            const state = getState();
+            const allPlaylists = [...state.allPlaylists, ...playlists.items];
+            playlists.items = allPlaylists;
+            dispatch(getNextPlaylistsSuccess(playlists));
         });
     };
 }

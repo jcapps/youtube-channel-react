@@ -11,7 +11,7 @@ export function getChannelInfo() {
     return function(dispatch) {
         dispatch(beginAjaxCall());
         return YouTubeApi.getChannelInfo().then(channelInfo => {
-            return channelInfo;
+            return channelInfo.items[0];
         }).catch(error => {
             throw(error);
         });
@@ -26,7 +26,7 @@ export function getChannelContent() {
     return function(dispatch) {
         dispatch(beginAjaxCall());
         return YouTubeApi.getChannelContent().then(channelContent => {
-            return channelContent;
+            return channelContent.items[0];
         }).catch(error => {
             throw(error);
         });
@@ -36,10 +36,10 @@ export function getChannelContent() {
 /**
  * Retrieve list of all playlists
  */
-export function getAllPlaylists() {
+export function getAllPlaylists(nextPageToken = "") {
     return function(dispatch) {
         dispatch(beginAjaxCall());
-        return YouTubeApi.getAllPlaylists().then(playlists => {
+        return YouTubeApi.getAllPlaylists(nextPageToken).then(playlists => {
             return playlists;
         }).catch(error => {
             throw(error);
@@ -54,7 +54,7 @@ export function getPlaylist(playlistId) {
     return function(dispatch) {
         dispatch(beginAjaxCall());
         return YouTubeApi.getPlaylist(playlistId).then(playlist => {
-            return playlist;
+            return playlist.items;
         }).catch(error => {
             throw(error);
         });
@@ -68,7 +68,7 @@ export function getPlaylistInfo(playlistId) {
     return function(dispatch) {
         dispatch(beginAjaxCall());
         return YouTubeApi.getPlaylistInfo(playlistId).then(playlist => {
-            return playlist;
+            return playlist.items[0];
         }).catch(error => {
             throw(error);
         });
