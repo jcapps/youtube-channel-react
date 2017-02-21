@@ -54,12 +54,13 @@ class YouTubeApi {
         });
     }
 
-    static getPlaylist(id) {
+    static getPlaylist(id, pageToken = "") {
         const playlistParams = {
             key: KEY,
             playlistId: id,
             part: 'snippet',
-            maxResults: 50
+            maxResults: 50,
+            pageToken: pageToken
         };
 
         return new Promise((resolve, reject) => {

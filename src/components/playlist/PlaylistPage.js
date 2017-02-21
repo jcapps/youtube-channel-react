@@ -11,14 +11,19 @@ class PlaylistPage extends React.Component {
         this.state = { 
             playlist: Object.assign([], props.playlist),
             playlistInfo: Object.assign({}, props.playlistInfo),
+            videoPageToken: Object.assign({}, props.videoPageToken),
             videoInPlaylist: props.videoInPlaylist
         };
         this.changeVideo = this.changeVideo.bind(this);
+        this.loadMoreVideos = this.loadMoreVideos.bind(this);
     }
 
     componentWillMount() {
         this.props.actions.getPlaylist(this.props.playlistId).then(() => {
-            this.setState({ playlist: Object.assign([], this.props.playlist) });
+            this.setState({ 
+                playlist: Object.assign([], this.props.playlist),
+                videoPageToken: Object.assign({}, this.props.videoPageToken)
+            });
         });
         this.props.actions.getPlaylistInfo(this.props.playlistId).then(() => {
             this.setState({ playlistInfo: Object.assign({}, this.props.playlistInfo) });
@@ -28,7 +33,10 @@ class PlaylistPage extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (this.props.playlistId != nextProps.params.id) {
             this.props.actions.getPlaylist(nextProps.params.id).then(() => {
-                this.setState({ playlist: Object.assign([], this.props.playlist) });
+                this.setState({ 
+                    playlist: Object.assign([], this.props.playlist),
+                    videoPageToken: Object.assign({}, this.props.videoPageToken)
+                });
             });
             this.props.actions.getPlaylistInfo(nextProps.params.id).then(() => {
                 this.setState({ playlistInfo: Object.assign({}, this.props.playlistInfo) });
@@ -38,6 +46,27 @@ class PlaylistPage extends React.Component {
 
     changeVideo(e) {
         this.setState({ videoInPlaylist: e.target.parentNode.id });
+    }
+
+    loadMoreVideos() {
+        const nextPageToken = this.state.videoPageToken.nextPageToken;
+        const id = this.props.playlistId;
+        this.props.actions.getNextVideos(id, nextPageToken).then(() => {
+            this.setState({ 
+                playlist: Object.assign([], this.props.playlist),
+                videoPageToken: Object.assign({}, this.props.videoPageToken)
+            });
+        });
+    }
+
+    renderViewMore() {
+        if (this.state.videoPageToken.nextPageToken) {
+            return (
+                <a id="view-more" onClick={this.loadMoreVideos}>
+                    <div>View More</div>
+                </a>
+            );
+        }
     }
 
     render() {
@@ -65,6 +94,7 @@ class PlaylistPage extends React.Component {
                                 </div>
                             );
                         })}
+                        {this.renderViewMore()}
                     </div>
                 </div>
             );
@@ -77,6 +107,7 @@ PlaylistPage.propTypes = {
     playlist: PropTypes.array.isRequired,
     playlistInfo: PropTypes.object.isRequired,
     playlistId: PropTypes.string.isRequired,
+    videoPageToken: PropTypes.object.isRequired,
     videoInPlaylist: PropTypes.number.isRequired,
     actions: PropTypes.object.isRequired
 };
@@ -86,6 +117,7 @@ function mapStateToProps(state, ownProps) {
         playlist: state.playlist,
         playlistInfo: state.playlistInfo,
         playlistId: ownProps.params.id,
+        videoPageToken: state.videoPageToken,
         videoInPlaylist: state.videoInPlaylist
     };
 }

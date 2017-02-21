@@ -16,4 +16,14 @@
     div.playlist-video:hover, div.selected {
         box-shadow: 0 0 10px $selected-shadow;
     }
+
+    a#view-more {
+        display: inline-block;
+        color: $primary;
+
+        &:hover {
+            text-decoration: none;
+            color: $anchor;
+        }
+    }
 }

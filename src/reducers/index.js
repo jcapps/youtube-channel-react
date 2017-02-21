@@ -4,6 +4,7 @@ import mostRecentUpload from './mostRecentUploadReducer';
 import recentUploadsPlaylist from './recentUploadsPlaylistReducer';
 import allPlaylists from './allPlaylistsReducer';
 import playlistPageToken from './playlistPageTokenReducer';
+import videoPageToken from './videoPageTokenReducer';
 import playlist from './playlistReducer';
 import playlistInfo from './playlistInfoReducer';
 import video from './videoReducer';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     recentUploadsPlaylist,
     allPlaylists,
     playlistPageToken,
+    videoPageToken,
     playlist,
     playlistInfo,
     video,

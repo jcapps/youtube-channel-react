@@ -36,10 +36,10 @@ export function getChannelContent() {
 /**
  * Retrieve list of all playlists
  */
-export function getAllPlaylists(nextPageToken = "") {
+export function getAllPlaylists(pageToken = "") {
     return function(dispatch) {
         dispatch(beginAjaxCall());
-        return YouTubeApi.getAllPlaylists(nextPageToken).then(playlists => {
+        return YouTubeApi.getAllPlaylists(pageToken).then(playlists => {
             return playlists;
         }).catch(error => {
             throw(error);
@@ -50,10 +50,10 @@ export function getAllPlaylists(nextPageToken = "") {
 /**
  * Retrieve videos in a playlist given the playlist ID
  */
-export function getPlaylist(playlistId) {
+export function getPlaylist(playlistId, pageToken = "") {
     return function(dispatch) {
         dispatch(beginAjaxCall());
-        return YouTubeApi.getPlaylist(playlistId).then(playlist => {
+        return YouTubeApi.getPlaylist(playlistId, pageToken).then(playlist => {
             return playlist;
         }).catch(error => {
             throw(error);

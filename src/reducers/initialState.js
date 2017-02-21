@@ -6,6 +6,7 @@ export default {
     playlist: [],
     playlistInfo: {},
     video: {},
+    videoPageToken: {prevPageToken: "", nextPageToken: ""},
     videoInPlaylist: 0,
     ajaxCallsInProgress: 0
 };
