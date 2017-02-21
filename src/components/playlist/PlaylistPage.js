@@ -35,7 +35,8 @@ class PlaylistPage extends React.Component {
             this.props.actions.getPlaylist(nextProps.params.id).then(() => {
                 this.setState({ 
                     playlist: Object.assign([], this.props.playlist),
-                    videoPageToken: Object.assign({}, this.props.videoPageToken)
+                    videoPageToken: Object.assign({}, this.props.videoPageToken),
+                    videoInPlaylist: 0
                 });
             });
             this.props.actions.getPlaylistInfo(nextProps.params.id).then(() => {
