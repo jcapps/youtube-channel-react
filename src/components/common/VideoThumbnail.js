@@ -15,11 +15,24 @@ class VideoThumbnail extends React.Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.videoId != nextProps.videoId) {
+            this.props.actions.getVideo(nextProps.videoId).then(() => {
+                this.setState({ video: Object.assign({}, this.props.video) });
+            });
+        }
+    }
+
     render() {
         let video = this.state.video;
         if (video.snippet) {
             return (
-                <img height="90" width="160" src={video.snippet.thumbnails.medium.url} alt={video.snippet.title}/>
+                <img 
+                    height="90" 
+                    width="160" 
+                    title={video.snippet.title} 
+                    src={video.snippet.thumbnails.medium.url} 
+                    alt={video.snippet.title}/>
             );
         }
         return <div>(Can't find video)</div>;
