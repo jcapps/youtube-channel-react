@@ -4,13 +4,14 @@ $gray: gray;
 $black: #1a1a1a;
 
 $anchorBlue: dodgerblue;
+$anchorPurple: mediumpurple;
 
 /* Page default colors */
 $page-background: $lightgray;
 $grid-border: $gray;
 $primary: $black;
 $contrast: $white;
-$anchor: $anchorBlue;
+$anchor: $anchorPurple;
 
 /* Header colors */
 $header-primary: $black;
@@ -18,4 +19,4 @@ $header-contrast: $white;
 $header-title: $gray;
 
 /* Selected video's shadow color */
-$selected-shadow: $anchorBlue;
+$selected-shadow: $anchorPurple;
