@@ -2,30 +2,65 @@ import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import VideoThumbnail from '../common/VideoThumbnail';
+import * as playlistActions from '../../actions/playlistActions';
+import VideoResult from './VideoResult';
 
 class AllVideosPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            recentUploadsPlaylist: Object.assign([], props.recentUploadsPlaylist)
+            playlist: Object.assign([], props.playlist),
+            playlistId: props.playlistId,
+            videoPageToken: props.videoPageToken
         };
+        this.loadMoreVideos = this.loadMoreVideos.bind(this);
+    }
+
+    componentWillMount() {
+        this.props.actions.getRecentUploadsPlaylist().then(() => {
+            this.setState({ 
+                playlist: Object.assign([], this.props.playlist),
+                videoPageToken: Object.assign({}, this.props.videoPageToken)
+            });
+        });
+    }
+
+    loadMoreVideos() {
+        const nextPageToken = this.state.videoPageToken.nextPageToken;
+        const id = this.props.playlistId;
+        this.props.actions.getNextVideos(id, nextPageToken).then(() => {
+            this.setState({ 
+                playlist: Object.assign([], this.props.playlist),
+                videoPageToken: Object.assign({}, this.props.videoPageToken)
+            });
+        });
+    }
+
+    renderViewMore() {
+        if (this.state.videoPageToken.nextPageToken) {
+            return (
+                <a id="view-more" onClick={this.loadMoreVideos}>
+                    <div>View More</div>
+                </a>
+            );
+        }
     }
 
     render() {
-        const recentUploadsPlaylist = this.state.recentUploadsPlaylist;
+        const playlist = this.state.playlist;
         return (
             <div id="videos-page">
                 <h2>Videos</h2>
                 <div id="video-list">
-                    {recentUploadsPlaylist.map(video => {
+                    {playlist.map(video => {
                         const id = video.snippet.resourceId.videoId;
                         return (
-                            <div className="video-result" key={id}>
-                                <VideoThumbnail videoId={id}/>
+                            <div key={id}>
+                                <VideoResult videoId={id}/>
                             </div>
                         );
                     })}
+                    {this.renderViewMore()}
                 </div>
             </div>
         );
@@ -33,17 +68,22 @@ class AllVideosPage extends React.Component {
 }
 
 AllVideosPage.propTypes = {
-    recentUploadsPlaylist: PropTypes.array.isRequired
+    playlist: PropTypes.array.isRequired,
+    playlistId: PropTypes.string.isRequired,
+    videoPageToken: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
     return { 
-        recentUploadsPlaylist: state.recentUploadsPlaylist
+        playlist: state.playlist,
+        playlistId: state.recentUploadsPlaylistId,
+        videoPageToken: state.videoPageToken
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return {  };
+    return { actions: bindActionCreators(playlistActions, dispatch) };
 }
 
-export default connect(mapStateToProps, null)(AllVideosPage);
+export default connect(mapStateToProps, mapDispatchToProps)(AllVideosPage);

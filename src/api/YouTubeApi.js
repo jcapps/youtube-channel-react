@@ -59,7 +59,7 @@ class YouTubeApi {
             key: KEY,
             playlistId: id,
             part: 'snippet',
-            maxResults: 50,
+            maxResults: 25,
             pageToken: pageToken
         };
 

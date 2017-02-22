@@ -23,6 +23,14 @@ export function getPlaylistInfoSuccess(playlistInfo) {
     return { type: types.GET_PLAYLIST_INFO_SUCCESS, playlistInfo };
 }
 
+export function getRecentUploadsPlaylistIdSuccess(playlistId) {
+    return { type: types.GET_RECENT_UPLOADS_PLAYLIST_ID_SUCCESS, playlistId };
+}
+
+export function getRecentUploadsPlaylistSuccess(playlist) {
+    return { type: types.GET_RECENT_UPLOADS_PLAYLIST_SUCCESS, playlist };
+}
+
 export function getAllPlaylists() {
     return function(dispatch) {
         const apiActions = bindActionCreators(youtubeActions, dispatch);
@@ -80,6 +88,23 @@ export function getPlaylistInfo(id) {
         dispatch(beginAjaxCall());
         return apiActions.getPlaylistInfo(id).then(playlist => {
             dispatch(getPlaylistInfoSuccess(playlist));
+        });
+    };
+}
+
+export function getRecentUploadsPlaylist() {
+    return function(dispatch) {
+        const apiActions = bindActionCreators(youtubeActions, dispatch);
+
+        dispatch(beginAjaxCall());
+        return apiActions.getChannelContent().then(channelContent => {
+            let playlistId = channelContent.contentDetails.relatedPlaylists.uploads;
+            dispatch(getRecentUploadsPlaylistIdSuccess(playlistId));
+            dispatch(beginAjaxCall());
+            return apiActions.getPlaylist(playlistId).then(playlist => {
+                dispatch(getRecentUploadsPlaylistSuccess(playlist));
+                return playlist;
+            });
         });
     };
 }

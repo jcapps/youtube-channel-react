@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 import mostRecentUpload from './mostRecentUploadReducer';
-import recentUploadsPlaylist from './recentUploadsPlaylistReducer';
+import recentUploadsPlaylistId from './recentUploadsPlaylistIdReducer';
 import allPlaylists from './allPlaylistsReducer';
 import playlistPageToken from './playlistPageTokenReducer';
 import videoPageToken from './videoPageTokenReducer';
@@ -13,7 +13,7 @@ import videoInPlaylist from './videoInPlaylistReducer';
 const rootReducer = combineReducers({
     ajaxCallsInProgress,
     mostRecentUpload,
-    recentUploadsPlaylist,
+    recentUploadsPlaylistId,
     allPlaylists,
     playlistPageToken,
     videoPageToken,

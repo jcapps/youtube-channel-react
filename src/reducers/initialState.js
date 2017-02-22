@@ -1,6 +1,6 @@
 export default {
     mostRecentUpload: {},
-    recentUploadsPlaylist: [],
+    recentUploadsPlaylistId: "",
     allPlaylists: [],
     playlistPageToken: {prevPageToken: "", nextPageToken: ""},
     playlist: [],

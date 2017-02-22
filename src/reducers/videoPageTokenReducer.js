@@ -8,6 +8,11 @@ export default function videoPageTokenReducer(state = initialState.videoPageToke
                 prevPageToken: action.playlist.prevPageToken,
                 nextPageToken: action.playlist.nextPageToken
             };
+        case types.GET_RECENT_UPLOADS_PLAYLIST_SUCCESS:
+            return {
+                prevPageToken: action.playlist.prevPageToken,
+                nextPageToken: action.playlist.nextPageToken
+            };
         case types.GET_NEXT_VIDEOS_SUCCESS:
             return {
                 prevPageToken: action.playlist.prevPageToken,

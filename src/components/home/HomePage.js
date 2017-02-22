@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as recentUploadsActions from '../../actions/recentUploadsActions';
+import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/VideoPlayer';
 
 class HomePage extends React.Component {
@@ -42,7 +42,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators(recentUploadsActions, dispatch) };
+    return { actions: bindActionCreators(videoActions, dispatch) };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
