@@ -38,6 +38,7 @@ class NavBar extends React.Component {
                             <li><Link to="/playlists"><div className="nav-view-all">View All</div></Link></li>
                         </ul>
                     </li>
+                    <li><Link to="/videos"><div>Videos</div></Link></li>
                 </ul>
             </nav>
         );

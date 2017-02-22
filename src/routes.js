@@ -4,11 +4,13 @@ import App from './components/App';
 import HomePage from './components/home/HomePage';
 import PlaylistPage from './components/playlist/PlaylistPage';
 import AllPlaylistsPage from './components/playlist/AllPlaylistsPage';
+import AllVideosPage from './components/video/AllVideosPage';
 
 export default (
     <Route path="/" component={App}>
         <IndexRoute component={HomePage} />
         <Route path="/playlist(/:id)" component={PlaylistPage} />
         <Route path="/playlists" component={AllPlaylistsPage} />
+        <Route path="/videos" component={AllVideosPage} />
     </Route>
 );
