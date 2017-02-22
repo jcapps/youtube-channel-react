@@ -55,9 +55,9 @@ class AllVideosPage extends React.Component {
                     {playlist.map(video => {
                         const id = video.snippet.resourceId.videoId;
                         return (
-                            <div key={id}>
+                            <Link to={"/watch/" + id} key={id}>
                                 <VideoResult videoId={id}/>
-                            </div>
+                            </Link>
                         );
                     })}
                     {this.renderViewMore()}
