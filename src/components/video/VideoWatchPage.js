@@ -27,7 +27,7 @@ class VideoWatchPage extends React.Component {
         if (this.state.isLoading) return <div></div>;
         return (
             <div id="videos-watch-page">
-                <VideoPlayer videoId={this.props.videoId} videoTitle={this.state.video.snippet.title}/>
+                <VideoPlayer video={this.state.video}/>
             </div>
         );
     }

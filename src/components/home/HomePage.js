@@ -24,7 +24,7 @@ class HomePage extends React.Component {
             return(
                 <div id="home-page">
                     <h2>Most Recent Upload</h2>
-                    <VideoPlayer videoId={mostRecentUpload.id} videoTitle={mostRecentUpload.snippet.title}/>
+                    <VideoPlayer video={mostRecentUpload}/>
                 </div>
             );
         }

@@ -1,18 +1,17 @@
 import React, {PropTypes} from 'react';
 
-const VideoPlayer = ({videoId, videoTitle}) => {
-    const videoUrl = "https://www.youtube.com/embed/" + videoId;
+const VideoPlayer = ({video}) => {
+    const videoUrl = "https://www.youtube.com/embed/" + video.id;
     return (
         <div className="video-player">
             <iframe width="640" height="360" src={videoUrl}></iframe>
-            <h3>{videoTitle}</h3>
+            <h3>{video.snippet.title}</h3>
         </div>
     );
 };
 
 VideoPlayer.propTypes = {
-    videoId: PropTypes.string.isRequired,
-    videoTitle: PropTypes.string.isRequired
+    video: PropTypes.object.isRequired
 };
 
 export default VideoPlayer;
