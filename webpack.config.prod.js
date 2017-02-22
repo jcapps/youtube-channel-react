@@ -1,6 +1,7 @@
 import webpack from 'webpack';
 import path from 'path';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import {YOUTUBE_INFO} from './tools/private/youtubeInfo';
 
 const GLOBALS = {
@@ -30,7 +31,12 @@ export default {
         new webpack.DefinePlugin(GLOBALS),
         new ExtractTextPlugin('styles.css'),
         new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.UglifyJsPlugin()
+        new webpack.optimize.UglifyJsPlugin(),
+        new HtmlWebpackPlugin({
+            favicon: 'src/images/favicon.ico',
+            template: 'src/index.html',
+            inject: false
+        })
     ],
     module: {
         loaders: [

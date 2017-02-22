@@ -1,5 +1,6 @@
 import webpack from 'webpack';
 import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import {YOUTUBE_INFO} from './tools/private/youtubeInfo';
 
 const GLOBALS = {
@@ -30,7 +31,12 @@ export default {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
-        new webpack.DefinePlugin(GLOBALS)
+        new webpack.DefinePlugin(GLOBALS),
+        new HtmlWebpackPlugin({
+            favicon: 'src/images/favicon.ico',
+            template: 'src/index.html',
+            inject: false
+        })
     ],
     module: {
         loaders: [
