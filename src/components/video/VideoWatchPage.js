@@ -9,7 +9,7 @@ class VideoWatchPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            video: Object.assign({}, props.video)
+            video: Object.assign({})
         };
     }
 

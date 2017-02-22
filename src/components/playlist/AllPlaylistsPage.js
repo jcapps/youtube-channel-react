@@ -9,7 +9,7 @@ class AllPlaylistsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            playlists: Object.assign([], props.playlists),
+            playlists: Object.assign([]),
             playlistPageToken: Object.assign({}, props.playlistPageToken)
         };
         this.loadMorePlaylists = this.loadMorePlaylists.bind(this);

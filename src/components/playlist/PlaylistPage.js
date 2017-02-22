@@ -9,9 +9,9 @@ class PlaylistPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            playlist: Object.assign([], props.playlist),
-            playlistInfo: Object.assign({}, props.playlistInfo),
-            videoPageToken: Object.assign({}, props.videoPageToken),
+            playlist: Object.assign([]),
+            playlistInfo: Object.assign({}),
+            videoPageToken: Object.assign({}),
             videoInPlaylist: props.videoInPlaylist
         };
         this.changeVideo = this.changeVideo.bind(this);

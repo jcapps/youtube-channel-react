@@ -7,7 +7,7 @@ import VideoThumbnail from '../common/VideoThumbnail';
 class VideoResult extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { video: Object.assign({}, props.video) };
+        this.state = { video: Object.assign({}) };
     }
 
     componentWillMount() {

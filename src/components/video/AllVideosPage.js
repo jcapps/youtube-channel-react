@@ -9,7 +9,7 @@ class AllVideosPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            playlist: Object.assign([], props.playlist),
+            playlist: Object.assign([]),
             playlistId: props.playlistId,
             videoPageToken: props.videoPageToken
         };
