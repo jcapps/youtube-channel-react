@@ -12,7 +12,8 @@ class PlaylistPage extends React.Component {
             playlist: Object.assign([]),
             playlistInfo: Object.assign({}),
             videoPageToken: Object.assign({}),
-            videoInPlaylist: props.videoInPlaylist
+            videoInPlaylist: props.videoInPlaylist,
+            isLoading: true
         };
         this.changeVideo = this.changeVideo.bind(this);
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
@@ -22,7 +23,8 @@ class PlaylistPage extends React.Component {
         this.props.actions.getPlaylist(this.props.playlistId).then(() => {
             this.setState({ 
                 playlist: Object.assign([], this.props.playlist),
-                videoPageToken: Object.assign({}, this.props.videoPageToken)
+                videoPageToken: Object.assign({}, this.props.videoPageToken),
+                isLoading: false
             });
         });
         this.props.actions.getPlaylistInfo(this.props.playlistId).then(() => {
@@ -36,7 +38,8 @@ class PlaylistPage extends React.Component {
                 this.setState({ 
                     playlist: Object.assign([], this.props.playlist),
                     videoPageToken: Object.assign({}, this.props.videoPageToken),
-                    videoInPlaylist: 0
+                    videoInPlaylist: 0,
+                    isLoading: false
                 });
             });
             this.props.actions.getPlaylistInfo(nextProps.params.id).then(() => {
@@ -71,6 +74,7 @@ class PlaylistPage extends React.Component {
     }
 
     render() {
+        if (this.state.isLoading) return <div></div>;
         const playlist = this.state.playlist;
         const nowPlaying = this.state.videoInPlaylist;
         if (playlist.length > 0) {

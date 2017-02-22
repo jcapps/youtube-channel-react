@@ -9,17 +9,22 @@ class VideoWatchPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            video: Object.assign({})
+            video: Object.assign({}),
+            isLoading: true
         };
     }
 
     componentWillMount() {
         this.props.actions.getVideo(this.props.videoId).then(() => {
-            this.setState({ video: Object.assign({}, this.props.video) });
+            this.setState({ 
+                video: Object.assign({}, this.props.video),
+                isLoading: false
+            });
         });
     }
 
     render() {
+        if (this.state.isLoading) return <div></div>;
         return (
             <div id="videos-watch-page">
                 <VideoPlayer videoId={this.props.videoId} videoTitle={this.state.video.snippet.title}/>

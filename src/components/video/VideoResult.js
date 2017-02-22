@@ -7,24 +7,34 @@ import VideoThumbnail from '../common/VideoThumbnail';
 class VideoResult extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { video: Object.assign({}) };
+        this.state = { 
+            video: Object.assign({}),
+            isLoading: true
+        };
     }
 
     componentWillMount() {
         this.props.actions.getVideo(this.props.videoId).then(() => {
-            this.setState({ video: Object.assign({}, this.props.video) });
+            this.setState({ 
+                video: Object.assign({}, this.props.video),
+                isLoading: false
+            });
         });
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.videoId != nextProps.videoId) {
             this.props.actions.getVideo(nextProps.videoId).then(() => {
-                this.setState({ video: Object.assign({}, this.props.video) });
+                this.setState({ 
+                    video: Object.assign({}, this.props.video),
+                    isLoading: false
+                });
             });
         }
     }
 
     render() {
+        if (this.state.isLoading) return <div></div>;
         let video = this.state.video;
         if (video.snippet) {
             return (

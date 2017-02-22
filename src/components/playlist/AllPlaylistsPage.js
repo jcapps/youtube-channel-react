@@ -10,7 +10,8 @@ class AllPlaylistsPage extends React.Component {
         super(props);
         this.state = { 
             playlists: Object.assign([]),
-            playlistPageToken: Object.assign({}, props.playlistPageToken)
+            playlistPageToken: Object.assign({}, props.playlistPageToken),
+            isLoading: true
         };
         this.loadMorePlaylists = this.loadMorePlaylists.bind(this);
     }
@@ -19,7 +20,8 @@ class AllPlaylistsPage extends React.Component {
         this.props.actions.getAllPlaylists().then(() => {
             this.setState({ 
                 playlists: Object.assign([], this.props.playlists),
-                playlistPageToken: Object.assign({}, this.props.playlistPageToken)
+                playlistPageToken: Object.assign({}, this.props.playlistPageToken),
+                isLoading: false
             });
         });
     }
@@ -45,6 +47,7 @@ class AllPlaylistsPage extends React.Component {
     }
 
     render() {
+        if (this.state.isLoading) return <div></div>;
         const playlists = this.state.playlists;
         return (
             <div id="playlists-page">

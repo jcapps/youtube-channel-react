@@ -11,7 +11,8 @@ class AllVideosPage extends React.Component {
         this.state = { 
             playlist: Object.assign([]),
             playlistId: props.playlistId,
-            videoPageToken: props.videoPageToken
+            videoPageToken: props.videoPageToken,
+            isLoading: true
         };
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
     }
@@ -20,7 +21,8 @@ class AllVideosPage extends React.Component {
         this.props.actions.getRecentUploadsPlaylist().then(() => {
             this.setState({ 
                 playlist: Object.assign([], this.props.playlist),
-                videoPageToken: Object.assign({}, this.props.videoPageToken)
+                videoPageToken: Object.assign({}, this.props.videoPageToken),
+                isLoading: false
             });
         });
     }
@@ -48,6 +50,7 @@ class AllVideosPage extends React.Component {
 
     render() {
         const playlist = this.state.playlist;
+        if (this.state.isLoading) return <div></div>;
         return (
             <div id="videos-page">
                 <h2>Videos</h2>
