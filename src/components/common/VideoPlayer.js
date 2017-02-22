@@ -6,6 +6,7 @@ const VideoPlayer = ({video}) => {
         <div className="video-player">
             <iframe width="640" height="360" src={videoUrl}></iframe>
             <h3>{video.snippet.title}</h3>
+            <p>{video.snippet.description}</p>
         </div>
     );
 };
