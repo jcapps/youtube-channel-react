@@ -3,9 +3,9 @@ import React, {PropTypes} from 'react';
 const VideoPlayer = ({videoId, videoTitle}) => {
     const videoUrl = "https://www.youtube.com/embed/" + videoId;
     return (
-        <div>
-            <h3>{videoTitle}</h3>
+        <div className="video-player">
             <iframe width="640" height="360" src={videoUrl}></iframe>
+            <h3>{videoTitle}</h3>
         </div>
     );
 };

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
 import VideoPlayer from '../common/VideoPlayer';
-import VideoThumbnail from '../common/VideoThumbnail';
+import VideoThumbnail from './VideoThumbnail';
 
 class PlaylistPage extends React.Component {
     constructor(props) {
@@ -49,7 +49,11 @@ class PlaylistPage extends React.Component {
     }
 
     changeVideo(e) {
-        this.setState({ videoInPlaylist: e.target.parentNode.id });
+        let element = e.target;
+        while (!element.classList.contains("playlist-video")) {
+            element = element.parentNode;
+        }
+        this.setState({ videoInPlaylist: element.id });
     }
 
     loadMoreVideos() {
@@ -81,8 +85,6 @@ class PlaylistPage extends React.Component {
             return(
                 <div id="playlist-page">
                     <h2>{this.state.playlistInfo.snippet.title}</h2>
-                    <VideoPlayer videoId={playlist[nowPlaying].snippet.resourceId.videoId} videoTitle={playlist[nowPlaying].snippet.title}/>
-                    <br/>
                     <div id="video-list">
                         {playlist.map(playlistItem => {
                             let video = playlistItem.snippet;
@@ -101,6 +103,9 @@ class PlaylistPage extends React.Component {
                         })}
                         {this.renderViewMore()}
                     </div>
+                    <VideoPlayer 
+                        videoId={playlist[nowPlaying].snippet.resourceId.videoId} 
+                        videoTitle={playlist[nowPlaying].snippet.title}/>
                 </div>
             );
         }

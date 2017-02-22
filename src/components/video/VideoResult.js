@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
-import VideoThumbnail from '../common/VideoThumbnail';
 
 class VideoResult extends React.Component {
     constructor(props) {
@@ -39,7 +38,12 @@ class VideoResult extends React.Component {
         if (video.snippet) {
             return (
                 <div className="video-thumbnail">
-                    <VideoThumbnail videoId={video.id}/>
+                    <img 
+                        height="90" 
+                        width="160" 
+                        title={video.snippet.title} 
+                        src={video.snippet.thumbnails.medium.url} 
+                        alt={video.snippet.title}/>
                     <div>
                         <h4>{video.snippet.title}</h4>
                         <p>{video.snippet.description}</p>

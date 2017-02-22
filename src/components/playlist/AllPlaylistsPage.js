@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
-import PlaylistThumbnail from '../common/PlaylistThumbnail';
+import PlaylistThumbnail from './PlaylistThumbnail';
 
 class AllPlaylistsPage extends React.Component {
     constructor(props) {
