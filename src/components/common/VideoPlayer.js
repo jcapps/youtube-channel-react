@@ -6,14 +6,17 @@ const VideoPlayer = ({video}) => {
     return (
         <div className="video-player">
             <iframe width="640" height="360" src={videoUrl}></iframe>
-            <h3>{video.snippet.title}</h3>
-            <p>
-                {videoDescription.map(piece => {
-                    return (
-                        <span key={piece}>{piece}<br/></span>
-                    );
-                })}
-            </p>
+            <div className="video-details">
+                <h3>{video.snippet.title}</h3>
+                <hr/>
+                <p>
+                    {videoDescription.map(piece => {
+                        return (
+                            <span key={piece}>{piece}<br/></span>
+                        );
+                    })}
+                </p>
+            </div>
         </div>
     );
 };

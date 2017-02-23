@@ -1,0 +1,14 @@
+.video-player {
+    .video-details{
+        margin: 0 auto;
+        padding: 5px;
+        border: 2px solid $grid-border;
+        max-width: 640px;
+
+        hr {
+            margin: 5px auto;
+            max-width: 400px;
+            border-color: $grid-border;
+        }
+    }
+}
