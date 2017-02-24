@@ -125,13 +125,13 @@ class PlaylistPage extends React.Component {
                             if (video.position == nowPlaying) {
                                 return (
                                     <div className="playlist-video selected" id={nowPlaying} key={nowPlaying} onClick={this.changeVideo}>
-                                        <VideoThumbnail videoId={video.resourceId.videoId}/>
+                                        <VideoThumbnail videoId={video.resourceId.videoId} playlistIndex={nowPlaying}/>
                                     </div>
                                 );
                             }
                             return (
                                 <div className="playlist-video" id={video.position} key={video.position} onClick={this.changeVideo}>
-                                    <VideoThumbnail videoId={video.resourceId.videoId}/>
+                                    <VideoThumbnail videoId={video.resourceId.videoId} playlistIndex={video.position}/>
                                 </div>
                             );
                         })}
