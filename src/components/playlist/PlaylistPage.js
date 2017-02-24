@@ -72,8 +72,7 @@ class PlaylistPage extends React.Component {
         this.props.videoActions.getVideo(videoId).then(() => {
             this.setState({
                 currentVideo: Object.assign({}, this.props.currentVideo),
-                videoInPlaylist: element.id,
-                isLoading: false
+                videoInPlaylist: element.id
             });
         });
     }
@@ -81,7 +80,13 @@ class PlaylistPage extends React.Component {
     updatePlaylist(playlistIndex) {
         const nowPlaying = this.state.videoInPlaylist;
         if (nowPlaying != playlistIndex) {
-            this.setState({videoInPlaylist: playlistIndex});
+            const videoId = this.state.playlist[playlistIndex].snippet.resourceId.videoId;
+            this.props.videoActions.getVideo(videoId).then(() => {
+                this.setState({
+                    currentVideo: Object.assign({}, this.props.currentVideo),
+                    videoInPlaylist: playlistIndex
+                });
+            });
         }
     }
 
@@ -132,7 +137,11 @@ class PlaylistPage extends React.Component {
                         })}
                         {this.renderViewMore()}
                     </div>
-                    <VideoPlayer video={this.state.currentVideo} playlistId={this.props.playlistId} updatePlaylist={this.updatePlaylist}/>
+                    <VideoPlayer 
+                        video={this.state.currentVideo} 
+                        playlistIndex={this.state.videoInPlaylist}
+                        playlistId={this.props.playlistId} 
+                        updatePlaylist={this.updatePlaylist}/>
                 </div>
             );
         }

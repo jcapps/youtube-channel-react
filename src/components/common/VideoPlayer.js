@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import YouTubePlayer from 'youtube-player';
 
+let player;
+
 class VideoPlayer extends React.Component {
     constructor(props) {
         super(props);
@@ -24,13 +26,25 @@ class VideoPlayer extends React.Component {
             };
         }
         
-        let player = YouTubePlayer('player-iframe', params);
+        player = YouTubePlayer('player-iframe', params);
+        player.on('ready', e => {
+            let playlistIndex = e.target.getPlaylistIndex(); // -1 if not a playlist
+            if (playlistIndex > -1) {
+                player.playVideoAt(this.props.playlistIndex);
+            }
+        });
         player.on('stateChange', e => {
             let playlistIndex = e.target.getPlaylistIndex(); // -1 if not a playlist
             if (playlistIndex > -1) {
                 this.props.updatePlaylist(playlistIndex);
             }
         });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.playlistIndex != nextProps.playlistIndex) {
+            player.playVideoAt(nextProps.playlistIndex);
+        }
     }
 
     render() {
@@ -57,6 +71,7 @@ class VideoPlayer extends React.Component {
 
 VideoPlayer.propTypes = {
     video: PropTypes.object.isRequired,
+    playlistIndex: PropTypes.number,
     playlistId: PropTypes.string,
     updatePlaylist: PropTypes.func
 };
