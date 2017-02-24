@@ -60,9 +60,7 @@ class VideoPlayer extends React.Component {
         return (
             <div className="video-player">
                 <div id="player-iframe"></div>
-                <VideoPlayerDescription 
-                    video={this.props.video} 
-                    videoDescription={this.props.video.snippet.description}/>
+                <VideoPlayerDescription video={this.props.video} />
             </div>
         );
     }

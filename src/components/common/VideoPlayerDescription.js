@@ -1,11 +1,13 @@
 import React, {PropTypes} from 'react';
 
-const VideoPlayerDescription = ({video, videoDescription}) => {
-    let description = videoDescription.split("\n");
+const VideoPlayerDescription = ({video}) => {
+    let description = video.snippet.description.split("\n");
+    let title = video.snippet.title.split(/\|(.+)/);
 
     return (
         <div className="video-details">
-            <h3>{video.snippet.title}</h3>
+            <h3>{title[0].trim()}</h3>
+            <h4>{title[1].trim()}</h4>
             <hr/>
             <p>
                 {description.map(piece => {
@@ -19,8 +21,7 @@ const VideoPlayerDescription = ({video, videoDescription}) => {
 };
 
 VideoPlayerDescription.propTypes = {
-    video: PropTypes.object.isRequired,
-    videoDescription: PropTypes.string.isRequired
+    video: PropTypes.object.isRequired
 };
 
 export default VideoPlayerDescription;
