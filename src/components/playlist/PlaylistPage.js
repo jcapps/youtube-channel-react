@@ -18,6 +18,7 @@ class PlaylistPage extends React.Component {
             isLoading: true
         };
         this.changeVideo = this.changeVideo.bind(this);
+        this.updatePlaylist = this.updatePlaylist.bind(this);
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
     }
 
@@ -77,6 +78,13 @@ class PlaylistPage extends React.Component {
         });
     }
 
+    updatePlaylist(playlistIndex) {
+        const nowPlaying = this.state.videoInPlaylist;
+        if (nowPlaying != playlistIndex) {
+            this.setState({videoInPlaylist: playlistIndex});
+        }
+    }
+
     loadMoreVideos() {
         const nextPageToken = this.state.videoPageToken.nextPageToken;
         const id = this.props.playlistId;
@@ -124,7 +132,7 @@ class PlaylistPage extends React.Component {
                         })}
                         {this.renderViewMore()}
                     </div>
-                    <VideoPlayer video={this.state.currentVideo}/>
+                    <VideoPlayer video={this.state.currentVideo} playlistId={this.props.playlistId} updatePlaylist={this.updatePlaylist}/>
                 </div>
             );
         }
