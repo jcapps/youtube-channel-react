@@ -6,6 +6,7 @@ import PlaylistPage from './components/playlist/PlaylistPage';
 import AllPlaylistsPage from './components/playlist/AllPlaylistsPage';
 import AllVideosPage from './components/video/AllVideosPage';
 import VideoWatchPage from './components/video/VideoWatchPage';
+import AboutPage from './components/about/AboutPage';
 
 export default (
     <Route path="/" component={App}>
@@ -14,5 +15,6 @@ export default (
         <Route path="/playlists" component={AllPlaylistsPage} />
         <Route path="/videos" component={AllVideosPage} />
         <Route path="/watch(/:id)" component={VideoWatchPage} />
+        <Route path="/about" component={AboutPage} />
     </Route>
 );
