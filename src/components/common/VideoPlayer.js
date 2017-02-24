@@ -9,42 +9,50 @@ class VideoPlayer extends React.Component {
     }
 
     componentDidMount() {
+        this.initializePlayer(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.playlistId != nextProps.playlistId) {
+            this.initializePlayer(nextProps);
+        }
+        if (this.props.playlistIndex != nextProps.playlistIndex) {
+            player.playVideoAt(nextProps.playlistIndex);
+        }
+    }
+
+    initializePlayer(props) {
         let params = {
             height: '360',
             width: '640',
-            videoId: this.props.video.id
+            videoId: props.video.id
         };
 
-        if (this.props.playlistId) {
+        if (props.playlistId) {
             params = {
                 height: '360',
                 width: '640',
                 playerVars: {
                     listType: 'playlist',
-                    list: this.props.playlistId
+                    list: props.playlistId
                 }
             };
         }
         
+        if (player) player.destroy();
         player = YouTubePlayer('player-iframe', params);
         player.on('ready', e => {
             let playlistIndex = e.target.getPlaylistIndex(); // -1 if not a playlist
             if (playlistIndex > -1) {
-                player.playVideoAt(this.props.playlistIndex);
+                player.playVideoAt(props.playlistIndex);
             }
         });
         player.on('stateChange', e => {
             let playlistIndex = e.target.getPlaylistIndex(); // -1 if not a playlist
             if (playlistIndex > -1) {
-                this.props.updatePlaylist(playlistIndex);
+                props.updatePlaylist(playlistIndex);
             }
         });
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.playlistIndex != nextProps.playlistIndex) {
-            player.playVideoAt(nextProps.playlistIndex);
-        }
     }
 
     render() {
