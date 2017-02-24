@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import YouTubePlayer from 'youtube-player';
+import VideoPlayerDescription from './VideoPlayerDescription';
 
 let player;
 
@@ -56,22 +57,12 @@ class VideoPlayer extends React.Component {
     }
 
     render() {
-        let videoDescription = this.props.video.snippet.description.split("\n");
-
         return (
             <div className="video-player">
                 <div id="player-iframe"></div>
-                <div className="video-details">
-                    <h3>{this.props.video.snippet.title}</h3>
-                    <hr/>
-                    <p>
-                        {videoDescription.map(piece => {
-                            return (
-                                <span key={piece}>{piece}<br/></span>
-                            );
-                        })}
-                    </p>
-                </div>
+                <VideoPlayerDescription 
+                    video={this.props.video} 
+                    videoDescription={this.props.video.snippet.description}/>
             </div>
         );
     }
