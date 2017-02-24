@@ -40,7 +40,7 @@ class AllPlaylistsPage extends React.Component {
         if (this.state.playlistPageToken.nextPageToken) {
             return (
                 <a id="view-more" onClick={this.loadMorePlaylists}>
-                    <div>View More</div>
+                    <div><b>View More</b></div>
                 </a>
             );
         }

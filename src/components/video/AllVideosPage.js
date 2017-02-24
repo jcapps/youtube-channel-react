@@ -42,7 +42,7 @@ class AllVideosPage extends React.Component {
         if (this.state.videoPageToken.nextPageToken) {
             return (
                 <a id="view-more" onClick={this.loadMoreVideos}>
-                    <div>View More</div>
+                    <div><b>View More</b></div>
                 </a>
             );
         }
