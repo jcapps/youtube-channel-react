@@ -35,7 +35,7 @@ class VideoThumbnail extends React.Component {
     render() {
         if (this.state.isLoading) return <div></div>;
         let video = this.state.video;
-        let position = this.props.playlistIndex;
+        let position = +this.props.playlistIndex + 1;
         if (video.snippet) {
             return (
                 <div className="video-thumbnail">
@@ -46,7 +46,7 @@ class VideoThumbnail extends React.Component {
                         src={video.snippet.thumbnails.medium.url} 
                         alt={video.snippet.title}/>
                     <div>
-                        <h3>{position + 1}. {video.snippet.title}</h3>
+                        <h3>{position}. {video.snippet.title}</h3>
                         <p>{video.snippet.channelTitle}</p>
                     </div>
                 </div>
