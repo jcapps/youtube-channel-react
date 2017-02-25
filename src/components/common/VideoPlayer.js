@@ -42,12 +42,6 @@ class VideoPlayer extends React.Component {
         
         if (player) player.destroy();
         player = YouTubePlayer('player-iframe', params);
-        player.on('ready', e => {
-            let playlistIndex = e.target.getPlaylistIndex(); // -1 if not a playlist
-            if (playlistIndex > -1) {
-                player.playVideoAt(props.playlistIndex);
-            }
-        });
         player.on('stateChange', e => {
             let playlistIndex = e.target.getPlaylistIndex(); // -1 if not a playlist
             if (playlistIndex > -1) {
