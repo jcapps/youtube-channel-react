@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
-import PlaylistThumbnail from './PlaylistThumbnail';
+import PlaylistResult from './PlaylistResult';
 
 class AllPlaylistsPage extends React.Component {
     constructor(props) {
@@ -55,7 +55,7 @@ class AllPlaylistsPage extends React.Component {
                 <div id="playlists-list">
                     {playlists.map(playlist =>
                         <Link to={"/playlist/" + playlist.id} key={playlist.id}>
-                            <PlaylistThumbnail playlist={playlist}/>
+                            <PlaylistResult playlist={playlist}/>
                         </Link>
                     )}
                     {this.renderViewMore()}

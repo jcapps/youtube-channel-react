@@ -37,7 +37,7 @@ class VideoResult extends React.Component {
         let video = this.state.video;
         if (video.snippet) {
             return (
-                <div className="video-thumbnail">
+                <div className="video-result">
                     <img 
                         height="90" 
                         width="160" 

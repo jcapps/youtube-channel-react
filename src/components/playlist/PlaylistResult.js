@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 
-const PlaylistThumbnail = ({playlist}) => {
+const PlaylistResult = ({playlist}) => {
     return (
-        <div className="playlist-thumbnail">
+        <div className="playlist-result">
             <img height="90" width="160" src={playlist.snippet.thumbnails.medium.url} alt={playlist.snippet.title}/>
             <div>
                 <h3>{playlist.snippet.title}</h3>
@@ -12,8 +12,8 @@ const PlaylistThumbnail = ({playlist}) => {
     );
 };
 
-PlaylistThumbnail.propTypes = {
+PlaylistResult.propTypes = {
     playlist: PropTypes.object.isRequired
 };
 
-export default PlaylistThumbnail;
+export default PlaylistResult;
