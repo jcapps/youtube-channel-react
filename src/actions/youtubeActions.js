@@ -88,3 +88,17 @@ export function getVideoInfo(videoId) {
         });
     };
 }
+
+/**
+ * Subscribe
+ */
+export function subscribe() {
+    return function(dispatch) {
+        dispatch(beginAjaxCall());
+        return YouTubeApi.subscribe().then(success => {
+            return success;
+        }).catch(error => {
+            throw(error);
+        });
+    };
+}

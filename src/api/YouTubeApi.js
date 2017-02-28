@@ -8,6 +8,7 @@ const channelUrl = apiUrl + 'channels';
 const playlistsUrl = apiUrl + 'playlists';
 const playlistUrl = apiUrl + 'playlistItems';
 const videoUrl = apiUrl + 'videos';
+const subscribeUrl = apiUrl + 'subscriptions';
 
 class YouTubeApi {
     static getChannelDetails() {
@@ -95,6 +96,24 @@ class YouTubeApi {
             axios.get(videoUrl, {params: videoParams}).then(res => {
                 resolve(res.data);
             });
+        });
+    }
+
+    static subscribe() {
+        const subscribeParams = {
+            "snippet": {
+                "resourceId": {
+                    "channelId": CHANNEL_ID
+                }
+            }
+        };
+
+        return new Promise((resolve, reject) => {
+            // axios.post(subscribeUrl, subscribeParams).then(res => {
+            //     console.log(res);
+            //     resolve(res.data);
+            // });
+            resolve(true);
         });
     }
 }

@@ -3,15 +3,20 @@ $lightgray: lightgray;
 $gray: gray;
 $black: #1a1a1a;
 
-$anchorBlue: dodgerblue;
-$anchorPurple: mediumpurple;
+$anchor-blue: dodgerblue;
+$anchor-purple: mediumpurple;
+
+$red: red;
 
 /* Page default colors */
 $page-background: $lightgray;
 $grid-border: $gray;
 $primary: $black;
 $contrast: $white;
-$anchor: $anchorPurple;
+$anchor: $anchor-purple;
+$youtube-red: darken($red, 10%);
+$youtube-lightred: $red;
+$youtube-border: darken($red, 25%);
 
 /* Header colors */
 $header-primary: $black;
@@ -19,4 +24,4 @@ $header-contrast: $white;
 $header-title: $gray;
 
 /* Selected video's shadow color */
-$selected-shadow: $anchorPurple;
+$selected-shadow: $anchor-purple;

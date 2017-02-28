@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 import channelInfo from './channelInfoReducer';
+import subscribeSuccess from './subscribeSuccessReducer';
 import mostRecentUpload from './mostRecentUploadReducer';
 import recentUploadsPlaylistId from './recentUploadsPlaylistIdReducer';
 import allPlaylists from './allPlaylistsReducer';
@@ -14,6 +15,7 @@ import videoInPlaylist from './videoInPlaylistReducer';
 const rootReducer = combineReducers({
     ajaxCallsInProgress,
     channelInfo,
+    subscribeSuccess,
     mostRecentUpload,
     recentUploadsPlaylistId,
     allPlaylists,

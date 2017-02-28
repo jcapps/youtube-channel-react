@@ -25,4 +25,30 @@ header {
         display: inline-block;
         vertical-align: middle;
     }
+
+    #titlebar, #subscribe {
+        display: inline-block;
+    }
+
+    #subscribe {
+        float: right;
+        margin: 10px;
+
+        button {
+            padding: 7px 14px;
+            font-weight: bold;
+            color: $contrast;
+            background-color: $youtube-red;
+            border: 2px solid $youtube-border;
+            border-radius: 10px;
+
+            &:hover {
+                background-color: $youtube-lightred;
+            }
+
+            &:active {
+                background-color: $youtube-red;
+            }
+        }
+    }
 }
