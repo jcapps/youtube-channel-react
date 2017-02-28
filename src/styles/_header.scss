@@ -7,10 +7,22 @@ header {
     width: 100%;
 
     #titlebar {
-        height: 40px;
+        height: 60px;
+
+        img {
+            height: 40px;
+            width: 40px;
+            margin: 10px;
+            border-radius: 50%;
+        }
 
         h3 {
-            padding-left: 20px;
+            margin: 0;
         }
+    }
+
+    #titlebar > * {
+        display: inline-block;
+        vertical-align: middle;
     }
 }
