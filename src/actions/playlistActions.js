@@ -97,8 +97,8 @@ export function getRecentUploadsPlaylist() {
         const apiActions = bindActionCreators(youtubeActions, dispatch);
 
         dispatch(beginAjaxCall());
-        return apiActions.getChannelContent().then(channelContent => {
-            let playlistId = channelContent.contentDetails.relatedPlaylists.uploads;
+        return apiActions.getChannelDetails().then(channelContent => {
+            let playlistId = channelContent.items[0].contentDetails.relatedPlaylists.uploads;
             dispatch(getRecentUploadsPlaylistIdSuccess(playlistId));
             dispatch(beginAjaxCall());
             return apiActions.getPlaylist(playlistId).then(playlist => {

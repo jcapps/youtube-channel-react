@@ -1,4 +1,5 @@
 export default {
+    channelInfo: {},
     mostRecentUpload: {},
     recentUploadsPlaylistId: "",
     allPlaylists: [],

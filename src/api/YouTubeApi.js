@@ -10,7 +10,7 @@ const playlistUrl = apiUrl + 'playlistItems';
 const videoUrl = apiUrl + 'videos';
 
 class YouTubeApi {
-    static getChannelContent() {
+    static getChannelDetails() {
         const channelParams = {
             key: KEY,
             id: CHANNEL_ID,

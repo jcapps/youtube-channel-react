@@ -5,12 +5,8 @@ import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/VideoPlayer';
 
 class AboutPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
     render() {
+        console.log(this.props.channel);
         return (
             <div>
                 <h3>About My Channel</h3>
@@ -19,6 +15,14 @@ class AboutPage extends React.Component {
     }
 }
 
-AboutPage.propTypes = {};
+AboutPage.propTypes = {
+    channel: PropTypes.object.isRequired
+};
 
-export default AboutPage;
+function mapStateToProps(state) {
+    return {
+        channel: state.channelInfo
+    };
+}
+
+export default connect(mapStateToProps, null)(AboutPage);

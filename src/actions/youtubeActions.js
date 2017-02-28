@@ -4,14 +4,13 @@ import YouTubeApi from '../api/YouTubeApi';
 
 /**
  * Retrieve information about the YouTube channel
- * (Contains info about related playlists such as 
- * uploads, watch history, and watch later)
+ * (Contains channel name, description, profile image)
  */
 export function getChannelInfo() {
     return function(dispatch) {
         dispatch(beginAjaxCall());
         return YouTubeApi.getChannelInfo().then(channelInfo => {
-            return channelInfo.items[0];
+            return channelInfo;
         }).catch(error => {
             throw(error);
         });
@@ -19,14 +18,15 @@ export function getChannelInfo() {
 }
 
 /**
- * Retrieve YouTube channel content
- * (Contains channel name, description, profile image)
+ * Retrieve YouTube channel details
+ * (Contains info about related playlists such as 
+ * uploads, watch history, and watch later)
  */
-export function getChannelContent() {
+export function getChannelDetails() {
     return function(dispatch) {
         dispatch(beginAjaxCall());
-        return YouTubeApi.getChannelContent().then(channelContent => {
-            return channelContent.items[0];
+        return YouTubeApi.getChannelDetails().then(channelContent => {
+            return channelContent;
         }).catch(error => {
             throw(error);
         });
