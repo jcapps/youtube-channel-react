@@ -141,6 +141,8 @@ class YouTubeApi {
                                         toastr.error(res.error.message);
                                     }
                                 });
+                            } else {
+                                toastr.error("Unable to sign in.");
                             }
                             let scriptToRemove = document.getElementById('gapiScript');
                             scriptToRemove.parentNode.removeChild(scriptToRemove);
