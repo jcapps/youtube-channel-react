@@ -1,5 +1,7 @@
 import axios from 'axios';
+import toastr from 'toastr';
 
+const CLIENT_ID = process.env.CLIENT_ID;
 const KEY = process.env.YOUTUBE_KEY;
 const CHANNEL_ID = process.env.CHANNEL_ID;
 
@@ -101,19 +103,50 @@ class YouTubeApi {
 
     static subscribe() {
         const subscribeParams = {
-            "snippet": {
-                "resourceId": {
-                    "channelId": CHANNEL_ID
+            'part': 'id, snippet',
+            'snippet': {
+                'resourceId': {
+                    'kind': 'youtube#channel',
+                    'channelId': CHANNEL_ID
                 }
             }
         };
 
         return new Promise((resolve, reject) => {
-            // axios.post(subscribeUrl, subscribeParams).then(res => {
-            //     console.log(res);
-            //     resolve(res.data);
-            // });
-            resolve(true);
+            let GoogleAuth;
+            let gapiScript = document.createElement('script');
+            gapiScript.id = 'gapiScript';
+            gapiScript.src = 'https://apis.google.com/js/api.js';
+            gapiScript.onload = () => {
+                /* eslint-disable no-undef */
+                gapi.load('client:auth2', () => {
+                    gapi.client.init({
+                        'apiKey': KEY,
+                        'clientId': CLIENT_ID,
+                        'scope': 'https://www.googleapis.com/auth/youtube',
+                        'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest']
+                    }).then(() => {
+                        GoogleAuth = gapi.auth2.getAuthInstance();
+                        GoogleAuth.signIn().then(() => {
+                            if (GoogleAuth.isSignedIn.get()) {
+                                let request = gapi.client.youtube.subscriptions.insert(subscribeParams);
+                                request.execute(res => {
+                                    toastr.options = { positionClass: "toastr-center" };
+                                    if (res.result) {
+                                        toastr.success("Subscribed!");
+                                    } else {
+                                        toastr.error(res.error.message);
+                                    }
+                                });
+                            }
+                            let scriptToRemove = document.getElementById('gapiScript');
+                            scriptToRemove.parentNode.removeChild(scriptToRemove);
+                            resolve();
+                        });
+                    });
+                });
+            };
+            document.getElementsByTagName('head')[0].appendChild(gapiScript);
         });
     }
 }

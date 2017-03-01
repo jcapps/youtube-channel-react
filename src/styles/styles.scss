@@ -32,3 +32,9 @@ html, #app {
         text-align: center;
     }
 }
+
+.toastr-center {
+    top: calc(50% - 28px);
+    left: calc(50% - 150px);
+    margin: 0 auto;
+}

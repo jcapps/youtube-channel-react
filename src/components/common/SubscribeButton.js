@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as channelActions from '../../actions/channelActions';
+import * as youtubeActions from '../../actions/youtubeActions';
 
 class SubscribeButton extends React.Component {
     constructor() {
@@ -14,7 +14,6 @@ class SubscribeButton extends React.Component {
     }
 
     render() {
-        console.log(this.props.success);
         return (
             <div id="subscribe">
                 <button onClick={this.subscribe}>Subscribe</button>
@@ -24,20 +23,13 @@ class SubscribeButton extends React.Component {
 }
 
 SubscribeButton.propTypes = {
-    success: PropTypes.bool.isRequired,
     actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state) {
-    return {
-        success: state.subscribeSuccess
-    };
-}
-
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(channelActions, dispatch)
+        actions: bindActionCreators(youtubeActions, dispatch)
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubscribeButton);
+export default connect(null, mapDispatchToProps)(SubscribeButton);

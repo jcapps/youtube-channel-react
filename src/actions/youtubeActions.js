@@ -95,8 +95,8 @@ export function getVideoInfo(videoId) {
 export function subscribe() {
     return function(dispatch) {
         dispatch(beginAjaxCall());
-        return YouTubeApi.subscribe().then(success => {
-            return success;
+        return YouTubeApi.subscribe().then(() => {
+            return;
         }).catch(error => {
             throw(error);
         });
