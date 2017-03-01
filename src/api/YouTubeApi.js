@@ -5,12 +5,15 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const KEY = process.env.YOUTUBE_KEY;
 const CHANNEL_ID = process.env.CHANNEL_ID;
 
+const googleClientApiUrl = 'https://apis.google.com/js/api.js';
 const apiUrl = 'https://www.googleapis.com/youtube/v3/';
 const channelUrl = apiUrl + 'channels';
 const playlistsUrl = apiUrl + 'playlists';
 const playlistUrl = apiUrl + 'playlistItems';
 const videoUrl = apiUrl + 'videos';
 const subscribeUrl = apiUrl + 'subscriptions';
+const subscribeScope = 'https://www.googleapis.com/auth/youtube';
+const subscribeDiscoveryDocs = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
 
 class YouTubeApi {
     static getChannelDetails() {
@@ -116,15 +119,15 @@ class YouTubeApi {
             let GoogleAuth;
             let gapiScript = document.createElement('script');
             gapiScript.id = 'gapiScript';
-            gapiScript.src = 'https://apis.google.com/js/api.js';
+            gapiScript.src = googleClientApiUrl;
             gapiScript.onload = () => {
                 /* eslint-disable no-undef */
                 gapi.load('client:auth2', () => {
                     gapi.client.init({
                         'apiKey': KEY,
                         'clientId': CLIENT_ID,
-                        'scope': 'https://www.googleapis.com/auth/youtube',
-                        'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest']
+                        'scope': subscribeScope,
+                        'discoveryDocs': subscribeDiscoveryDocs
                     }).then(() => {
                         GoogleAuth = gapi.auth2.getAuthInstance();
                         GoogleAuth.signIn().then(() => {
