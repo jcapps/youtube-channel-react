@@ -13,7 +13,7 @@ class PlaylistPage extends React.Component {
             playlist: Object.assign([]),
             playlistInfo: Object.assign({}),
             videoPageToken: Object.assign({}),
-            videoInPlaylist: props.videoInPlaylist,
+            videoInPlaylist: 0,
             currentVideo: Object.assign({}),
             isLoading: true
         };
@@ -28,7 +28,7 @@ class PlaylistPage extends React.Component {
                 playlist: Object.assign([], this.props.playlist),
                 videoPageToken: Object.assign({}, this.props.videoPageToken)
             });
-            const videoId = this.props.playlist[this.props.videoInPlaylist].snippet.resourceId.videoId;
+            const videoId = this.props.playlist[this.state.videoInPlaylist].snippet.resourceId.videoId;
             this.props.videoActions.getVideo(videoId).then(() => {
                 this.setState({
                     currentVideo: Object.assign({}, this.props.currentVideo),
@@ -72,7 +72,7 @@ class PlaylistPage extends React.Component {
         this.props.videoActions.getVideo(videoId).then(() => {
             this.setState({
                 currentVideo: Object.assign({}, this.props.currentVideo),
-                videoInPlaylist: element.id
+                videoInPlaylist: parseInt(element.id)
             });
         });
     }
@@ -84,7 +84,7 @@ class PlaylistPage extends React.Component {
             this.props.videoActions.getVideo(videoId).then(() => {
                 this.setState({
                     currentVideo: Object.assign({}, this.props.currentVideo),
-                    videoInPlaylist: playlistIndex
+                    videoInPlaylist: parseInt(playlistIndex)
                 });
             });
         }
@@ -139,7 +139,7 @@ class PlaylistPage extends React.Component {
                     </div>
                     <VideoPlayer 
                         video={this.state.currentVideo} 
-                        playlistIndex={this.state.videoInPlaylist}
+                        playlistIndex={nowPlaying}
                         playlistId={this.props.playlistId} 
                         updatePlaylist={this.updatePlaylist}/>
                 </div>
@@ -154,7 +154,6 @@ PlaylistPage.propTypes = {
     playlistInfo: PropTypes.object.isRequired,
     playlistId: PropTypes.string.isRequired,
     videoPageToken: PropTypes.object.isRequired,
-    videoInPlaylist: PropTypes.number.isRequired,
     currentVideo: PropTypes.object.isRequired,
     playlistActions: PropTypes.object.isRequired,
     videoActions: PropTypes.object.isRequired
@@ -166,7 +165,6 @@ function mapStateToProps(state, ownProps) {
         playlistInfo: state.playlistInfo,
         playlistId: ownProps.params.id,
         videoPageToken: state.videoPageToken,
-        videoInPlaylist: state.videoInPlaylist,
         currentVideo: state.video
     };
 }
