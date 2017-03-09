@@ -1,4 +1,3 @@
-import {bindActionCreators} from 'redux';
 import * as types from './actionTypes';
 import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 import * as youtubeActions from './youtubeActions';
@@ -9,9 +8,8 @@ export function getChannelInfoSuccess(channelInfo) {
 
 export function getChannelInfo() {
     return function(dispatch) {
-        const apiActions = bindActionCreators(youtubeActions, dispatch);
         dispatch(beginAjaxCall());
-        return apiActions.getChannelInfo().then(channelInfo => {
+        return youtubeActions.getChannelInfo().then(channelInfo => {
             dispatch(getChannelInfoSuccess(channelInfo));
         }).catch(error => {
             throw(error);

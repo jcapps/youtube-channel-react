@@ -14,10 +14,8 @@ export function getMostRecentUploadSuccess(video) {
 
 export function getVideo(id) {
     return function(dispatch) {
-        const apiActions = bindActionCreators(youtubeActions, dispatch);
-
         dispatch(beginAjaxCall());
-        return apiActions.getVideoInfo(id).then(video => {
+        return youtubeActions.getVideoInfo(id).then(video => {
             dispatch(getVideoSuccess(video));
         });
     };
@@ -25,13 +23,12 @@ export function getVideo(id) {
 
 export function getMostRecentUpload() {
     return function(dispatch) {
-        const apiActions = bindActionCreators(youtubeActions, dispatch);
         const helperActions = bindActionCreators(playlistActions, dispatch);
 
         dispatch(beginAjaxCall());
         return helperActions.getRecentUploadsPlaylist().then(playlist => {
             let videoId = playlist.items[0].snippet.resourceId.videoId;
-            return apiActions.getVideoInfo(videoId).then(video => {
+            return youtubeActions.getVideoInfo(videoId).then(video => {
                 dispatch(getMostRecentUploadSuccess(video));
             });
         });

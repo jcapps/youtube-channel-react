@@ -1,4 +1,3 @@
-import {bindActionCreators} from 'redux';
 import * as types from './actionTypes';
 import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 import * as youtubeActions from './youtubeActions';
@@ -33,10 +32,8 @@ export function getRecentUploadsPlaylistSuccess(playlist) {
 
 export function getAllPlaylists() {
     return function(dispatch) {
-        const apiActions = bindActionCreators(youtubeActions, dispatch);
-
         dispatch(beginAjaxCall());
-        return apiActions.getAllPlaylists().then(playlists => {
+        return youtubeActions.getAllPlaylists().then(playlists => {
             dispatch(getAllPlaylistsSuccess(playlists));
         });
     };
@@ -44,10 +41,8 @@ export function getAllPlaylists() {
 
 export function getNextPlaylists(nextPageToken) {
     return function(dispatch, getState) {
-        const apiActions = bindActionCreators(youtubeActions, dispatch);
-
         dispatch(beginAjaxCall());
-        return apiActions.getAllPlaylists(nextPageToken).then(playlists => {
+        return youtubeActions.getAllPlaylists(nextPageToken).then(playlists => {
             const state = getState();
             const allPlaylists = [...state.allPlaylists, ...playlists.items];
             playlists.items = allPlaylists;
@@ -58,10 +53,8 @@ export function getNextPlaylists(nextPageToken) {
 
 export function getPlaylist(id) {
     return function(dispatch) {
-        const apiActions = bindActionCreators(youtubeActions, dispatch);
-
         dispatch(beginAjaxCall());
-        return apiActions.getPlaylist(id).then(playlist => {
+        return youtubeActions.getPlaylist(id).then(playlist => {
             dispatch(getPlaylistSuccess(playlist));
         });
     };
@@ -69,10 +62,8 @@ export function getPlaylist(id) {
 
 export function getNextVideos(id, nextPageToken) {
     return function(dispatch, getState) {
-        const apiActions = bindActionCreators(youtubeActions, dispatch);
-
         dispatch(beginAjaxCall());
-        return apiActions.getPlaylist(id, nextPageToken).then(videos => {
+        return youtubeActions.getPlaylist(id, nextPageToken).then(videos => {
             const state = getState();
             const playlist = [...state.playlist, ...videos.items];
             videos.items = playlist;
@@ -83,10 +74,8 @@ export function getNextVideos(id, nextPageToken) {
 
 export function getPlaylistInfo(id) {
     return function(dispatch) {
-        const apiActions = bindActionCreators(youtubeActions, dispatch);
-
         dispatch(beginAjaxCall());
-        return apiActions.getPlaylistInfo(id).then(playlist => {
+        return youtubeActions.getPlaylistInfo(id).then(playlist => {
             dispatch(getPlaylistInfoSuccess(playlist));
         });
     };
@@ -94,14 +83,12 @@ export function getPlaylistInfo(id) {
 
 export function getRecentUploadsPlaylist() {
     return function(dispatch) {
-        const apiActions = bindActionCreators(youtubeActions, dispatch);
-
         dispatch(beginAjaxCall());
-        return apiActions.getChannelDetails().then(channelContent => {
+        return youtubeActions.getChannelDetails().then(channelContent => {
             let playlistId = channelContent.items[0].contentDetails.relatedPlaylists.uploads;
             dispatch(getRecentUploadsPlaylistIdSuccess(playlistId));
             dispatch(beginAjaxCall());
-            return apiActions.getPlaylist(playlistId).then(playlist => {
+            return youtubeActions.getPlaylist(playlistId).then(playlist => {
                 dispatch(getRecentUploadsPlaylistSuccess(playlist));
                 return playlist;
             });

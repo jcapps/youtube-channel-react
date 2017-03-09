@@ -1,6 +1,4 @@
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React from 'react';
 import * as youtubeActions from '../../actions/youtubeActions';
 
 class SubscribeButton extends React.Component {
@@ -10,7 +8,7 @@ class SubscribeButton extends React.Component {
     }
 
     subscribe() {
-        this.props.actions.subscribe();
+        youtubeActions.subscribe();
     }
 
     render() {
@@ -22,14 +20,4 @@ class SubscribeButton extends React.Component {
     }
 }
 
-SubscribeButton.propTypes = {
-    actions: PropTypes.object.isRequired
-};
-
-function mapDispatchToProps(dispatch) {
-    return {
-        actions: bindActionCreators(youtubeActions, dispatch)
-    };
-}
-
-export default connect(null, mapDispatchToProps)(SubscribeButton);
+export default SubscribeButton;
