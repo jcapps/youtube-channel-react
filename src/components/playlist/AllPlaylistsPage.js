@@ -10,8 +10,7 @@ class AllPlaylistsPage extends React.Component {
         super(props);
         this.state = { 
             playlists: Object.assign([]),
-            playlistPageToken: Object.assign({}, props.playlistPageToken),
-            isLoading: true
+            playlistPageToken: Object.assign({}, props.playlistPageToken)
         };
         this.loadMorePlaylists = this.loadMorePlaylists.bind(this);
     }
@@ -20,8 +19,7 @@ class AllPlaylistsPage extends React.Component {
         this.props.actions.getAllPlaylists().then(() => {
             this.setState({ 
                 playlists: Object.assign([], this.props.playlists),
-                playlistPageToken: Object.assign({}, this.props.playlistPageToken),
-                isLoading: false
+                playlistPageToken: Object.assign({}, this.props.playlistPageToken)
             });
         });
     }
@@ -47,7 +45,9 @@ class AllPlaylistsPage extends React.Component {
     }
 
     render() {
-        if (this.state.isLoading) return <div></div>;
+        if (this.props.isLoading) {
+            return <div>Loading...</div>;
+        }
         const playlists = this.state.playlists;
         return (
             <div id="playlists-page">
@@ -68,13 +68,15 @@ class AllPlaylistsPage extends React.Component {
 AllPlaylistsPage.propTypes = {
     playlists: PropTypes.array.isRequired,
     playlistPageToken: PropTypes.object.isRequired,
+    isLoading: PropTypes.bool.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
     return { 
         playlists: state.allPlaylists,
-        playlistPageToken: state.playlistPageToken
+        playlistPageToken: state.playlistPageToken,
+        isLoading: state.ajaxCallsInProgress > 0
     };
 }
 

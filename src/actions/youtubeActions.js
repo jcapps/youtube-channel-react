@@ -8,7 +8,6 @@ import YouTubeApi from '../api/YouTubeApi';
  */
 export function getChannelInfo() {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
         return YouTubeApi.getChannelInfo().then(channelInfo => {
             return channelInfo;
         }).catch(error => {
@@ -24,7 +23,6 @@ export function getChannelInfo() {
  */
 export function getChannelDetails() {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
         return YouTubeApi.getChannelDetails().then(channelContent => {
             return channelContent;
         }).catch(error => {
@@ -38,7 +36,6 @@ export function getChannelDetails() {
  */
 export function getAllPlaylists(pageToken = "") {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
         return YouTubeApi.getAllPlaylists(pageToken).then(playlists => {
             return playlists;
         }).catch(error => {
@@ -52,7 +49,6 @@ export function getAllPlaylists(pageToken = "") {
  */
 export function getPlaylist(playlistId, pageToken = "") {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
         return YouTubeApi.getPlaylist(playlistId, pageToken).then(playlist => {
             return playlist;
         }).catch(error => {
@@ -66,7 +62,6 @@ export function getPlaylist(playlistId, pageToken = "") {
  */
 export function getPlaylistInfo(playlistId) {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
         return YouTubeApi.getPlaylistInfo(playlistId).then(playlist => {
             return playlist;
         }).catch(error => {
@@ -80,7 +75,6 @@ export function getPlaylistInfo(playlistId) {
  */
 export function getVideoInfo(videoId) {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
         return YouTubeApi.getVideo(videoId).then(video => {
             return video;
         }).catch(error => {
@@ -94,7 +88,6 @@ export function getVideoInfo(videoId) {
  */
 export function subscribe() {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
         return YouTubeApi.subscribe().then(() => {
             return;
         }).catch(error => {

@@ -19,6 +19,9 @@ class HomePage extends React.Component {
     }
 
     render() {
+        if (this.props.isLoading) {
+            return <div>Loading...</div>;
+        }
         const mostRecentUpload = this.state.mostRecentUpload;
         if (mostRecentUpload.id) {
             return(
@@ -34,11 +37,15 @@ class HomePage extends React.Component {
 
 HomePage.propTypes = {
     mostRecentUpload: PropTypes.object.isRequired,
+    isLoading: PropTypes.bool.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-    return { mostRecentUpload: state.mostRecentUpload };
+    return { 
+        mostRecentUpload: state.mostRecentUpload,
+        isLoading: state.ajaxCallsInProgress > 0
+    };
 }
 
 function mapDispatchToProps(dispatch) {
