@@ -45,9 +45,6 @@ class AllPlaylistsPage extends React.Component {
     }
 
     render() {
-        if (this.props.isLoading) {
-            return <div>Loading...</div>;
-        }
         const playlists = this.state.playlists;
         return (
             <div id="playlists-page">
@@ -68,15 +65,13 @@ class AllPlaylistsPage extends React.Component {
 AllPlaylistsPage.propTypes = {
     playlists: PropTypes.array.isRequired,
     playlistPageToken: PropTypes.object.isRequired,
-    isLoading: PropTypes.bool.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
     return { 
         playlists: state.allPlaylists,
-        playlistPageToken: state.playlistPageToken,
-        isLoading: state.ajaxCallsInProgress > 0
+        playlistPageToken: state.playlistPageToken
     };
 }
 
