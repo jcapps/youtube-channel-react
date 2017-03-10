@@ -5,24 +5,9 @@ import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/VideoPlayer';
 
 class HomePage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            mostRecentUpload: Object.assign({}, props.mostRecentUpload)
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.mostRecentUpload.id) {
-            this.setState({ mostRecentUpload: Object.assign({}, nextProps.mostRecentUpload) });
-        }
-    }
-
     render() {
-        if (this.props.isLoading) {
-            return <div>Loading...</div>;
-        }
-        const mostRecentUpload = this.state.mostRecentUpload;
+        if (this.props.isLoading) { return <div></div>; }
+        const mostRecentUpload = this.props.mostRecentUpload;
         if (mostRecentUpload.id) {
             return(
                 <div id="home-page">
