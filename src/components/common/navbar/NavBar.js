@@ -6,16 +6,26 @@ import * as playlistActions from '../../../actions/playlistActions';
 import PlaylistLink from './PlaylistLink';
 
 class NavBar extends React.Component {
-    componentDidMount() {
-        let lis = document.getElementsByClassName("has-submenu");
-        for (let li of lis) {
-            li.onmouseover = () => {
-                li.children[1].classList.remove("hidden");
-            };
-            li.onmouseout = () => {
-                li.children[1].classList.add("hidden");
-            };
+    constructor() {
+        super();
+        this.showSubmenu = this.showSubmenu.bind(this);
+        this.hideSubmenu = this.hideSubmenu.bind(this);
+    }
+
+    showSubmenu(e) {
+        let element = e.target;
+        while (!element.classList.contains("has-submenu")) {
+            element = element.parentNode;
         }
+        element.children[1].classList.remove("hidden");
+    }
+
+    hideSubmenu(e) {
+        let element = e.target;
+        while (!element.classList.contains("has-submenu")) {
+            element = element.parentNode;
+        }
+        element.children[1].classList.add("hidden");
     }
 
     render() {
@@ -24,7 +34,7 @@ class NavBar extends React.Component {
             <nav>
                 <ul>
                     <li><IndexLink to="/"><div>Home</div></IndexLink></li>
-                    <li className="has-submenu">
+                    <li className="has-submenu" onMouseOver={this.showSubmenu} onMouseOut={this.hideSubmenu}>
                         <Link to="/playlists"><div>Playlists</div></Link>
                         <ul className="hidden">
                             {allPlaylists.slice(0, 5).map(playlist => <PlaylistLink key={playlist.id} playlist={playlist} />)}
