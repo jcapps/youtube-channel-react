@@ -6,13 +6,6 @@ import * as playlistActions from '../../../actions/playlistActions';
 import PlaylistLink from './PlaylistLink';
 
 class NavBar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            allPlaylists: Object.assign([], props.allPlaylists)
-        };
-    }
-
     componentDidMount() {
         let lis = document.getElementsByClassName("has-submenu");
         for (let li of lis) {
