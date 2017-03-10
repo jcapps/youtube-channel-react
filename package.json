@@ -61,7 +61,7 @@
     "html-webpack-plugin": "2.26.0",
     "jsdom": "8.5.0",
     "mocha": "2.4.5",
-    "nock": "8.0.0",
+    "moxios": "^0.3.0",
     "node-sass": "4.3.0",
     "npm-run-all": "1.8.0",
     "open": "0.0.5",
