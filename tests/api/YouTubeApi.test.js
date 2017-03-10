@@ -3,10 +3,6 @@ import moxios from 'moxios';
 import YouTubeApi from '../../src/api/YouTubeApi';
 import {YOUTUBE_INFO} from '../../tools/private/youtubeInfo';
 
-//const KEY = YOUTUBE_INFO.API_KEY;
-//const CHANNEL_ID = YOUTUBE_INFO.CHANNEL_ID;
-//'/youtube/v3/channels?key=AIzaSyBZxV9xDjJwG0_Vrfqf6IPikLV4VdyIhPA&id=UCSijnYFYz5vMIntY_rdkWwQ&part=contentDetails'
-
 describe('YouTube API', () => {
     beforeEach(() => {
         moxios.install();
