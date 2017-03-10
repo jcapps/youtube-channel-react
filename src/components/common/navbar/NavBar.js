@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import {Link, IndexLink} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as playlistActions from '../../../actions/playlistActions';
 import PlaylistLink from './PlaylistLink';
 
 class NavBar extends React.Component {
@@ -57,8 +56,4 @@ function mapStateToProps(state) {
     return { allPlaylists: state.allPlaylists };
 }
 
-function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators(playlistActions, dispatch) };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default connect(mapStateToProps)(NavBar);
