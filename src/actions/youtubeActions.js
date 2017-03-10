@@ -52,8 +52,8 @@ export function getPlaylist(playlistId, pageToken = "") {
  * Retrieve playlist information given the playlist ID
  */
 export function getPlaylistInfo(playlistId) {
-    return YouTubeApi.getPlaylistInfo(playlistId).then(playlist => {
-        return playlist;
+    return YouTubeApi.getPlaylistInfo(playlistId).then(playlistInfo => {
+        return playlistInfo;
     }).catch(error => {
         throw(error);
     });
