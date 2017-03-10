@@ -5,10 +5,6 @@ import VideoPlayerDescription from './VideoPlayerDescription';
 let player;
 
 class VideoPlayer extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
         this.initializePlayer(this.props);
     }
