@@ -6,36 +6,22 @@ import * as playlistActions from '../../actions/playlistActions';
 import PlaylistResult from './PlaylistResult';
 
 export class AllPlaylistsPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { 
-            playlists: Object.assign([]),
-            playlistPageToken: Object.assign({}, props.playlistPageToken)
-        };
+    constructor() {
+        super();
         this.loadMorePlaylists = this.loadMorePlaylists.bind(this);
     }
 
     componentWillMount() {
-        this.props.actions.getAllPlaylists().then(() => {
-            this.setState({ 
-                playlists: Object.assign([], this.props.playlists),
-                playlistPageToken: Object.assign({}, this.props.playlistPageToken)
-            });
-        });
+        this.props.actions.getAllPlaylists();
     }
 
     loadMorePlaylists() {
-        const nextPageToken = this.state.playlistPageToken.nextPageToken;
-        this.props.actions.getNextPlaylists(nextPageToken).then(() => {
-            this.setState({ 
-                playlists: Object.assign([], this.props.playlists),
-                playlistPageToken: Object.assign({}, this.props.playlistPageToken)
-            });
-        });
+        const nextPageToken = this.props.playlistPageToken.nextPageToken;
+        this.props.actions.getNextPlaylists(nextPageToken);
     }
 
     renderViewMore() {
-        if (this.state.playlistPageToken.nextPageToken) {
+        if (this.props.playlistPageToken.nextPageToken) {
             return (
                 <a id="view-more" onClick={this.loadMorePlaylists}>
                     <div><b>View More</b></div>
@@ -45,7 +31,7 @@ export class AllPlaylistsPage extends React.Component {
     }
 
     render() {
-        const playlists = this.state.playlists;
+        const playlists = this.props.playlists;
         return (
             <div id="playlists-page">
                 <h2>Playlists</h2>

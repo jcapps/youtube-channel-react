@@ -6,40 +6,23 @@ import * as playlistActions from '../../actions/playlistActions';
 import VideoResult from './VideoResult';
 
 export class AllVideosPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { 
-            playlist: Object.assign([]),
-            playlistId: props.playlistId,
-            videoPageToken: props.videoPageToken,
-            isLoading: true
-        };
+    constructor() {
+        super();
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
     }
 
     componentWillMount() {
-        this.props.actions.getRecentUploadsPlaylist().then(() => {
-            this.setState({ 
-                playlist: Object.assign([], this.props.playlist),
-                videoPageToken: Object.assign({}, this.props.videoPageToken),
-                isLoading: false
-            });
-        });
+        this.props.actions.getRecentUploadsPlaylist();
     }
 
     loadMoreVideos() {
-        const nextPageToken = this.state.videoPageToken.nextPageToken;
+        const nextPageToken = this.props.videoPageToken.nextPageToken;
         const id = this.props.playlistId;
-        this.props.actions.getNextVideos(id, nextPageToken).then(() => {
-            this.setState({ 
-                playlist: Object.assign([], this.props.playlist),
-                videoPageToken: Object.assign({}, this.props.videoPageToken)
-            });
-        });
+        this.props.actions.getNextVideos(id, nextPageToken);
     }
 
     renderViewMore() {
-        if (this.state.videoPageToken.nextPageToken) {
+        if (this.props.videoPageToken.nextPageToken) {
             return (
                 <a id="view-more" onClick={this.loadMoreVideos}>
                     <div><b>View More</b></div>
@@ -49,8 +32,7 @@ export class AllVideosPage extends React.Component {
     }
 
     render() {
-        const playlist = this.state.playlist;
-        if (this.state.isLoading) return <div></div>;
+        const playlist = this.props.playlist;
         return (
             <div id="videos-page">
                 <h2>Videos</h2>
