@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
 import VideoResult from './VideoResult';
 
-class AllVideosPage extends React.Component {
+export class AllVideosPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 

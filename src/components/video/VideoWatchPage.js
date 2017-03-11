@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/VideoPlayer';
 
-class VideoWatchPage extends React.Component {
+export class VideoWatchPage extends React.Component {
     componentWillMount() {
         this.props.actions.getVideo(this.props.videoId);
     }

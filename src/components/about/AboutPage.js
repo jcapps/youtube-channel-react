@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 
-class AboutPage extends React.Component {
+export class AboutPage extends React.Component {
     render() {
         let profilePicUrl = this.props.channel.snippet.thumbnails.medium.url;
         let description = this.props.channel.snippet.description.split("\n");

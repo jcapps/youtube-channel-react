@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
 import PlaylistResult from './PlaylistResult';
 
-class AllPlaylistsPage extends React.Component {
+export class AllPlaylistsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 

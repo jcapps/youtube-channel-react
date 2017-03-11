@@ -6,7 +6,7 @@ import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/VideoPlayer';
 import VideoThumbnail from './VideoThumbnail';
 
-class PlaylistPage extends React.Component {
+export class PlaylistPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 

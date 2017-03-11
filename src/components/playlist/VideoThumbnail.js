@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
 
-class VideoThumbnail extends React.Component {
+export class VideoThumbnail extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 

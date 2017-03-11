@@ -4,7 +4,7 @@ import TitleBar from './TitleBar';
 import NavBar from './navbar/NavBar';
 import SubscribeButton from './SubscribeButton';
 
-class Header extends React.Component {
+export class Header extends React.Component {
     render() {
         return (
             <header>

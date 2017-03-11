@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/VideoPlayer';
 
-class HomePage extends React.Component {
+export class HomePage extends React.Component {
     render() {
         if (this.props.isLoading) { return <div></div>; }
         const mostRecentUpload = this.props.mostRecentUpload;
