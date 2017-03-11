@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/VideoPlayer';
 
 export class HomePage extends React.Component {
@@ -22,8 +21,7 @@ export class HomePage extends React.Component {
 
 HomePage.propTypes = {
     mostRecentUpload: PropTypes.object.isRequired,
-    isLoading: PropTypes.bool.isRequired,
-    actions: PropTypes.object.isRequired
+    isLoading: PropTypes.bool.isRequired
 };
 
 function mapStateToProps(state) {
@@ -33,8 +31,4 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators(videoActions, dispatch) };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps)(HomePage);
