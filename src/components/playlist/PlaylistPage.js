@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
 import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/VideoPlayer';
-import VideoThumbnail from './VideoThumbnail';
+import VideoThumbnail from './VideoThumbnail'; // eslint-disable-line import/no-named-as-default
 
 export class PlaylistPage extends React.Component {
     constructor(props) {
@@ -69,7 +69,7 @@ export class PlaylistPage extends React.Component {
 
     changeVideo(e) {
         let element = e.target;
-        while (!element.classList.contains("playlist-video")) {
+        while (element.className.indexOf("playlist-video") < 0) {
             element = element.parentNode;
         }
         const videoId = this.state.playlist[element.id].snippet.resourceId.videoId;
