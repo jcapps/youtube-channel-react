@@ -28,13 +28,15 @@ export class PlaylistPage extends React.Component {
                 playlist: Object.assign([], this.props.playlist),
                 videoPageToken: Object.assign({}, this.props.videoPageToken)
             });
-            const videoId = this.props.playlist[this.state.videoInPlaylist].snippet.resourceId.videoId;
-            this.props.videoActions.getVideo(videoId).then(() => {
-                this.setState({
-                    currentVideo: Object.assign({}, this.props.currentVideo),
-                    isLoading: false
+            if (this.props.playlist.length > 0) {
+                const videoId = this.props.playlist[this.state.videoInPlaylist].snippet.resourceId.videoId;
+                this.props.videoActions.getVideo(videoId).then(() => {
+                    this.setState({
+                        currentVideo: Object.assign({}, this.props.currentVideo),
+                        isLoading: false
+                    });
                 });
-            });
+            }
         });
         this.props.playlistActions.getPlaylistInfo(this.props.playlistId).then(() => {
             this.setState({ playlistInfo: Object.assign({}, this.props.playlistInfo) });
@@ -49,13 +51,15 @@ export class PlaylistPage extends React.Component {
                     videoPageToken: Object.assign({}, this.props.videoPageToken),
                     videoInPlaylist: 0
                 });
-                const videoId = this.props.playlist[0].snippet.resourceId.videoId;
-                this.props.videoActions.getVideo(videoId).then(() => {
-                    this.setState({
-                        currentVideo: Object.assign({}, this.props.currentVideo),
-                        isLoading: false
+                if (this.props.playlist.length > 0) {
+                    const videoId = this.props.playlist[0].snippet.resourceId.videoId;
+                    this.props.videoActions.getVideo(videoId).then(() => {
+                        this.setState({
+                            currentVideo: Object.assign({}, this.props.currentVideo),
+                            isLoading: false
+                        });
                     });
-                });
+                }
             });
             this.props.playlistActions.getPlaylistInfo(nextProps.params.id).then(() => {
                 this.setState({ playlistInfo: Object.assign({}, this.props.playlistInfo) });
