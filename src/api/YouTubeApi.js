@@ -11,7 +11,6 @@ const channelUrl = apiUrl + 'channels';
 const playlistsUrl = apiUrl + 'playlists';
 const playlistUrl = apiUrl + 'playlistItems';
 const videoUrl = apiUrl + 'videos';
-const subscribeUrl = apiUrl + 'subscriptions';
 const subscribeScope = 'https://www.googleapis.com/auth/youtube';
 const subscribeDiscoveryDocs = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
 
