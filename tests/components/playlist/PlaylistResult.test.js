@@ -28,6 +28,7 @@ describe('Playlist Result', () => {
         expect(image.prop('height')).toEqual('90');
         expect(image.prop('width')).toEqual('160');
         expect(image.prop('src')).toEqual('test.url');
+        expect(image.prop('title')).toEqual('Playlist Title');
         expect(image.prop('alt')).toEqual('Playlist Title');
     });
 
