@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import YouTubePlayer from 'youtube-player';
 import VideoPlayerDescription from './VideoPlayerDescription';
+import VideoPlayerStats from './VideoPlayerStats';
 
 let player;
 
@@ -50,6 +51,7 @@ class VideoPlayer extends React.Component {
         return (
             <div className="video-player">
                 <div id="player-iframe"></div>
+                <VideoPlayerStats video={this.props.video} />
                 <VideoPlayerDescription video={this.props.video} />
             </div>
         );

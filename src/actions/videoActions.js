@@ -16,7 +16,11 @@ export function getVideo(id) {
     return function(dispatch) {
         dispatch(beginAjaxCall());
         return youtubeActions.getVideoInfo(id).then(video => {
-            dispatch(getVideoSuccess(video));
+            return youtubeActions.getVideoStats(id).then(videoStats => {
+                const combinedInfo = Object.assign(video.items[0], videoStats.items[0]);
+                const newVideo = {items: [combinedInfo]}
+                dispatch(getVideoSuccess(newVideo));
+            });
         });
     };
 }
@@ -29,7 +33,11 @@ export function getMostRecentUpload() {
         return helperActions.getRecentUploadsPlaylist().then(playlist => {
             let videoId = playlist.items[0].snippet.resourceId.videoId;
             return youtubeActions.getVideoInfo(videoId).then(video => {
-                dispatch(getMostRecentUploadSuccess(video));
+                return youtubeActions.getVideoStats(videoId).then(videoStats => {
+                    const combinedInfo = Object.assign(video.items[0], videoStats.items[0]);
+                    const newVideo = {items: [combinedInfo]}
+                    dispatch(getMostRecentUploadSuccess(newVideo));
+                });
             });
         });
     };

@@ -71,6 +71,17 @@ export function getVideoInfo(videoId) {
 }
 
 /**
+ * Retrieve video statistics given its ID
+ */
+export function getVideoStats(videoId) {
+    return YouTubeApi.getVideoStats(videoId).then(video => {
+        return video;
+    }).catch(error => {
+        throw(error);
+    });
+}
+
+/**
  * Subscribe
  */
 export function subscribe() {

@@ -3,11 +3,80 @@
         margin: 5px auto;
     }
 
+    .video-stats {
+        margin: 0 auto;
+        max-width: 640px;
+
+        #like-bar-container {
+            font-size: 0;
+
+            #like-bar {
+                @extend .rating-bar;
+                float: left;
+                background-color: $green;
+                width: 0;
+            }
+
+            #dislike-bar {
+                @extend .rating-bar;
+                float: right;
+                background-color: $red;
+                width: 0;
+            }
+
+            #like-bar.displayed, #dislike-bar.displayed {
+                transition: width 2s ease-in-out;
+            }
+
+            #empty-bar {
+                @extend .rating-bar;
+                background-color: $gray;
+                width: 100%;
+            }
+
+            .rating-bar {
+                margin: 0;
+                height: 15px;
+            }
+        }
+
+        #stats {
+            clear: both;
+            font-size: 14pt;
+
+            #likes-dislikes {
+                float: left;
+                text-align: left;
+            }
+
+            #likes {
+                color: $green;
+            }
+
+            #dislikes {
+                color: $red;
+            }
+
+            #views {
+                float: right;
+                text-align: right;
+            }
+
+            #end-stats {
+                clear: both;
+            }
+        }
+    }
+
     .video-details {
         margin: 5px auto;
         border: 2px solid $grid-border;
         max-width: 640px;
         background-color: $contrast;
+
+        .date-published {
+            font-weight: bold;
+        }
 
         hr {
             margin: 5px auto;

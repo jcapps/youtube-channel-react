@@ -103,6 +103,20 @@ class YouTubeApi {
         });
     }
 
+    static getVideoStats(id) {
+        const statsParams = {
+            key: KEY,
+            id: id,
+            part: 'statistics'
+        };
+
+        return new Promise((resolve, reject) => {
+            axios.get(videoUrl, {params: statsParams}).then(res => {
+                resolve(res.data);
+            });
+        });
+    }
+
     static subscribe() {
         const subscribeParams = {
             'part': 'id, snippet',
