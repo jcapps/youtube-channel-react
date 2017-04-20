@@ -12,7 +12,7 @@ describe('All Videos Page', () => {
     let mockGetRecentUploadsPlaylist;
     let mockGetNextVideos;
     beforeEach(() => {
-        // arrange video.snippet.resourceId.videoId
+        // arrange
         props = {
             playlist: [
                 {snippet: {title: 'Title 1', resourceId: {videoId: '1'}}},
