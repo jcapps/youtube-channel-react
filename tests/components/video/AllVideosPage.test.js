@@ -61,7 +61,7 @@ describe('All Videos Page', () => {
     it('Should create list of videos', () => {
         // act
         const component = shallow(<AllVideosPage {...props}/>);
-        const list = component.find('#video-list');
+        const list = component.find('.search-list');
         const links = list.find(Link);
 
         // assert
@@ -81,7 +81,7 @@ describe('All Videos Page', () => {
     it('Should create "View More" link if has nextPageToken', () => {
         // act
         const component = shallow(<AllVideosPage {...props}/>);
-        const list = component.find('#video-list');
+        const list = component.find('.search-list');
         const link = list.find('a');
 
         // assert
@@ -92,7 +92,7 @@ describe('All Videos Page', () => {
     it('Should load more results when "View More" is clicked', () => {
         // act
         const component = shallow(<AllVideosPage {...props}/>);
-        const list = component.find('#video-list');
+        const list = component.find('.search-list');
         const link = list.find('a');
 
         link.simulate('click');

@@ -7,6 +7,7 @@ import AllPlaylistsPage from './components/playlist/AllPlaylistsPage';
 import AllVideosPage from './components/video/AllVideosPage';
 import VideoWatchPage from './components/video/VideoWatchPage';
 import AboutPage from './components/about/AboutPage';
+import SearchResultsPage from './components/search/SearchResultsPage';
 
 export default (
     <Route path="/" component={App}>
@@ -16,5 +17,6 @@ export default (
         <Route path="/videos" component={AllVideosPage} />
         <Route path="/watch(/:id)" component={VideoWatchPage} />
         <Route path="/about" component={AboutPage} />
+        <Route path="/search(/:q)" component={SearchResultsPage} />
     </Route>
 );

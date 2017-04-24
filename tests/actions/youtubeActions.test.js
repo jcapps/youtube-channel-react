@@ -46,33 +46,24 @@ describe('YouTube Actions', () => {
     });
 
     describe('getAllPlaylists', () => {
+        // arrange
+        const playlists = [];
+
+        let mockAction = sinon.stub(YouTubeApi, 'getAllPlaylists');
+        mockAction.returns(new Promise((resolve, reject) => {
+            resolve(playlists);
+        }));
+
         it('Should return playlists', (done) => {
-            // arrange
-            const playlists = [];
-
-            let mockAction = sinon.stub(YouTubeApi, 'getAllPlaylists');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(playlists);
-            }));
-
             // act
             youtubeActions.getAllPlaylists().then(result => {
                 // assert
                 expect(result).toEqual(playlists);
-                mockAction.restore();
                 done();
             });
         });
 
         it('Should return playlists when given a pageToken', (done) => {
-            // arrange
-            const playlists = [];
-
-            let mockAction = sinon.stub(YouTubeApi, 'getAllPlaylists');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(playlists);
-            }));
-
             // act
             youtubeActions.getAllPlaylists("TOKEN").then(result => {
                 // assert
@@ -84,33 +75,24 @@ describe('YouTube Actions', () => {
     });
 
     describe('getPlaylist', () => {
+        // arrange
+        const playlist = [];
+
+        let mockAction = sinon.stub(YouTubeApi, 'getPlaylist');
+        mockAction.returns(new Promise((resolve, reject) => {
+            resolve(playlist);
+        }));
+
         it('Should return a playlist when given a playlistId', (done) => {
-            // arrange
-            const playlist = [];
-
-            let mockAction = sinon.stub(YouTubeApi, 'getPlaylist');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(playlist);
-            }));
-
             // act
             youtubeActions.getPlaylist("ID").then(result => {
                 // assert
                 expect(result).toEqual(playlist);
-                mockAction.restore();
                 done();
             });
         });
 
         it('Should return a playlist when given a playlistId and a pageToken', (done) => {
-            // arrange
-            const playlist = [];
-
-            let mockAction = sinon.stub(YouTubeApi, 'getPlaylist');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(playlist);
-            }));
-
             // act
             youtubeActions.getPlaylist("ID", "TOKEN").then(result => {
                 // assert
@@ -155,6 +137,35 @@ describe('YouTube Actions', () => {
             youtubeActions.getVideoInfo("ID").then(result => {
                 // assert
                 expect(result).toEqual(video);
+                mockAction.restore();
+                done();
+            });
+        });
+    });
+
+    describe('searchChannel', () => {
+        // arrange
+        const results = {};
+
+        let mockAction = sinon.stub(YouTubeApi, 'search');
+        mockAction.returns(new Promise((resolve, reject) => {
+            resolve(results);
+        }));
+
+        it('Should return results when given a search query', (done) => {
+            // act
+            youtubeActions.searchChannel("QUERY").then(result => {
+                // assert
+                expect(result).toEqual(results);
+                done();
+            });
+        });
+
+        it('Should return results when given a search query and a pageToken', (done) => {
+            // act
+            youtubeActions.searchChannel("QUERY", "TOKEN").then(result => {
+                // assert
+                expect(result).toEqual(results);
                 mockAction.restore();
                 done();
             });

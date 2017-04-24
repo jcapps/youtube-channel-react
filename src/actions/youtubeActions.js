@@ -82,6 +82,17 @@ export function getVideoStats(videoId) {
 }
 
 /**
+ * Search channel for playlists/videos given a search query
+ */
+export function searchChannel(query, pageToken = "") {
+    return YouTubeApi.search(query, pageToken).then(result => {
+        return result;
+    }).catch(error => {
+        throw(error);
+    });
+}
+
+/**
  * Subscribe
  */
 export function subscribe() {

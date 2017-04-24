@@ -27,6 +27,40 @@ describe('Channel Actions', () => {
         });
     });
 
+    describe('getSearchResultsSuccess', () => {
+        it('Should create a GET_SEARCH_RESULTS_SUCCESS action', () => {
+            // arrange
+            const result = [];
+            const expectedAction = {
+                type: types.GET_SEARCH_RESULTS_SUCCESS,
+                result: result
+            };
+
+            // act
+            const action = channelActions.getSearchResultsSuccess(result);
+
+            // assert
+            expect(action).toEqual(expectedAction);
+        });
+    });
+
+    describe('getNextResultsSuccess', () => {
+        it('Should create a GET_NEXT_RESULTS_SUCCESS action', () => {
+            // arrange
+            const result = [];
+            const expectedAction = {
+                type: types.GET_NEXT_RESULTS_SUCCESS,
+                result: result
+            };
+
+            // act
+            const action = channelActions.getNextResultsSuccess(result);
+
+            // assert
+            expect(action).toEqual(expectedAction);
+        });
+    });
+
     describe('getChannelInfo', () => {
         it('Should dispatch BEGIN_AJAX_CALL and GET_CHANNEL_INFO_SUCCESS actions', (done) => {
             // arrange
@@ -49,6 +83,62 @@ describe('Channel Actions', () => {
                 // assert
                 expect(actions[0].type).toEqual(types.BEGIN_AJAX_CALL);
                 expect(actions[1].type).toEqual(types.GET_CHANNEL_INFO_SUCCESS);
+                mockAction.restore();
+                done();
+            });
+        });
+    });
+
+    describe('getSearchResults', () => {
+        it('Should dispatch BEGIN_AJAX_CALL and GET_SEARCH_RESULTS_SUCCESS actions', (done) => {
+            // arrange
+            const result = [];
+            const expectedAction = {
+                type: types.GET_SEARCH_RESULTS_SUCCESS,
+                result: result
+            };
+            
+            const store = mockStore({searchResults: result}, expectedAction);
+
+            let mockAction = sinon.stub(youtubeActions, 'searchChannel');
+            mockAction.returns(new Promise((resolve, reject) => {
+                resolve(result);
+            }));
+
+            // act
+            store.dispatch(channelActions.getSearchResults("QUERY")).then(() => {
+                const actions = store.getActions();
+                // assert
+                expect(actions[0].type).toEqual(types.BEGIN_AJAX_CALL);
+                expect(actions[1].type).toEqual(types.GET_SEARCH_RESULTS_SUCCESS);
+                mockAction.restore();
+                done();
+            });
+        });
+    });
+
+    describe('getNextResults', () => {
+        it('Should dispatch BEGIN_AJAX_CALL and GET_NEXT_RESULTS_SUCCESS actions', (done) => {
+            // arrange
+            const result = [];
+            const expectedAction = {
+                type: types.GET_NEXT_RESULTS_SUCCESS,
+                result: result
+            };
+            
+            const store = mockStore({searchResults: result}, expectedAction);
+
+            let mockAction = sinon.stub(youtubeActions, 'searchChannel');
+            mockAction.returns(new Promise((resolve, reject) => {
+                resolve({items: []});
+            }));
+
+            // act
+            store.dispatch(channelActions.getNextResults("QUERY", "TOKEN")).then(() => {
+                const actions = store.getActions();
+                // assert
+                expect(actions[0].type).toEqual(types.BEGIN_AJAX_CALL);
+                expect(actions[1].type).toEqual(types.GET_NEXT_RESULTS_SUCCESS);
                 mockAction.restore();
                 done();
             });

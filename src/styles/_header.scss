@@ -26,8 +26,15 @@ header {
         vertical-align: middle;
     }
 
-    #titlebar, #subscribe {
+    #titlebar,
+    #subscribe,
+    #navbar,
+    #searchbar {
         display: inline-block;
+    }
+
+    #subscribe, #searchbar {
+        float: right;
     }
 
     #subscribe {
@@ -49,6 +56,27 @@ header {
             &:active {
                 background-color: $youtube-red;
             }
+        }
+    }
+
+    #searchbar {
+        margin: 5px 15px;
+
+        #search-img {
+            margin-right: 7px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        #search {
+            border-radius: 15px;
+            text-indent: 12px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        #search:focus {
+            outline: none;
+            box-shadow: 0 0 2pt 1pt $anchor-blue;
         }
     }
 }

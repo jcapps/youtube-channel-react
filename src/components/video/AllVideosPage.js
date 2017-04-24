@@ -34,9 +34,9 @@ export class AllVideosPage extends React.Component {
     render() {
         const playlist = this.props.playlist;
         return (
-            <div id="videos-page">
+            <div className="search-results">
                 <h2>Videos</h2>
-                <div id="video-list">
+                <div className="search-list">
                     {playlist.map(video => {
                         const id = video.snippet.resourceId.videoId;
                         return (

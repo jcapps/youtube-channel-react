@@ -159,4 +159,60 @@ describe('Store', () => {
         const result = store.getState().video;
         expect(result).toEqual(expected);
     });
+
+    it('Should handle setting searchResults', () => {
+        // arrange
+        const searchResults = {
+            items: [{video: 'A'}, {playlist: 'B'}],
+            pageInfo: {totalResults: 10}
+        };
+
+        // act
+        const action = channelActions.getSearchResultsSuccess(searchResults);
+        store.dispatch(action);
+
+        // assert
+        const expected = [{video: 'A'}, {playlist: 'B'}];
+        const result = store.getState().searchResults;
+        expect(result).toEqual(expected);
+    });
+
+    it('Should handle setting searchInfo', () => {
+        // arrange
+        const searchResults = {
+            items: [{video: 'A'}, {playlist: 'B'}],
+            pageInfo: {totalResults: 10}
+        };
+
+        // act
+        const action = channelActions.getSearchResultsSuccess(searchResults);
+        store.dispatch(action);
+
+        // assert
+        const expected = {totalResults: 10};
+        const result = store.getState().searchInfo;
+        expect(result).toEqual(expected);
+    });
+
+    it('Should handle setting searchPageToken', () => {
+        // arrange
+        const searchResults = {
+            items: [{video: 'A'}, {playlist: 'B'}],
+            pageInfo: {totalResults: 10},
+            prevPageToken: 'XXXXX',
+            nextPageToken: 'YYYYY'
+        };
+
+        // act
+        const action = channelActions.getSearchResultsSuccess(searchResults);
+        store.dispatch(action);
+
+        // assert
+        const expected = {
+            prevPageToken: 'XXXXX',
+            nextPageToken: 'YYYYY'
+        };
+        const result = store.getState().searchPageToken;
+        expect(result).toEqual(expected);
+    });
 });

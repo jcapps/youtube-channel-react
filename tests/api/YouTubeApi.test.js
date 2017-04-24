@@ -158,4 +158,40 @@ describe('YouTube API', () => {
             });
         });
     });
+
+    describe('search', () => {
+        it('Should make call to YouTube API and get results when passed a search query', (done) => {
+            // arrange
+            const expectedResult = {items: []};
+
+            moxios.stubRequest(/https:\/\/www.googleapis.com\/youtube\/v3\/search.*/, {
+                status: 200,
+                response: expectedResult
+            });
+
+            // act
+            YouTubeApi.search("QUERY").then(result => {
+                // assert
+                expect(result).toEqual(expectedResult);
+                done();
+            });
+        });
+
+        it('Should make call to YouTube API and get results when passed a search query and a pageToken', (done) => {
+            // arrange
+            const expectedResult = {items: []};
+
+            moxios.stubRequest(/https:\/\/www.googleapis.com\/youtube\/v3\/search.*/, {
+                status: 200,
+                response: expectedResult
+            });
+
+            // act
+            YouTubeApi.search("QUERY", "TOKEN").then(result => {
+                // assert
+                expect(result).toEqual(expectedResult);
+                done();
+            });
+        });
+    });
 });

@@ -11,6 +11,7 @@ const channelUrl = apiUrl + 'channels';
 const playlistsUrl = apiUrl + 'playlists';
 const playlistUrl = apiUrl + 'playlistItems';
 const videoUrl = apiUrl + 'videos';
+const searchUrl = apiUrl + 'search';
 const subscribeScope = 'https://www.googleapis.com/auth/youtube';
 const subscribeDiscoveryDocs = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
 
@@ -112,6 +113,24 @@ class YouTubeApi {
 
         return new Promise((resolve, reject) => {
             axios.get(videoUrl, {params: statsParams}).then(res => {
+                resolve(res.data);
+            });
+        });
+    }
+
+    static search(query, pageToken = "") {
+        const searchParams = {
+            key: KEY,
+            channelId: CHANNEL_ID,
+            maxResults: '25',
+            part: 'snippet',
+            q: query,
+            type: 'playlist,video',
+            pageToken: pageToken
+        };
+
+        return new Promise((resolve, reject) => {
+            axios.get(searchUrl, {params: searchParams}).then(res => {
                 resolve(res.data);
             });
         });

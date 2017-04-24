@@ -9,6 +9,9 @@ import videoPageToken from './videoPageTokenReducer';
 import playlist from './playlistReducer';
 import playlistInfo from './playlistInfoReducer';
 import video from './videoReducer';
+import searchResults from './searchResultsReducer';
+import searchInfo from './searchInfoReducer';
+import searchPageToken from './searchPageTokenReducer';
 
 const rootReducer = combineReducers({
     ajaxCallsInProgress,
@@ -20,7 +23,10 @@ const rootReducer = combineReducers({
     videoPageToken,
     playlist,
     playlistInfo,
-    video
+    video,
+    searchResults,
+    searchInfo,
+    searchPageToken
 });
 
 export default rootReducer;

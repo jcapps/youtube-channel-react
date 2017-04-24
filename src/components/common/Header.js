@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import TitleBar from './TitleBar';
 import NavBar from './navbar/NavBar';
+import SearchBar from './SearchBar';
 import SubscribeButton from './SubscribeButton';
 
 export class Header extends React.Component {
@@ -12,7 +13,10 @@ export class Header extends React.Component {
                     <TitleBar channel={this.props.channel}/>
                     <SubscribeButton/>
                 </div>
-                <NavBar/>
+                <div>
+                    <NavBar/>
+                    <SearchBar/>
+                </div>
             </header>
         );
     }

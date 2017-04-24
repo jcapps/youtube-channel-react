@@ -33,9 +33,9 @@ export class AllPlaylistsPage extends React.Component {
     render() {
         const playlists = this.props.playlists;
         return (
-            <div id="playlists-page">
+            <div className="search-results">
                 <h2>Playlists</h2>
-                <div id="playlists-list">
+                <div className="search-list">
                     {playlists.map(playlist =>
                         <Link to={"/playlist/" + playlist.id} key={playlist.id}>
                             <PlaylistResult playlist={playlist}/>

@@ -5,6 +5,7 @@ import {Header} from '../../../src/components/common/Header';
 import TitleBar from '../../../src/components/common/TitleBar';
 import SubscribeButton from '../../../src/components/common/SubscribeButton';
 import NavBar from '../../../src/components/common/navbar/NavBar';
+import SearchBar from '../../../src/components/common/SearchBar';
 
 describe('Header', () => {
     let props;
@@ -38,5 +39,14 @@ describe('Header', () => {
 
         // assert
         expect(navbar.length).toEqual(1);
+    });
+
+    it('Should create the SearchBar', () => {
+        // act
+        const component = shallow(<Header {...props}/>);
+        const searchbar = component.find(SearchBar);
+
+        // assert
+        expect(searchbar.length).toEqual(1);
     });
 });

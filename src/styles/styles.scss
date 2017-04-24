@@ -5,8 +5,7 @@
 @import 'navbar';
 @import 'player';
 @import 'playlist';
-@import 'playlists';
-@import 'videos';
+@import 'search';
 
 html, #app {
     background-color: $page-background;
@@ -23,6 +22,12 @@ html, #app {
 
     a:hover {
         cursor: pointer;
+    }
+
+    input {
+        height: 30px;
+        width: 200px;
+        border-style: none;
     }
 
     #content {

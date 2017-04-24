@@ -1,15 +1,25 @@
-#playlists-page {
-    #playlists-list {
+.search-results {
+    .results-found {
+        color: $green;
+    }
+
+    .no-results {
+        color: $red;
+    }
+
+    .search-list {
         margin: 0 auto;
         width: 1000px;
         border: 1px solid $grid-border;
 
         a {
             color: $primary;
+            text-decoration: none;
         }
     }
 
-    div.playlist-result {
+    .playlist-result,
+    .video-result {
         text-align: left;
         border: 1px solid $grid-border;
 
@@ -24,11 +34,23 @@
             background-color: $contrast;
             color: $anchor;
         }
+    }
 
+    .playlist-result {
         h3 { margin: 10px 0; }
     }
 
-    a#view-more {
+    .video-result {
+        h4 { 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        p { font-size: 10pt; }
+    }
+
+    #view-more {
         div {
             text-align: center;
             vertical-align: middle;
