@@ -3,7 +3,7 @@ import videoPageTokenReducer from '../../src/reducers/videoPageTokenReducer';
 import * as playlistActions from '../../src/actions/playlistActions';
 
 describe('Video Page Token Reducer', () => {
-    it('Should set playlist when passed GET_PLAYLIST_SUCCESS', () => {
+    it('Should set videoPageToken when passed GET_PLAYLIST_SUCCESS', () => {
         // arrange
         const initialState = {prevPageToken: "", nextPageToken: ""};
 
@@ -23,7 +23,7 @@ describe('Video Page Token Reducer', () => {
         });     
     });
 
-    it('Should set playlist when passed GET_RECENT_UPLOADS_PLAYLIST_SUCCESS', () => {
+    it('Should set videoPageToken when passed GET_RECENT_UPLOADS_PLAYLIST_SUCCESS', () => {
         // arrange
         const initialState = {prevPageToken: "", nextPageToken: ""};
 
@@ -43,7 +43,7 @@ describe('Video Page Token Reducer', () => {
         });     
     });
 
-    it('Should set playlist when passed GET_NEXT_VIDEOS_SUCCESS', () => {
+    it('Should set videoPageToken when passed GET_NEXT_VIDEOS_SUCCESS', () => {
         // arrange
         const initialState = {prevPageToken: "", nextPageToken: ""};
 
