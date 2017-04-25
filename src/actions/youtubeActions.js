@@ -71,17 +71,6 @@ export function getVideoInfo(videoId) {
 }
 
 /**
- * Retrieve video statistics given its ID
- */
-export function getVideoStats(videoId) {
-    return YouTubeApi.getVideoStats(videoId).then(video => {
-        return video;
-    }).catch(error => {
-        throw(error);
-    });
-}
-
-/**
  * Search channel for playlists/videos given a search query
  */
 export function searchChannel(query, pageToken = "") {

@@ -61,11 +61,6 @@ describe('Video Actions', () => {
                 resolve(video);
             }));
 
-            let mockAction2 = sinon.stub(youtubeActions, 'getVideoStats');
-            mockAction2.returns(new Promise((resolve, reject) => {
-                resolve(video);
-            }));
-
             // act
             store.dispatch(videoActions.getVideo("ID")).then(() => {
                 const actions = store.getActions();
@@ -73,7 +68,6 @@ describe('Video Actions', () => {
                 expect(actions[0].type).toEqual(types.BEGIN_AJAX_CALL);
                 expect(actions[1].type).toEqual(types.GET_VIDEO_SUCCESS);
                 mockAction.restore();
-                mockAction2.restore();
                 done();
             });
         });
@@ -100,11 +94,6 @@ describe('Video Actions', () => {
                 resolve(video);
             }));
 
-            let mockAction3 = sinon.stub(youtubeActions, 'getVideoStats');
-            mockAction3.returns(new Promise((resolve, reject) => {
-                resolve(video);
-            }));
-
             // act
             store.dispatch(videoActions.getMostRecentUpload()).then(() => {
                 const actions = store.getActions();
@@ -113,7 +102,6 @@ describe('Video Actions', () => {
                 expect(actions[2].type).toEqual(types.GET_MOST_RECENT_UPLOAD_SUCCESS);
                 mockAction.restore();
                 mockAction2.restore();
-                mockAction3.restore();
                 done();
             });
         });

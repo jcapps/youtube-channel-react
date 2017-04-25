@@ -94,25 +94,11 @@ class YouTubeApi {
         const videoParams = {
             key: KEY,
             id: id,
-            part: 'snippet'
+            part: 'snippet,statistics'
         };
 
         return new Promise((resolve, reject) => {
             axios.get(videoUrl, {params: videoParams}).then(res => {
-                resolve(res.data);
-            });
-        });
-    }
-
-    static getVideoStats(id) {
-        const statsParams = {
-            key: KEY,
-            id: id,
-            part: 'statistics'
-        };
-
-        return new Promise((resolve, reject) => {
-            axios.get(videoUrl, {params: statsParams}).then(res => {
                 resolve(res.data);
             });
         });
