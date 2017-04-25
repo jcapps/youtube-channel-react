@@ -50,4 +50,13 @@ describe('About Page', () => {
         expect(descriptionParts.at(0).text()).toEqual('Dummy description.');
         expect(descriptionParts.at(1).text()).toEqual('This is a test.');
     });
+
+    it('Should display "Unable to load About page" if no channelInfo', () => {
+        props.channel = {};
+        // act
+        const component = mount(<AboutPage {...props}/>);
+
+        // assert
+        expect(component.text()).toEqual('(Unable to load About page)');
+    });
 });
