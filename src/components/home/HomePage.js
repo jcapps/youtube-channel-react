@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import VideoPlayer from '../common/VideoPlayer';
+import VideoPlayer from '../common/player/VideoPlayer';
 
 export class HomePage extends React.Component {
     shouldComponentUpdate(nextProps) {

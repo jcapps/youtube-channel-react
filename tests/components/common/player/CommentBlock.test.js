@@ -2,7 +2,7 @@ import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
 import {mount} from 'enzyme';
-import CommentBlock from '../../../src/components/common/CommentBlock';
+import CommentBlock from '../../../../src/components/common/player/CommentBlock';
 
 describe('CommentBlock', () => {
     let props;

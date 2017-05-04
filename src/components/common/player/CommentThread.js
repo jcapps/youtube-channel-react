@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as commentActions from '../../actions/commentActions';
+import * as commentActions from '../../../actions/commentActions';
 import CommentBlock from './CommentBlock';
 
 export class CommentThread extends React.Component {

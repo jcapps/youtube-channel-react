@@ -2,7 +2,7 @@ import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
 import {mount} from 'enzyme';
-import VideoPlayerStats from '../../../src/components/common/VideoPlayerStats';
+import VideoPlayerStats from '../../../../src/components/common/player/VideoPlayerStats';
 
 describe('VideoPlayerStats', () => {
     let props;

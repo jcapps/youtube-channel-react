@@ -2,9 +2,9 @@ import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
-import * as commentActions from '../../../src/actions/commentActions';
-import {VideoPlayerComments} from '../../../src/components/common/VideoPlayerComments';
-import CommentThread from '../../../src/components/common/CommentThread';
+import * as commentActions from '../../../../src/actions/commentActions';
+import {VideoPlayerComments} from '../../../../src/components/common/player/VideoPlayerComments';
+import CommentThread from '../../../../src/components/common/player/CommentThread';
 
 describe('VideoPlayerComments', () => {
     let props;

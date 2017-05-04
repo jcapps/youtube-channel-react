@@ -2,10 +2,10 @@ import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
-import VideoPlayer from '../../../src/components/common/VideoPlayer';
-import VideoPlayerDescription from '../../../src/components/common/VideoPlayerDescription';
-import VideoPlayerStats from '../../../src/components/common/VideoPlayerStats';
-import VideoPlayerComments from '../../../src/components/common/VideoPlayerComments';
+import VideoPlayer from '../../../../src/components/common/player/VideoPlayer';
+import VideoPlayerDescription from '../../../../src/components/common/player/VideoPlayerDescription';
+import VideoPlayerStats from '../../../../src/components/common/player/VideoPlayerStats';
+import VideoPlayerComments from '../../../../src/components/common/player/VideoPlayerComments';
 
 describe('VideoPlayer', () => {
     let props;

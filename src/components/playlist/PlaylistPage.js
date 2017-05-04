@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
 import * as videoActions from '../../actions/videoActions';
-import VideoPlayer from '../common/VideoPlayer';
+import VideoPlayer from '../common/player/VideoPlayer';
 import VideoThumbnail from './VideoThumbnail';
 
 export class PlaylistPage extends React.Component {

@@ -1,7 +1,7 @@
 import React from 'react';
 import expect from 'expect';
 import {mount} from 'enzyme';
-import VideoPlayerDescription from '../../../src/components/common/VideoPlayerDescription';
+import VideoPlayerDescription from '../../../../src/components/common/player/VideoPlayerDescription';
 
 describe('VideoPlayerDescription', () => {
     let props;

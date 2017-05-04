@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import expect from 'expect';
 import {shallow} from 'enzyme';
 import {HomePage} from '../../../src/components/home/HomePage';
-import VideoPlayer from '../../../src/components/common/VideoPlayer';
+import VideoPlayer from '../../../src/components/common/player/VideoPlayer';
 
 describe('Home Page', () => {
     let props;

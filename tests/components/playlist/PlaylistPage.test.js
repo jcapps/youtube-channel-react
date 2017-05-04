@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import {shallow} from 'enzyme';
 import {PlaylistPage} from '../../../src/components/playlist/PlaylistPage';
 import VideoThumbnail from '../../../src/components/playlist/VideoThumbnail';
-import VideoPlayer from '../../../src/components/common/VideoPlayer';
+import VideoPlayer from '../../../src/components/common/player/VideoPlayer';
 import * as playlistActions from '../../../src/actions/playlistActions';
 import * as videoActions from '../../../src/actions/videoActions';
 

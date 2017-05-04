@@ -3,7 +3,7 @@ import expect from 'expect';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
 import {VideoWatchPage} from '../../../src/components/video/VideoWatchPage';
-import VideoPlayer from '../../../src/components/common/VideoPlayer';
+import VideoPlayer from '../../../src/components/common/player/VideoPlayer';
 import * as videoActions from '../../../src/actions/videoActions';
 
 describe('Video Watch Page', () => {
