@@ -159,6 +159,78 @@ describe('YouTube API', () => {
         });
     });
 
+    describe('getCommentThreads', () => {
+        it('Should make call to YouTube API and get comments when passed an ID and sortOrder', (done) => {
+            // arrange
+            const expectedResult = {comments: { items: [] }};
+
+            moxios.stubRequest(/https:\/\/www.googleapis.com\/youtube\/v3\/commentThreads.*/, {
+                status: 200,
+                response: expectedResult
+            });
+
+            // act
+            YouTubeApi.getCommentThreads("ID", "relevance").then(result => {
+                // assert
+                expect(result).toEqual(expectedResult);
+                done();
+            });
+        });
+
+        it('Should make call to YouTube API and get comments when passed an ID, sortOrder, and pageToken', (done) => {
+            // arrange
+            const expectedResult = {comments: { items: [] }};
+
+            moxios.stubRequest(/https:\/\/www.googleapis.com\/youtube\/v3\/commentThreads.*/, {
+                status: 200,
+                response: expectedResult
+            });
+
+            // act
+            YouTubeApi.getCommentThreads("ID", "relevance", "TOKEN").then(result => {
+                // assert
+                expect(result).toEqual(expectedResult);
+                done();
+            });
+        });
+    });
+
+    describe('getReplyThreads', () => {
+        it('Should make call to YouTube API and get replies when passed an ID and maxResults', (done) => {
+            // arrange
+            const expectedResult = {replies: { items: [] }};
+
+            moxios.stubRequest(/https:\/\/www.googleapis.com\/youtube\/v3\/comments.*/, {
+                status: 200,
+                response: expectedResult
+            });
+
+            // act
+            YouTubeApi.getReplyThreads("ID", 10).then(result => {
+                // assert
+                expect(result).toEqual(expectedResult);
+                done();
+            });
+        });
+
+        it('Should make call to YouTube API and get replies when passed an ID, maxResults, and pageToken', (done) => {
+            // arrange
+            const expectedResult = {replies: { items: [] }};
+
+            moxios.stubRequest(/https:\/\/www.googleapis.com\/youtube\/v3\/comments.*/, {
+                status: 200,
+                response: expectedResult
+            });
+
+            // act
+            YouTubeApi.getReplyThreads("ID", 10, "TOKEN").then(result => {
+                // assert
+                expect(result).toEqual(expectedResult);
+                done();
+            });
+        });
+    });
+
     describe('search', () => {
         it('Should make call to YouTube API and get results when passed a search query', (done) => {
             // arrange

@@ -5,6 +5,7 @@ import {shallow} from 'enzyme';
 import VideoPlayer from '../../../src/components/common/VideoPlayer';
 import VideoPlayerDescription from '../../../src/components/common/VideoPlayerDescription';
 import VideoPlayerStats from '../../../src/components/common/VideoPlayerStats';
+import VideoPlayerComments from '../../../src/components/common/VideoPlayerComments';
 
 describe('VideoPlayer', () => {
     let props;
@@ -37,7 +38,7 @@ describe('VideoPlayer', () => {
         expect(description.props().video).toEqual(props.video);
     });
 
-     it('Should create a VideoPlayerStats element', () => {
+    it('Should create a VideoPlayerStats element', () => {
         // act
         const component = shallow(<VideoPlayer {...props}/>);
         const stats = component.find(VideoPlayerStats);
@@ -45,5 +46,16 @@ describe('VideoPlayer', () => {
         // assert
         expect(stats.length).toEqual(1);
         expect(stats.props().video).toEqual(props.video);
+    });
+
+    it('Should create a VideoPlayerComments element', () => {
+        // act
+        const component = shallow(<VideoPlayer {...props}/>);
+        const comments = component.find(VideoPlayerComments);
+
+        // assert
+        expect(comments.length).toEqual(1);
+        expect(comments.props().video).toEqual(props.video);
+        expect(comments.props().videoSeek).toEqual(component.instance().videoSeek);
     });
 });

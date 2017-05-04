@@ -143,6 +143,82 @@ describe('YouTube Actions', () => {
         });
     });
 
+    describe('getVideoComments', () => {
+        it('Should return commentThreads when given a videoId and sortOrder', (done) => {
+            // arrange
+            const commentThreads = {};
+
+            let mockAction = sinon.stub(YouTubeApi, 'getCommentThreads');
+            mockAction.returns(new Promise((resolve, reject) => {
+                resolve(commentThreads);
+            }));
+
+            // act
+            youtubeActions.getVideoComments("ID", "relevance").then(result => {
+                // assert
+                expect(result).toEqual(commentThreads);
+                mockAction.restore();
+                done();
+            });
+        });
+
+        it('Should return commentThreads when given a videoId, sortOrder, and pageToken', (done) => {
+            // arrange
+            const commentThreads = {};
+
+            let mockAction = sinon.stub(YouTubeApi, 'getCommentThreads');
+            mockAction.returns(new Promise((resolve, reject) => {
+                resolve(commentThreads);
+            }));
+
+            // act
+            youtubeActions.getVideoComments("ID", "relevance", "TOKEN").then(result => {
+                // assert
+                expect(result).toEqual(commentThreads);
+                mockAction.restore();
+                done();
+            });
+        });
+    });
+
+    describe('getCommentReplies', () => {
+        it('Should return comment replies when given a commentId and maxResults', (done) => {
+            // arrange
+            const replies = {};
+
+            let mockAction = sinon.stub(YouTubeApi, 'getReplyThreads');
+            mockAction.returns(new Promise((resolve, reject) => {
+                resolve(replies);
+            }));
+
+            // act
+            youtubeActions.getCommentReplies("ID", 10).then(result => {
+                // assert
+                expect(result).toEqual(replies);
+                mockAction.restore();
+                done();
+            });
+        });
+
+        it('Should return comment replies when given a commentId, maxResults, and pageToken', (done) => {
+            // arrange
+            const replies = {};
+
+            let mockAction = sinon.stub(YouTubeApi, 'getReplyThreads');
+            mockAction.returns(new Promise((resolve, reject) => {
+                resolve(replies);
+            }));
+
+            // act
+            youtubeActions.getCommentReplies("ID", 10, "TOKEN").then(result => {
+                // assert
+                expect(result).toEqual(replies);
+                mockAction.restore();
+                done();
+            });
+        });
+    });
+
     describe('searchChannel', () => {
         // arrange
         const results = {};

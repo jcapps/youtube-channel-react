@@ -3,6 +3,7 @@ import {createStore} from 'redux';
 import rootReducer from '../../src/reducers';
 import initialState from '../../src/reducers/initialState';
 import * as channelActions from '../../src/actions/channelActions';
+import * as commentActions from '../../src/actions/commentActions';
 import * as playlistActions from '../../src/actions/playlistActions';
 import * as videoActions from '../../src/actions/videoActions';
 
@@ -214,5 +215,37 @@ describe('Store', () => {
         };
         const result = store.getState().searchPageToken;
         expect(result).toEqual(expected);
+    });
+
+    it('Should handle setting comments', () => {
+        // arrange
+        const comments = {
+            items: [{comment: 'A'}, {comment: 'B'}],
+            nextPageToken: 'TOKEN'
+        };
+
+        // act
+        const action = commentActions.getCommentsSuccess(comments);
+        store.dispatch(action);
+
+        // assert
+        const result = store.getState().comments;
+        expect(result).toEqual(comments);
+    });
+
+    it('Should handle setting replies', () => {
+        // arrange
+        const replies = {
+            items: [{comment: 'A'}, {comment: 'B'}],
+            nextPageToken: 'TOKEN'
+        };
+
+        // act
+        const action = commentActions.getRepliesSuccess(replies);
+        store.dispatch(action);
+
+        // assert
+        const result = store.getState().replies;
+        expect(result).toEqual(replies);
     });
 });

@@ -45,6 +45,7 @@ describe('Video Watch Page', () => {
     it('Should create a VideoPlayer', () => {
         // act
         const component = shallow(<VideoWatchPage {...props}/>);
+        component.setState({ isLoading: false });
         const player = component.find(VideoPlayer);
         
         // assert
