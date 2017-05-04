@@ -212,7 +212,7 @@ describe('Playlist Page', () => {
         });
         let videoList = component.find('#video-list');
         const nextVideo = videoList.children('div').at(1);
-        const mockTarget = {id: nextVideo.prop('id'), className: 'playlist-video'}
+        const mockTarget = {id: nextVideo.prop('id'), className: 'playlist-video'};
         
         mockGetVideo.returns(new Promise((resolve, reject) => {
             component.setState({videoInPlaylist: parseInt(mockTarget.id)});
