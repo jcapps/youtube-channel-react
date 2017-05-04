@@ -1,11 +1,17 @@
 import React, {PropTypes} from 'react';
 import YouTubePlayer from 'youtube-player';
+import VideoPlayerComments from './VideoPlayerComments';
 import VideoPlayerDescription from './VideoPlayerDescription';
 import VideoPlayerStats from './VideoPlayerStats';
 
 let player;
 
 class VideoPlayer extends React.Component {
+    constructor() {
+        super();
+        this.videoSeek = this.videoSeek.bind(this);
+    }
+
     componentDidMount() {
         this.initializePlayer(this.props);
     }
@@ -47,12 +53,29 @@ class VideoPlayer extends React.Component {
         });
     }
 
+    videoSeek(time) {
+        let hrMinSec = [0, 0, 0];
+        const timeUnits = ['h', 'm', 's'];
+
+        for (let i = 0; i < timeUnits.length; i++) {
+            if (time.indexOf(timeUnits[i]) > 0) {
+                hrMinSec[i] = parseInt(time.split(timeUnits[i])[0]);
+                time = time.split(timeUnits[i])[1];
+            }
+        }
+
+        const seconds = 3600 * hrMinSec[0] + 60 * hrMinSec[1] + hrMinSec[2];
+        player.seekTo(seconds, true);
+        window.scrollTo(0, 0);
+    }
+
     render() {
         return (
             <div className="video-player">
                 <div id="player-iframe"></div>
                 <VideoPlayerStats video={this.props.video} />
                 <VideoPlayerDescription video={this.props.video} />
+                <VideoPlayerComments video={this.props.video} videoSeek={this.videoSeek} />
             </div>
         );
     }

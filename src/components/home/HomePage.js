@@ -4,6 +4,16 @@ import {bindActionCreators} from 'redux';
 import VideoPlayer from '../common/VideoPlayer';
 
 export class HomePage extends React.Component {
+    shouldComponentUpdate(nextProps) {
+        if (this.props.mostRecentUpload.id != nextProps.mostRecentUpload.id) {
+            return true;
+        }
+        if (!document.getElementById('home-page')) {
+            return true;
+        }
+        return false;
+    }
+
     render() {
         if (this.props.isLoading) { return <div></div>; }
         const mostRecentUpload = this.props.mostRecentUpload;

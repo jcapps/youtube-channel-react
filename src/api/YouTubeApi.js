@@ -11,6 +11,8 @@ const channelUrl = apiUrl + 'channels';
 const playlistsUrl = apiUrl + 'playlists';
 const playlistUrl = apiUrl + 'playlistItems';
 const videoUrl = apiUrl + 'videos';
+const commentUrl = apiUrl + 'comments';
+const commentThreadUrl = apiUrl + 'commentThreads';
 const searchUrl = apiUrl + 'search';
 const subscribeScope = 'https://www.googleapis.com/auth/youtube';
 const subscribeDiscoveryDocs = ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'];
@@ -99,6 +101,39 @@ class YouTubeApi {
 
         return new Promise((resolve, reject) => {
             axios.get(videoUrl, {params: videoParams}).then(res => {
+                resolve(res.data);
+            });
+        });
+    }
+
+    static getCommentThreads(id, sortOrder, pageToken="") {
+        const commentParams = {
+            key: KEY,
+            videoId: id,
+            maxResults: 10,
+            part: 'snippet',
+            order: sortOrder,
+            pageToken: pageToken
+        };
+
+        return new Promise((resolve, reject) => {
+            axios.get(commentThreadUrl, {params: commentParams}).then(res => {
+                resolve(res.data);
+            });
+        });
+    }
+
+    static getReplyThreads(id, maxResults, pageToken="") {
+        const commentParams = {
+            key: KEY,
+            parentId: id,
+            maxResults: maxResults,
+            part: 'snippet',
+            pageToken: pageToken
+        };
+
+        return new Promise((resolve, reject) => {
+            axios.get(commentUrl, {params: commentParams}).then(res => {
                 resolve(res.data);
             });
         });

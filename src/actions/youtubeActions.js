@@ -71,6 +71,28 @@ export function getVideoInfo(videoId) {
 }
 
 /**
+ * Retrieve video comment threads given video ID
+ */
+export function getVideoComments(videoId, sortOrder, pageToken = "") {
+    return YouTubeApi.getCommentThreads(videoId, sortOrder, pageToken).then(comments => {
+        return comments;
+    }).catch(error => {
+        throw(error);
+    });
+}
+
+/**
+ * Retrieve video comment threads given video ID
+ */
+export function getCommentReplies(commentId, maxResults, pageToken = "") {
+    return YouTubeApi.getReplyThreads(commentId, maxResults, pageToken).then(replies => {
+        return replies;
+    }).catch(error => {
+        throw(error);
+    });
+}
+
+/**
  * Search channel for playlists/videos given a search query
  */
 export function searchChannel(query, pageToken = "") {

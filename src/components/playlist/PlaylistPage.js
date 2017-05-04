@@ -67,6 +67,19 @@ export class PlaylistPage extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps) {
+        if (this.props.playlistId != nextProps.playlistId) {
+            return true;
+        }
+        if (this.state.currentVideo.id != nextProps.currentVideo.id) {
+            return true;
+        }
+        if (!document.getElementById('playlist-page')) {
+            return true;
+        }
+        return false;
+    }
+
     changeVideo(e) {
         let element = e.target;
         while (element.className.indexOf("playlist-video") < 0) {

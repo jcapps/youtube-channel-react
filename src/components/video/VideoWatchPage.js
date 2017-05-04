@@ -6,12 +6,38 @@ import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/VideoPlayer';
 
 export class VideoWatchPage extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            isLoading: false
+        };
+    }
+
     componentWillMount() {
-        this.props.actions.getVideo(this.props.videoId);
+        this.setState({ isLoading: true });
+        this.props.actions.getVideo(this.props.videoId).then(() => {
+            this.setState({ isLoading: this.props.isLoading });
+        });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.video.id == nextProps.videoId) {
+            this.setState({ isLoading: false });
+        }
+    }
+
+    shouldComponentUpdate(nextProps) {
+        if (this.props.video.id != nextProps.video.id) {
+            return true;
+        }
+        if (!document.getElementById('videos-watch-page')) {
+            return true;
+        }
+        return false;
     }
 
     render() {
-        if (this.props.isLoading) return <div></div>;
+        if (this.state.isLoading) return <div></div>;
         return (
             <div id="videos-watch-page">
                 <VideoPlayer video={this.props.video}/>

@@ -1,0 +1,129 @@
+.comment-header {
+    position: relative;
+    margin: 5px auto;
+    width: 640px;
+
+    .comment-stats {
+        font-size: 14pt;
+    }
+
+    .comment-sort {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 26.5px;
+        border: 2px solid $gray;
+        cursor: pointer;
+        z-index: 0;
+    }
+}
+
+.comment-section {
+    margin: 0 auto;
+    width: 640px;
+    border: 1px solid $grid-border;
+    background-color: $contrast;
+
+    .comment-thread {
+        text-align: left;
+        border: 1px solid $grid-border;
+
+        .comment {
+            padding: 5px;
+
+            & > * {
+                display: inline-block;
+                vertical-align: top;
+            }
+        }
+
+        .comment-info {
+            margin: 0 10px;
+            width: 545px;
+
+            .user-channel, .time-elapsed {
+                display: inline-block;
+            }
+
+            .time-elapsed {
+                float: right;
+                margin-left: 10px;
+                color: $gray;
+            }
+
+            .comment-text {
+                max-height: 100px;
+                overflow: hidden;
+            }
+
+            .like-label {
+                color: $gray;
+            }
+
+            .like-count {
+                color: $green;
+                font-weight: bold;
+            }
+        }
+
+        .replies {
+            padding-left: 60px;
+
+            .view-hide-replies {
+                & > * {
+                    display: inline-block;
+                    margin: 5px;
+                    padding: 0 3px;
+                    border: 1px solid $anchor-blue;
+                    color: $anchor-blue;
+                    text-decoration: none;
+                    
+                    &:hover {
+                        color: $contrast;
+                        background-color: $anchor-blue;
+                    }
+                }
+
+                .view-more-replies {
+                    float: left;
+                }
+
+                .hide-replies {
+                    float: right;
+                }
+
+                &:after {
+                    content: '';
+                    display: block;
+                    clear: both;
+                }
+            }
+
+            hr {
+                margin: 0 5px;
+                border-color: $lightgray;
+            }
+
+            .comment-info {
+                max-width: 485px;
+            }
+        }
+    }
+
+    #view-more-comments {
+        div {
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid $grid-border;
+
+            &:hover {
+                background-color: $contrast;
+            }
+        }
+
+        &:hover {
+            text-decoration: none;
+            color: $anchor;
+        }
+    }
+}
