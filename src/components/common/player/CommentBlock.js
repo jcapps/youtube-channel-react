@@ -115,7 +115,7 @@ export class CommentBlock extends React.Component {
                             </span>
                         );
                     })}
-                    <span>{commentPieces[commentPieces.length - 1]}</span>
+                    <span dangerouslySetInnerHTML={{__html: commentPieces[commentPieces.length - 1]}}></span>
                 </div>
             );
         }
