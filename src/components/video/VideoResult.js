@@ -13,15 +13,17 @@ export class VideoResult extends React.Component {
     }
 
     componentWillMount() {
-        this.props.actions.getVideo(this.props.videoId).then(() => {
-            this.setState({ 
-                video: Object.assign({}, this.props.video),
-                isLoading: false
-            });
-        });
+        this.props.actions.getVideo(this.props.videoId);
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.videoId == nextProps.video.id) { // Avoid race condition in IE
+            this.setState({ 
+                video: Object.assign({}, nextProps.video),
+                isLoading: false
+            });
+        }
+
         if (this.props.videoId != nextProps.videoId) {
             this.props.actions.getVideo(nextProps.videoId).then(() => {
                 this.setState({ 
