@@ -106,7 +106,7 @@ class YouTubeApi {
         });
     }
 
-    static getCommentThreads(id, sortOrder, pageToken="") {
+    static getCommentThreads(id, sortOrder, pageToken = "") {
         const commentParams = {
             key: KEY,
             videoId: id,
@@ -123,7 +123,7 @@ class YouTubeApi {
         });
     }
 
-    static getReplyThreads(id, maxResults, pageToken="") {
+    static getReplyThreads(id, maxResults, pageToken = "") {
         const commentParams = {
             key: KEY,
             parentId: id,
