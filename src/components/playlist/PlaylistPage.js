@@ -144,7 +144,7 @@ export class PlaylistPage extends React.Component {
         if (playlist.length > 0) {
             return(
                 <div id="playlist-page">
-                     <h2>{this.state.playlistInfo.snippet.title}</h2> 
+                    <h2>{this.state.playlistInfo.snippet.title}</h2> 
                     <div id="video-list">
                         {playlist.map(playlistItem => {
                             let video = playlistItem.snippet;
