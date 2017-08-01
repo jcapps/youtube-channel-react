@@ -1,6 +1,7 @@
 import React from 'react';
 import expect from 'expect';
-import {Link, IndexLink} from 'react-router';
+import {MemoryRouter as Router} from 'react-router';
+import {Link} from 'react-router-dom';
 import {mount} from 'enzyme';
 import {NavBar} from '../../../src/components/common/navbar/NavBar';
 
@@ -25,18 +26,18 @@ describe('NavBar', () => {
 
     it('Should create "Home" link', () => {
         // act
-        const component = mount(<NavBar {...props}/>);
+        const component = mount(<Router><NavBar {...props}/></Router>);
         const menu = component.find('ul').first();
         const menuItems = menu.children('li');
 
         // assert
         expect(menuItems.at(0).find('div').text()).toEqual('Home');
-        expect(menuItems.at(0).find(IndexLink).prop('to')).toEqual('/');
+        expect(menuItems.at(0).find(Link).prop('to')).toEqual('/');
     });
 
     it('Should create "Playlists" link', () => {
         // act
-        const component = mount(<NavBar {...props}/>);
+        const component = mount(<Router><NavBar {...props}/></Router>);
         const menu = component.find('ul').first();
         const menuItems = menu.children('li');
 
@@ -47,7 +48,7 @@ describe('NavBar', () => {
 
     it('Should create "Videos" link', () => {
         // act
-        const component = mount(<NavBar {...props}/>);
+        const component = mount(<Router><NavBar {...props}/></Router>);
         const menu = component.find('ul').first();
         const menuItems = menu.children('li');
 
@@ -58,7 +59,7 @@ describe('NavBar', () => {
 
     it('Should create "About" link', () => {
         // act
-        const component = mount(<NavBar {...props}/>);
+        const component = mount(<Router><NavBar {...props}/></Router>);
         const menu = component.find('ul').first();
         const menuItems = menu.children('li');
 
@@ -69,7 +70,7 @@ describe('NavBar', () => {
 
     it('Should create Playlist submenu of first 5 playlists', () => {
         // act
-        const component = mount(<NavBar {...props}/>);
+        const component = mount(<Router><NavBar {...props}/></Router>);
         const playlistMenu = component.find('li.has-submenu');
         const submenu = playlistMenu.find('ul');
         const submenuItems = submenu.find('li');
@@ -91,7 +92,7 @@ describe('NavBar', () => {
 
     it('Should create "View All" link in Playlist submenu', () => {
         // act
-        const component = mount(<NavBar {...props}/>);
+        const component = mount(<Router><NavBar {...props}/></Router>);
         const playlistMenu = component.find('li.has-submenu');
         const submenu = playlistMenu.find('ul');
         const submenuItems = submenu.find('li');
@@ -103,7 +104,7 @@ describe('NavBar', () => {
 
     it('Should initially hide submenu', () => {
         // act
-        const component = mount(<NavBar {...props}/>);
+        const component = mount(<Router><NavBar {...props}/></Router>);
         const playlistMenu = component.find('li.has-submenu');
         const submenu = playlistMenu.find('ul');
 
@@ -113,7 +114,7 @@ describe('NavBar', () => {
 
     it('Should show submenu on mouseOver', () => {
         // act
-        const component = mount(<NavBar {...props}/>);
+        const component = mount(<Router><NavBar {...props}/></Router>);
         const playlistMenu = component.find('li.has-submenu');
         const submenu = playlistMenu.find('ul');
 
@@ -125,7 +126,7 @@ describe('NavBar', () => {
 
     it('Should hide submenu on mouseOut', () => {
         // act
-        const component = mount(<NavBar {...props}/>);
+        const component = mount(<Router><NavBar {...props}/></Router>);
         const playlistMenu = component.find('li.has-submenu');
         const submenu = playlistMenu.find('ul');
 
