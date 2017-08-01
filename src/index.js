@@ -4,11 +4,12 @@ import React from 'react';
 import {render} from 'react-dom';
 import configureStore from './store/configureStore';
 import {Provider} from 'react-redux';
-import {Router, browserHistory} from 'react-router';
-import routes from './routes';
+import {Route} from 'react-router';
+import {BrowserRouter as Router} from 'react-router-dom';
 import {getChannelInfo} from './actions/channelActions';
 import {getMostRecentUpload} from './actions/videoActions';
 import {getAllPlaylists} from './actions/playlistActions';
+import App from './components/App';
 import './styles/styles.scss';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/toastr/build/toastr.min.css';
@@ -20,7 +21,9 @@ store.dispatch(getMostRecentUpload());
 
 render(
     <Provider store={store}>
-        <Router history={browserHistory} routes={routes} />
+        <Router>
+            <Route path="/" component={App} />
+        </Router>
     </Provider>,
     document.getElementById('app')
 );

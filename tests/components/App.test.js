@@ -2,18 +2,13 @@ import React from 'react';
 import expect from 'expect';
 import {shallow} from 'enzyme';
 import App from '../../src/components/App';
+import Routes from '../../src/components/Routes';
 import Header from '../../src/components/common/Header';
 
 describe('App', () => {
-    let props;
-    beforeEach(() => {
-        // arrange
-        props = {children: <div>Content</div>};
-    });
-
     it('Should create the Header', () => {
         // act
-        const component = shallow(<App {...props}/>);
+        const component = shallow(<App />);
         const header = component.find(Header);
         
         // assert
@@ -22,10 +17,12 @@ describe('App', () => {
 
     it('Should create the page content', () => {
         // act
-        const component = shallow(<App {...props}/>);
+        const component = shallow(<App />);
         const content = component.find('#content');
+        const routes = content.find(Routes);
         
         // assert
-        expect(content.children('div').text()).toEqual('Content');
+        expect(content.length).toEqual(1);
+        expect(routes.length).toEqual(1);
     });
 });

@@ -1,6 +1,7 @@
 // This component handles the App template used on every page.
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Header from './common/Header';
+import Routes from './Routes';
 
 class App extends React.Component {
     render() {
@@ -8,15 +9,11 @@ class App extends React.Component {
             <div>
                 <Header/>
                 <div id="content">
-                    {this.props.children}
+                    <Routes />
                 </div>
             </div>
         );
     }
 }
-
-App.propTypes = {
-    children: PropTypes.object.isRequired
-};
 
 export default App;
