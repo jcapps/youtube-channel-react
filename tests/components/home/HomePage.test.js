@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import expect from 'expect';
 import {shallow} from 'enzyme';
 import {HomePage} from '../../../src/components/home/HomePage';

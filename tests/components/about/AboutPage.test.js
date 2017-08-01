@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import expect from 'expect';
 import {mount} from 'enzyme';
 import {AboutPage} from '../../../src/components/about/AboutPage';

@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import expect from 'expect';
 import {shallow} from 'enzyme';
 import {Header} from '../../../src/components/common/Header';
@@ -11,7 +11,7 @@ describe('Header', () => {
     let props;
     beforeEach(() => {
         // arrange
-        props = {channel: {}}
+        props = {channel: {}};
     });
 
     it('Should create the TitleBar', () => {
