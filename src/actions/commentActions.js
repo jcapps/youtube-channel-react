@@ -1,4 +1,3 @@
-import {bindActionCreators} from 'redux';
 import * as types from './actionTypes';
 import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 import * as youtubeActions from './youtubeActions';
