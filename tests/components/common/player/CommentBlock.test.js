@@ -26,9 +26,7 @@ describe('CommentBlock', () => {
         };
 
         mockVideoSeek = sinon.stub(props, 'videoSeek');
-        mockVideoSeek.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockVideoSeek.resolves();
     });
 
     afterEach(() => {
@@ -124,7 +122,7 @@ describe('CommentBlock', () => {
         expect(commentText.length).toEqual(1);
         expect(timestamp.length).toEqual(1);
         expect(commentText.text()).toEqual('Test 1:30 Text');
-        expect(timestamp.props().value).toEqual('1m30s');
+        expect(timestamp.props().name).toEqual('1m30s');
     });
 
     it('Should call videoSeek if timestamp is clicked', () => {
@@ -138,7 +136,7 @@ describe('CommentBlock', () => {
         const commentText = commentInfo.find('div.comment-text');
         const timestamp = commentText.find('a');
 
-        timestamp.simulate('click', {target: {value: '1m30s'}});
+        timestamp.simulate('click', {target: {name: '1m30s'}});
 
         // assert
         expect(mockVideoSeek.calledOnce).toEqual(true);
