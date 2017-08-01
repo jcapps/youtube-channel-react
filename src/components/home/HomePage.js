@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import VideoPlayer from '../common/player/VideoPlayer';
@@ -15,7 +16,7 @@ export class HomePage extends React.Component {
     }
 
     render() {
-        if (this.props.isLoading) { return <div></div>; }
+        if (this.props.isLoading) { return <div />; }
         const mostRecentUpload = this.props.mostRecentUpload;
         if (mostRecentUpload.id) {
             return(

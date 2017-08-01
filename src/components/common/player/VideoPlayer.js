@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import YouTubePlayer from 'youtube-player';
 import VideoPlayerComments from './VideoPlayerComments';
 import VideoPlayerDescription from './VideoPlayerDescription';
@@ -72,7 +73,7 @@ class VideoPlayer extends React.Component {
     render() {
         return (
             <div className="video-player">
-                <div id="player-iframe"></div>
+                <div id="player-iframe" />
                 <VideoPlayerStats video={this.props.video} />
                 <VideoPlayerDescription video={this.props.video} />
                 <VideoPlayerComments video={this.props.video} videoSeek={this.videoSeek} />

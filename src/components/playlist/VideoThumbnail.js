@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
@@ -33,7 +34,7 @@ export class VideoThumbnail extends React.Component {
     }
 
     render() {
-        if (this.state.isLoading) return <div></div>;
+        if (this.state.isLoading) return <div />;
         let video = this.state.video;
         let position = +this.props.playlistIndex + 1;
         if (video.snippet) {

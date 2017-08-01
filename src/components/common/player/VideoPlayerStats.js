@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class VideoPlayerStats extends React.Component {
     componentDidMount() {
@@ -44,7 +45,7 @@ class VideoPlayerStats extends React.Component {
     renderEmptyBar() {
         const stats = this.props.video.statistics;
         if (stats.likeCount == '0' && stats.dislikeCount == '0') {
-            return <div id="empty-bar"></div>;
+            return <div id="empty-bar" />;
         }
     }
 
@@ -54,8 +55,8 @@ class VideoPlayerStats extends React.Component {
             return (
                 <div className="video-stats">
                     <div id="like-bar-container">
-                        <div id="like-bar"></div>
-                        <div id="dislike-bar"></div>
+                        <div id="like-bar" />
+                        <div id="dislike-bar" />
                         {this.renderEmptyBar()}
                     </div>
                     <div id="stats">
@@ -69,7 +70,7 @@ class VideoPlayerStats extends React.Component {
                             <span>Views: </span>
                             <span>{this.formatNumberString(stats.viewCount)}</span>
                         </div>
-                        <div id="end-stats"></div>
+                        <div id="end-stats" />
                     </div>
                 </div>
             );
