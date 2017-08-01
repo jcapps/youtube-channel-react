@@ -1,5 +1,6 @@
-import React, {PropTypes} from 'react';
-import {Link, IndexLink} from 'react-router';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import PlaylistLink from './PlaylistLink';
@@ -33,7 +34,7 @@ export class NavBar extends React.Component {
             <div id="navbar">
                 <nav>
                     <ul>
-                        <li><IndexLink to="/"><div>Home</div></IndexLink></li>
+                        <li><Link to="/"><div>Home</div></Link></li>
                         <li className="has-submenu" onMouseOver={this.showSubmenu} onMouseOut={this.hideSubmenu}>
                             <Link to="/playlists"><div>Playlists</div></Link>
                             <ul className="hidden">
