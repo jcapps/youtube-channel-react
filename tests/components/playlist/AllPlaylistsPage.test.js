@@ -1,8 +1,8 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 import {AllPlaylistsPage} from '../../../src/components/playlist/AllPlaylistsPage';
 import PlaylistResult from '../../../src/components/playlist/PlaylistResult';
 import * as playlistActions from '../../../src/actions/playlistActions';
@@ -26,14 +26,10 @@ describe('All Playlists Page', () => {
         };
 
         mockGetAllPlaylists = sinon.stub(props.actions, 'getAllPlaylists');
-        mockGetAllPlaylists.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetAllPlaylists.resolves();
 
         mockGetNextPlaylists = sinon.stub(props.actions, 'getNextPlaylists');
-        mockGetNextPlaylists.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetNextPlaylists.resolves();
     });
     afterEach(() => {
         mockGetAllPlaylists.restore();

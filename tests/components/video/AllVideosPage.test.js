@@ -1,8 +1,8 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 import {AllVideosPage} from '../../../src/components/video/AllVideosPage';
 import VideoResult from '../../../src/components/video/VideoResult';
 import * as playlistActions from '../../../src/actions/playlistActions';
@@ -27,14 +27,10 @@ describe('All Videos Page', () => {
         };
 
         mockGetRecentUploadsPlaylist = sinon.stub(props.actions, 'getRecentUploadsPlaylist');
-        mockGetRecentUploadsPlaylist.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetRecentUploadsPlaylist.resolves();
 
         mockGetNextVideos = sinon.stub(props.actions, 'getNextVideos');
-        mockGetNextVideos.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetNextVideos.resolves();
     });
     afterEach(() => {
         mockGetRecentUploadsPlaylist.restore();

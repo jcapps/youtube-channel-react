@@ -1,8 +1,8 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 import {SearchResultsPage} from '../../../src/components/search/SearchResultsPage';
 import PlaylistResult from '../../../src/components/playlist/PlaylistResult';
 import VideoResult from '../../../src/components/video/VideoResult';
@@ -26,14 +26,10 @@ describe('Search Results Page', () => {
         };
 
         mockGetSearchResults = sinon.stub(props.actions, 'getSearchResults');
-        mockGetSearchResults.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetSearchResults.resolves();
 
         mockGetNextResults = sinon.stub(props.actions, 'getNextResults');
-        mockGetNextResults.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetNextResults.resolves();
     });
     afterEach(() => {
         mockGetSearchResults.restore();
