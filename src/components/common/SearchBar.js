@@ -1,8 +1,10 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {withRouter} from "react-router-dom";
 
 class SearchBar extends React.Component {
-    constructor(context) {
-        super(context);
+    constructor() {
+        super();
         this.state = {
             searchText: ''
         };
@@ -19,7 +21,7 @@ class SearchBar extends React.Component {
     search(e) {
         e.preventDefault();
         const query = this.state.searchText;
-        this.context.router.push('/search/' + query);
+        this.props.history.push('/search/' + query);
     }
 
     toggleSearchBar() {
@@ -54,8 +56,8 @@ class SearchBar extends React.Component {
     }
 }
 
-SearchBar.contextTypes = {
-    router: PropTypes.object
+SearchBar.propTypes = {
+    history: PropTypes.object
 };
 
-export default SearchBar;
+export default withRouter(SearchBar);
