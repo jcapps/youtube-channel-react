@@ -2,9 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/player/VideoPlayer';
 
 export class HomePage extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            isLoading: false
+        };
+    }
+
+    componentWillMount() {
+        this.setState({ isLoading: true });
+        this.props.actions.getMostRecentUpload().then(() => {
+            this.setState({ isLoading: this.props.isLoading });
+        });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.mostRecentUpload.id == nextProps.mostRecentUpload.id) {
+            this.setState({ isLoading: false });
+        }
+    }
+
     shouldComponentUpdate(nextProps) {
         if (this.props.mostRecentUpload.id != nextProps.mostRecentUpload.id) {
             return true;
@@ -16,7 +37,7 @@ export class HomePage extends React.Component {
     }
 
     render() {
-        if (this.props.isLoading) { return <div />; }
+        if (this.state.isLoading) { return <div />; }
         const mostRecentUpload = this.props.mostRecentUpload;
         if (mostRecentUpload.id) {
             return(
@@ -42,4 +63,8 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(HomePage);
+function mapDispatchToProps(dispatch) {
+    return { actions: bindActionCreators(videoActions, dispatch) };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

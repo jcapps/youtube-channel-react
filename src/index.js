@@ -17,7 +17,6 @@ import '../node_modules/toastr/build/toastr.min.css';
 const store = configureStore();
 store.dispatch(getChannelInfo());
 store.dispatch(getAllPlaylists());
-store.dispatch(getMostRecentUpload());
 
 render(
     <Provider store={store}>
