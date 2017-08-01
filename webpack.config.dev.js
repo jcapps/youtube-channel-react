@@ -1,6 +1,5 @@
 import webpack from 'webpack';
 import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import {YOUTUBE_INFO} from './tools/private/youtubeInfo';
 
 const GLOBALS = {
@@ -12,9 +11,7 @@ const GLOBALS = {
 };
 
 export default {
-    debug: true,
     devtool: 'inline-source-map',
-    noInfo: false,
     entry: [
         'eventsource-polyfill', // necessary for hot reloading with IE
         'webpack-hot-middleware/client?reload=true', //note that it reloads the page if hot module reloading fails.
@@ -30,21 +27,26 @@ export default {
         contentBase: path.resolve(__dirname, 'src')
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin(GLOBALS),
-        new HtmlWebpackPlugin({
-            favicon: 'src/images/favicon.ico',
-            template: 'src/index.html',
-            inject: false
-        })
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.LoaderOptionsPlugin({
+            debug: true,
+            noInfo: false
+        }),
+        new webpack.NoEmitOnErrorsPlugin()
     ],
     module: {
-        loaders: [
-            {test: /\.js$/, include: path.join(__dirname, 'src'), loaders: ['babel']},
-            {test: /(\.css)$/, loaders: ['style', 'css']},
-            {test: /(\.scss)$/, loaders: ['style', 'css', 'sass']},
-            {test: /\.(jpe?g|ico|gif|png|svg|eot|woff|woff2|ttf)$/, loader: 'file', options: {name: '[path][name].[hash].[ext]'}}
+        rules: [
+            {test: /\.js$/, include: path.join(__dirname, 'src'), use: 'babel-loader'},
+            {test: /(\.css)$/, use: ['style-loader', 'css-loader']},
+            {test: /(\.scss)$/, use: ['style-loader', 'css-loader', 'sass-loader']},
+            {
+                test: /\.(jpe?g|ico|gif|png|svg|eot|woff|woff2|ttf)$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {name: '[path][name].[hash].[ext]'}
+                }]
+            }
         ]
     }
 };
