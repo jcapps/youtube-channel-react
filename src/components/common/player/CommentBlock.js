@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 const DOMPurify = require('dompurify')(window);
 
 export class CommentBlock extends React.Component {
@@ -65,7 +66,7 @@ export class CommentBlock extends React.Component {
     }
 
     clickTimeStamp(e) {
-        this.props.videoSeek(e.target.value);
+        this.props.videoSeek(e.target.name);
     }
 
     renderComment() {
@@ -110,18 +111,18 @@ export class CommentBlock extends React.Component {
                     {timestamps.map((timestamp, i) => {
                         return ( // Add timestamps back in with a new link
                             <span key={i}>
-                                <span dangerouslySetInnerHTML={{__html: commentPieces[i]}}></span>
-                                <span><a value={times[i]} onClick={this.clickTimeStamp}>{timestamps[i]}</a></span>
+                                <span dangerouslySetInnerHTML={{__html: commentPieces[i]}} />
+                                <span><a name={times[i]} onClick={this.clickTimeStamp}>{timestamps[i]}</a></span>
                             </span>
                         );
                     })}
-                    <span dangerouslySetInnerHTML={{__html: commentPieces[commentPieces.length - 1]}}></span>
+                    <span dangerouslySetInnerHTML={{__html: commentPieces[commentPieces.length - 1]}} />
                 </div>
             );
         }
 
         return ( // If no linked timestamps in original comment
-            <div ref="text" className="comment-text" dangerouslySetInnerHTML={{__html: cleanComment}}></div>
+            <div ref="text" className="comment-text" dangerouslySetInnerHTML={{__html: cleanComment}} />
         );
     }
 
