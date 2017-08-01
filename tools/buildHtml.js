@@ -20,3 +20,14 @@ fs.readFile('src/index.html', 'utf8', (err, markup) => {
         console.log('index.html written to /dist'.green);
     });
 });
+
+// Writing the favicon to /dist
+const writeStream = fs.createWriteStream('dist/rose.ico');
+fs.createReadStream('src/images/favicon.ico').pipe(writeStream);
+
+writeStream.on('error', function(err) {
+    console.log(err);
+});
+writeStream.on('close', function() {
+    console.log('favicon.ico written to /dist'.green);
+});
