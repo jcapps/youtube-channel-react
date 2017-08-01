@@ -32,14 +32,10 @@ describe('VideoPlayerComments', () => {
         };
 
         mockGetComments = sinon.stub(props.actions, 'getComments');
-        mockGetComments.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetComments.resolves();
 
         mockGetNextComments = sinon.stub(props.actions, 'getNextComments');
-        mockGetNextComments.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetNextComments.resolves();
     });
 
     afterEach(() => {
@@ -95,7 +91,7 @@ describe('VideoPlayerComments', () => {
         expect(commentSort.children('option').at(0).text()).toEqual('Relevance');
         expect(commentSort.children('option').at(1).text()).toEqual('Most Recent');
 
-        mockGetComments.reset();
+        mockGetComments.resetHistory();
         commentSort.simulate('change', {target: {value: 'time'}});
 
         expect(mockGetComments.calledOnce).toEqual(true);

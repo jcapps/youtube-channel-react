@@ -33,14 +33,10 @@ describe('CommentThread', () => {
         };
 
         mockGetReplies = sinon.stub(props.actions, 'getReplies');
-        mockGetReplies.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetReplies.resolves();
 
         mockGetNextReplies = sinon.stub(props.actions, 'getNextReplies');
-        mockGetNextReplies.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetNextReplies.resolves();
     });
 
     afterEach(() => {
@@ -166,7 +162,7 @@ describe('CommentThread', () => {
         const viewMore = replySection.find('a.view-more-replies');
         const hideReplies = replySection.find('a.hide-replies');
 
-        mockGetReplies.reset();
+        mockGetReplies.resetHistory();
         hideReplies.simulate('click');
 
         // assert
