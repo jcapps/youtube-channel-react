@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
@@ -48,9 +49,9 @@ export class PlaylistPage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.playlistId != nextProps.params.id) {
-            this.props.playlistActions.getPlaylistInfo(nextProps.params.id).then(() => {
-                this.props.playlistActions.getPlaylist(nextProps.params.id).then(() => {
+        if (this.props.playlistId != nextProps.match.params.id) {
+            this.props.playlistActions.getPlaylistInfo(nextProps.match.params.id).then(() => {
+                this.props.playlistActions.getPlaylist(nextProps.match.params.id).then(() => {
                     if (this.props.playlist.length > 0) {
                         const videoId = this.props.playlist[0].snippet.resourceId.videoId;
                         this.props.videoActions.getVideo(videoId).then(() => {
@@ -138,7 +139,7 @@ export class PlaylistPage extends React.Component {
     }
 
     render() {
-        if (this.state.isLoading) return <div></div>;
+        if (this.state.isLoading) return <div />;
         const playlist = this.state.playlist;
         const nowPlaying = this.state.videoInPlaylist;
         if (playlist.length > 0) {
@@ -178,18 +179,19 @@ export class PlaylistPage extends React.Component {
 PlaylistPage.propTypes = {
     playlist: PropTypes.array.isRequired,
     playlistInfo: PropTypes.object.isRequired,
-    playlistId: PropTypes.string.isRequired,
     videoPageToken: PropTypes.object.isRequired,
     currentVideo: PropTypes.object.isRequired,
     playlistActions: PropTypes.object.isRequired,
-    videoActions: PropTypes.object.isRequired
+    videoActions: PropTypes.object.isRequired,
+    playlistId: PropTypes.string,
+    match: PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {
     return { 
         playlist: state.playlist,
         playlistInfo: state.playlistInfo,
-        playlistId: ownProps.params.id,
+        playlistId: ownProps.match.params.id,
         videoPageToken: state.videoPageToken,
         currentVideo: state.video
     };

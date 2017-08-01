@@ -1,5 +1,6 @@
-import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
@@ -37,7 +38,7 @@ export class VideoWatchPage extends React.Component {
     }
 
     render() {
-        if (this.state.isLoading) return <div></div>;
+        if (this.state.isLoading) return <div />;
         return (
             <div id="videos-watch-page">
                 <VideoPlayer video={this.props.video}/>
@@ -56,7 +57,7 @@ VideoWatchPage.propTypes = {
 function mapStateToProps(state, ownProps) {
     return {
         video: state.video,
-        videoId: ownProps.params.id,
+        videoId: ownProps.match.params.id,
         isLoading: state.ajaxCallsInProgress > 0
     };
 }

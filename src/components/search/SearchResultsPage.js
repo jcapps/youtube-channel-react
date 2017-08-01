@@ -1,5 +1,6 @@
-import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as channelActions from '../../actions/channelActions';
@@ -17,8 +18,8 @@ export class SearchResultsPage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.query != nextProps.params.q) {
-            this.props.actions.getSearchResults(nextProps.params.q);
+        if (this.props.query != nextProps.match.params.q) {
+            this.props.actions.getSearchResults(nextProps.match.params.q);
         }
     }
 
@@ -91,13 +92,14 @@ SearchResultsPage.propTypes = {
     query: PropTypes.string.isRequired,
     results: PropTypes.array.isRequired,
     resultsCount: PropTypes.number.isRequired,
-    actions: PropTypes.object.isRequired
+    actions: PropTypes.object.isRequired,
+    match: PropTypes.object
 };
 
 function mapStateToProps(state, ownProps) {
     return {
         pageToken: state.searchPageToken,
-        query: ownProps.params.q,
+        query: ownProps.match.params.q,
         results: state.searchResults,
         resultsCount: state.searchInfo.totalResults
     };
