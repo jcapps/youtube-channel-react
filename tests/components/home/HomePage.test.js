@@ -1,22 +1,33 @@
 import React from 'react';
 import expect from 'expect';
+import sinon from 'sinon';
 import {shallow} from 'enzyme';
 import {HomePage} from '../../../src/components/home/HomePage';
 import VideoPlayer from '../../../src/components/common/player/VideoPlayer';
+import * as videoActions from '../../../src/actions/videoActions';
 
 describe('Home Page', () => {
     let props;
+    let mockGetVideo;
     beforeEach(() => {
         // arrange
         props = {
             mostRecentUpload: {id: '0'},
-            isLoading: false
+            isLoading: false,
+            actions: videoActions
         };
+        mockGetVideo = sinon.stub(props.actions, 'getMostRecentUpload');
+        mockGetVideo.resolves();
+    });
+
+    afterEach(() => {
+        mockGetVideo.restore();
     });
 
     it('Should create page heading', () => {
         // act
         const component = shallow(<HomePage {...props}/>);
+        component.setState({ isLoading: false });
         const title = component.find('h2').text();
 
         // assert
@@ -26,6 +37,7 @@ describe('Home Page', () => {
     it('Should create a VideoPlayer', () => {
         // act
         const component = shallow(<HomePage {...props}/>);
+        component.setState({ isLoading: false });
         const player = component.find(VideoPlayer);
 
         // assert
@@ -36,7 +48,8 @@ describe('Home Page', () => {
         // arrange
         props = {
             mostRecentUpload: {id: '0'},
-            isLoading: true
+            isLoading: true,
+            actions: videoActions
         };
 
         // act
@@ -50,11 +63,13 @@ describe('Home Page', () => {
         // arrange
         props = {
             mostRecentUpload: {id: null},
-            isLoading: false
+            isLoading: false,
+            actions: videoActions
         };
 
         // act
         const component = shallow(<HomePage {...props}/>);
+        component.setState({ isLoading: false });
 
         // assert
         expect(component.text()).toEqual('(Video not found.)');
