@@ -43,24 +43,16 @@ describe('Playlist Page', () => {
         };
 
         mockGetPlaylist = sinon.stub(props.playlistActions, 'getPlaylist');
-        mockGetPlaylist.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetPlaylist.resolves();
         
         mockGetNextVideos = sinon.stub(props.playlistActions, 'getNextVideos');
-        mockGetNextVideos.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetNextVideos.resolves();
 
         mockGetPlaylistInfo = sinon.stub(props.playlistActions, 'getPlaylistInfo');
-        mockGetPlaylistInfo.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetPlaylistInfo.resolves();
 
         mockGetVideo = sinon.stub(props.videoActions, 'getVideo');
-        mockGetVideo.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetVideo.resolves();
     });
 
     afterEach(() => {

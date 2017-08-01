@@ -73,9 +73,7 @@ describe('Channel Actions', () => {
             const store = mockStore({channelInfo: channelInfo}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getChannelInfo');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(channelInfo);
-            }));
+            mockAction.resolves(channelInfo);
 
             // act
             store.dispatch(channelActions.getChannelInfo()).then(() => {
@@ -101,9 +99,7 @@ describe('Channel Actions', () => {
             const store = mockStore({searchResults: result}, expectedAction);
 
             let mockAction = sinon.stub(youtubeActions, 'searchChannel');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(result);
-            }));
+            mockAction.resolves(result);
 
             // act
             store.dispatch(channelActions.getSearchResults("QUERY")).then(() => {
@@ -129,9 +125,7 @@ describe('Channel Actions', () => {
             const store = mockStore({searchResults: result}, expectedAction);
 
             let mockAction = sinon.stub(youtubeActions, 'searchChannel');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve({items: []});
-            }));
+            mockAction.resolves({items: []});
 
             // act
             store.dispatch(channelActions.getNextResults("QUERY", "TOKEN")).then(() => {

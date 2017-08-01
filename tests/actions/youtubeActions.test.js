@@ -11,9 +11,7 @@ describe('YouTube Actions', () => {
             const channelInfo = {};
 
             let mockAction = sinon.stub(YouTubeApi, 'getChannelInfo');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(channelInfo);
-            }));
+            mockAction.resolves(channelInfo);
 
             // act
             youtubeActions.getChannelInfo().then(result => {
@@ -31,9 +29,7 @@ describe('YouTube Actions', () => {
             const channelDetails = {};
 
             let mockAction = sinon.stub(YouTubeApi, 'getChannelDetails');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(channelDetails);
-            }));
+            mockAction.resolves(channelDetails);
 
             // act
             youtubeActions.getChannelDetails().then(result => {
@@ -50,9 +46,7 @@ describe('YouTube Actions', () => {
         const playlists = [];
 
         let mockAction = sinon.stub(YouTubeApi, 'getAllPlaylists');
-        mockAction.returns(new Promise((resolve, reject) => {
-            resolve(playlists);
-        }));
+        mockAction.resolves(playlists);
 
         it('Should return playlists', (done) => {
             // act
@@ -79,9 +73,7 @@ describe('YouTube Actions', () => {
         const playlist = [];
 
         let mockAction = sinon.stub(YouTubeApi, 'getPlaylist');
-        mockAction.returns(new Promise((resolve, reject) => {
-            resolve(playlist);
-        }));
+        mockAction.resolves(playlist);
 
         it('Should return a playlist when given a playlistId', (done) => {
             // act
@@ -109,9 +101,7 @@ describe('YouTube Actions', () => {
             const playlistInfo = {};
 
             let mockAction = sinon.stub(YouTubeApi, 'getPlaylistInfo');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(playlistInfo);
-            }));
+            mockAction.resolves(playlistInfo);
 
             // act
             youtubeActions.getPlaylistInfo("ID").then(result => {
@@ -129,9 +119,7 @@ describe('YouTube Actions', () => {
             const video = {};
 
             let mockAction = sinon.stub(YouTubeApi, 'getVideo');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(video);
-            }));
+            mockAction.resolves(video);
 
             // act
             youtubeActions.getVideoInfo("ID").then(result => {
@@ -149,9 +137,7 @@ describe('YouTube Actions', () => {
             const commentThreads = {};
 
             let mockAction = sinon.stub(YouTubeApi, 'getCommentThreads');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(commentThreads);
-            }));
+            mockAction.resolves(commentThreads);
 
             // act
             youtubeActions.getVideoComments("ID", "relevance").then(result => {
@@ -167,9 +153,7 @@ describe('YouTube Actions', () => {
             const commentThreads = {};
 
             let mockAction = sinon.stub(YouTubeApi, 'getCommentThreads');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(commentThreads);
-            }));
+            mockAction.resolves(commentThreads);
 
             // act
             youtubeActions.getVideoComments("ID", "relevance", "TOKEN").then(result => {
@@ -187,9 +171,7 @@ describe('YouTube Actions', () => {
             const replies = {};
 
             let mockAction = sinon.stub(YouTubeApi, 'getReplyThreads');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(replies);
-            }));
+            mockAction.resolves(replies);
 
             // act
             youtubeActions.getCommentReplies("ID", 10).then(result => {
@@ -205,9 +187,7 @@ describe('YouTube Actions', () => {
             const replies = {};
 
             let mockAction = sinon.stub(YouTubeApi, 'getReplyThreads');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(replies);
-            }));
+            mockAction.resolves(replies);
 
             // act
             youtubeActions.getCommentReplies("ID", 10, "TOKEN").then(result => {
@@ -224,9 +204,7 @@ describe('YouTube Actions', () => {
         const results = {};
 
         let mockAction = sinon.stub(YouTubeApi, 'search');
-        mockAction.returns(new Promise((resolve, reject) => {
-            resolve(results);
-        }));
+        mockAction.resolves(results);
 
         it('Should return results when given a search query', (done) => {
             // act
@@ -252,9 +230,7 @@ describe('YouTube Actions', () => {
         it('Should call the API but not return a value', (done) => {
             // arrange
             let mockAction = sinon.stub(YouTubeApi, 'subscribe');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve();
-            }));
+            mockAction.resolves();
 
             // act, assert
             youtubeActions.subscribe().then(() => {

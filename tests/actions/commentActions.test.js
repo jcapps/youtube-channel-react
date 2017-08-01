@@ -90,9 +90,7 @@ describe('Comment Actions', () => {
             const store = mockStore({comments: comments}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getVideoComments');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(comments);
-            }));
+            mockAction.resolves(comments);
 
             // act
             store.dispatch(commentActions.getComments("ID")).then(() => {
@@ -116,9 +114,7 @@ describe('Comment Actions', () => {
             const store = mockStore({comments: comments}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getVideoComments');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(comments);
-            }));
+            mockAction.resolves(comments);
 
             // act
             store.dispatch(commentActions.getComments("ID", "relevance")).then(() => {
@@ -144,9 +140,7 @@ describe('Comment Actions', () => {
             const store = mockStore({comments: comments}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getVideoComments');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(comments);
-            }));
+            mockAction.resolves(comments);
 
             // act
             store.dispatch(commentActions.getNextComments("ID", "relevance", "TOKEN")).then(() => {
@@ -172,9 +166,7 @@ describe('Comment Actions', () => {
             const store = mockStore({replies: replies}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getCommentReplies');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(replies);
-            }));
+            mockAction.resolves(replies);
 
             // act
             store.dispatch(commentActions.getReplies("ID")).then(() => {
@@ -200,9 +192,7 @@ describe('Comment Actions', () => {
             const store = mockStore({replies: replies}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getCommentReplies');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(replies);
-            }));
+            mockAction.resolves(replies);
 
             // act
             store.dispatch(commentActions.getNextReplies("ID", {items: [{id: "0"}]}, "TOKEN")).then(() => {

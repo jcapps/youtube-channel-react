@@ -141,9 +141,7 @@ describe('Playlist Actions', () => {
             const store = mockStore({allPlaylists: playlists}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getAllPlaylists');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(playlists);
-            }));
+            mockAction.resolves(playlists);
 
             // act
             store.dispatch(playlistActions.getAllPlaylists()).then(() => {
@@ -169,9 +167,7 @@ describe('Playlist Actions', () => {
             const store = mockStore({allPlaylists: playlists}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getAllPlaylists');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve({items: []});
-            }));
+            mockAction.resolves({items: []});
 
             // act
             store.dispatch(playlistActions.getNextPlaylists("TOKEN")).then(() => {
@@ -197,9 +193,7 @@ describe('Playlist Actions', () => {
             const store = mockStore({playlist: playlist}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getPlaylist');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(playlist);
-            }));
+            mockAction.resolves(playlist);
 
             // act
             store.dispatch(playlistActions.getPlaylist("ID")).then(() => {
@@ -225,9 +219,7 @@ describe('Playlist Actions', () => {
             const store = mockStore({playlist: playlist}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getPlaylist');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve({items: []});
-            }));
+            mockAction.resolves({items: []});
 
             // act
             store.dispatch(playlistActions.getNextVideos("ID", "TOKEN")).then(() => {
@@ -253,9 +245,7 @@ describe('Playlist Actions', () => {
             const store = mockStore({playlistInfo: playlistInfo}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getPlaylistInfo');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(playlistInfo);
-            }));
+            mockAction.resolves(playlistInfo);
 
             // act
             store.dispatch(playlistActions.getPlaylistInfo("ID", "TOKEN")).then(() => {
@@ -292,14 +282,10 @@ describe('Playlist Actions', () => {
             );
 
             let mockAction = sinon.stub(youtubeActions, 'getChannelDetails');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve({items: [{contentDetails: {relatedPlaylists: {uploads: ""}}}]});
-            }));
+            mockAction.resolves({items: [{contentDetails: {relatedPlaylists: {uploads: ""}}}]});
 
             let mockAction2 = sinon.stub(youtubeActions, 'getPlaylist');
-            mockAction2.returns(new Promise((resolve, reject) => {
-                resolve(playlist);
-            }));
+            mockAction2.resolves(playlist);
 
             // act
             store.dispatch(playlistActions.getRecentUploadsPlaylist()).then(() => {

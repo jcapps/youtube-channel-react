@@ -57,9 +57,7 @@ describe('Video Actions', () => {
             const store = mockStore({video: video}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getVideoInfo');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve(video);
-            }));
+            mockAction.resolves(video);
 
             // act
             store.dispatch(videoActions.getVideo("ID")).then(() => {
@@ -85,14 +83,15 @@ describe('Video Actions', () => {
             const store = mockStore({video: video}, expectedActions);
 
             let mockAction = sinon.stub(playlistActions, 'getRecentUploadsPlaylist');
-            mockAction.returns(new Promise((resolve, reject) => {
-                resolve({items: [{snippet: {resourceId: {videoId: ""}}}]});
-            }));
+            mockAction.returns(function(dispatch) {
+                return new Promise((resolve, reject) => {
+                    dispatch({type: 'DUMMY_ACTION'});
+                    resolve({items: [{snippet: {resourceId: {videoId: ""}}}]});
+                });
+            });
 
             let mockAction2 = sinon.stub(youtubeActions, 'getVideoInfo');
-            mockAction2.returns(new Promise((resolve, reject) => {
-                resolve(video);
-            }));
+            mockAction2.resolves(video);
 
             // act
             store.dispatch(videoActions.getMostRecentUpload()).then(() => {

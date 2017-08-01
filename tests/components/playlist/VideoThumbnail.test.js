@@ -26,9 +26,7 @@ describe('Playlist Page', () => {
         };
 
         mockGetVideo = sinon.stub(props.actions, 'getVideo');
-        mockGetVideo.returns(new Promise((resolve, reject) => {
-            resolve();
-        }));
+        mockGetVideo.resolves();
     });
 
     afterEach(() => {
