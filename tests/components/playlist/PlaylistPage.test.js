@@ -5,6 +5,7 @@ import {shallow} from 'enzyme';
 import {PlaylistPage} from '../../../src/components/playlist/PlaylistPage';
 import VideoThumbnail from '../../../src/components/playlist/VideoThumbnail';
 import VideoPlayer from '../../../src/components/common/player/VideoPlayer';
+import * as videoTypes from '../../../src/reducers/videoTypes';
 import * as playlistActions from '../../../src/actions/playlistActions';
 import * as videoActions from '../../../src/actions/videoActions';
 
@@ -30,6 +31,7 @@ describe('Playlist Page', () => {
             playlistInfo: {snippet: {title: 'Playlist Title'}},
             playlistId: '1',
             videoPageToken: {nextPageToken: 'TOKEN'},
+            videoInPlaylist: 0,
             currentVideo: {
                 snippet: {
                     title: 'Video Title',
@@ -75,13 +77,7 @@ describe('Playlist Page', () => {
     it('Should create playlist title', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        component.setState({
-            playlist: props.playlist,
-            playlistInfo: props.playlistInfo,
-            videoPageToken: props.videoPageToken,
-            currentVideo: props.currentVideo,
-            isLoading: false
-        });
+        component.setState({ isLoading: false });
         const title = component.find('h2').text();
 
         // assert
@@ -91,13 +87,7 @@ describe('Playlist Page', () => {
     it('Should create the video list', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        component.setState({
-            playlist: props.playlist,
-            playlistInfo: props.playlistInfo,
-            videoPageToken: props.videoPageToken,
-            currentVideo: props.currentVideo,
-            isLoading: false
-        });
+        component.setState({ isLoading: false });
         const videoList = component.find('#video-list');
         const videoDivs = videoList.children('div');
 
@@ -124,13 +114,7 @@ describe('Playlist Page', () => {
     it('Should create a "View More" link if nextPageToken exists', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        component.setState({
-            playlist: props.playlist,
-            playlistInfo: props.playlistInfo,
-            videoPageToken: props.videoPageToken,
-            currentVideo: props.currentVideo,
-            isLoading: false
-        });
+        component.setState({ isLoading: false });
         const videoList = component.find('#video-list');
         const viewMoreLink = videoList.find('a');
 
@@ -140,15 +124,12 @@ describe('Playlist Page', () => {
     });
 
     it('Should not create a "View More" link if no nextPageToken exists', () => {
+        // arrange
+        props.videoPageToken = '';
+
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        component.setState({
-            playlist: props.playlist,
-            playlistInfo: props.playlistInfo,
-            videoPageToken: '',
-            currentVideo: props.currentVideo,
-            isLoading: false
-        });
+        component.setState({ isLoading: false });
         const videoList = component.find('#video-list');
         const viewMore = videoList.find('a');
 
@@ -159,13 +140,7 @@ describe('Playlist Page', () => {
     it('Should create a VideoPlayer', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        component.setState({
-            playlist: props.playlist,
-            playlistInfo: props.playlistInfo,
-            videoPageToken: props.videoPageToken,
-            currentVideo: props.currentVideo,
-            isLoading: false
-        });
+        component.setState({ isLoading: false });
         const player = component.find(VideoPlayer);
         const updatePlaylist = component.instance().updatePlaylist;
 
@@ -183,10 +158,7 @@ describe('Playlist Page', () => {
 
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        component.setState({
-            playlist: props.playlist,
-            isLoading: false
-        });
+        component.setState({ isLoading: false });
         
         // assert
         expect(component.text()).toEqual('(No videos found for this playlist.)');
@@ -195,21 +167,12 @@ describe('Playlist Page', () => {
     it('Should change video on VideoThumbnail click', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        component.setState({
-            playlist: props.playlist,
-            playlistInfo: props.playlistInfo,
-            videoPageToken: props.videoPageToken,
-            currentVideo: props.currentVideo,
-            isLoading: false
-        });
+        component.setState({ isLoading: false });
         let videoList = component.find('#video-list');
         const nextVideo = videoList.children('div').at(1);
         const mockTarget = {id: nextVideo.prop('id'), className: 'playlist-video'};
         
-        mockGetVideo.returns(new Promise((resolve, reject) => {
-            component.setState({videoInPlaylist: parseInt(mockTarget.id)});
-            resolve();
-        }));
+        mockGetVideo.resolves();
 
         nextVideo.simulate('click', {target: mockTarget});
 
@@ -219,40 +182,25 @@ describe('Playlist Page', () => {
 
         // assert
         expect(mockGetVideo.calledOnce).toEqual(true);
-        expect(mockGetVideo.getCalls()[0].args).toEqual(['1']);
-        expect(videoDivs.at(0).hasClass('selected')).toEqual(false);
-        expect(videoDivs.at(1).hasClass('selected')).toEqual(true);
-        expect(player.prop('playlistIndex')).toEqual(1);
+        expect(mockGetVideo.getCalls()[0].args).toEqual(['1', videoTypes.CURRENT, 1]);
     });
 
     it('Should update playlist on state change', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        component.setState({
-            playlist: props.playlist,
-            playlistInfo: props.playlistInfo,
-            videoPageToken: props.videoPageToken,
-            currentVideo: props.currentVideo,
-            isLoading: false
-        });
+        component.setState({ isLoading: false });
         const playlistIndex = 1;
         component.instance().updatePlaylist(playlistIndex);
 
         // assert
         expect(mockGetVideo.calledOnce).toEqual(true);
-        expect(mockGetVideo.getCalls()[0].args).toEqual(['1']);
+        expect(mockGetVideo.getCalls()[0].args).toEqual(['1', videoTypes.CURRENT, 1]);
     });
 
     it('Should load more videos when "View More" is clicked', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        component.setState({
-            playlist: props.playlist,
-            playlistInfo: props.playlistInfo,
-            videoPageToken: props.videoPageToken,
-            currentVideo: props.currentVideo,
-            isLoading: false
-        });
+        component.setState({ isLoading: false });
         const videoList = component.find('#video-list');
         const viewMoreLink = videoList.find('a');
 

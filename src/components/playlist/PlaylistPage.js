@@ -4,18 +4,14 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
 import * as videoActions from '../../actions/videoActions';
+import * as videoTypes from '../../reducers/videoTypes';
 import VideoPlayer from '../common/player/VideoPlayer';
 import VideoThumbnail from './VideoThumbnail';
 
-export class PlaylistPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { 
-            playlist: Object.assign([]),
-            playlistInfo: Object.assign({}),
-            videoPageToken: Object.assign({}),
-            videoInPlaylist: 0,
-            currentVideo: Object.assign({}),
+export class PlaylistPage extends React.PureComponent {
+    constructor() {
+        super();
+        this.state = {
             isLoading: true
         };
         this.changeVideo = this.changeVideo.bind(this);
@@ -27,21 +23,9 @@ export class PlaylistPage extends React.Component {
         this.props.playlistActions.getPlaylistInfo(this.props.playlistId).then(() => {
             this.props.playlistActions.getPlaylist(this.props.playlistId).then(() => {
                 if (this.props.playlist.length > 0) {
-                    const videoId = this.props.playlist[this.state.videoInPlaylist].snippet.resourceId.videoId;
-                    this.props.videoActions.getVideo(videoId).then(() => {
-                        this.setState({
-                            playlistInfo: Object.assign({}, this.props.playlistInfo),
-                            playlist: Object.assign([], this.props.playlist),
-                            videoPageToken: Object.assign({}, this.props.videoPageToken),
-                            currentVideo: Object.assign({}, this.props.currentVideo),
-                            isLoading: false
-                        });
-                    });
-                } else {
-                    this.setState({
-                        playlistInfo: Object.assign({}, this.props.playlistInfo),
-                        playlist: Object.assign([], this.props.playlist),
-                        videoPageToken: Object.assign({}, this.props.videoPageToken)
+                    const videoId = this.props.playlist[this.props.videoInPlaylist].snippet.resourceId.videoId;
+                    this.props.videoActions.getVideo(videoId, videoTypes.CURRENT).then(() => {
+                        this.setState({ isLoading: false });
                     });
                 }
             });
@@ -54,22 +38,8 @@ export class PlaylistPage extends React.Component {
                 this.props.playlistActions.getPlaylist(nextProps.match.params.id).then(() => {
                     if (this.props.playlist.length > 0) {
                         const videoId = this.props.playlist[0].snippet.resourceId.videoId;
-                        this.props.videoActions.getVideo(videoId).then(() => {
-                            this.setState({
-                                playlistInfo: Object.assign({}, this.props.playlistInfo),
-                                playlist: Object.assign([], this.props.playlist),
-                                videoPageToken: Object.assign({}, this.props.videoPageToken),
-                                videoInPlaylist: 0,
-                                currentVideo: Object.assign({}, this.props.currentVideo),
-                                isLoading: false
-                            });
-                        });
-                    } else {
-                        this.setState({
-                            playlistInfo: Object.assign({}, this.props.playlistInfo),
-                            playlist: Object.assign([], this.props.playlist),
-                            videoPageToken: Object.assign({}, this.props.videoPageToken),
-                            videoInPlaylist: 0
+                        this.props.videoActions.getVideo(videoId, videoTypes.CURRENT).then(() => {
+                            this.setState({ isLoading: false });
                         });
                     }
                 });
@@ -77,59 +47,31 @@ export class PlaylistPage extends React.Component {
         }
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (this.props.playlistId != nextProps.playlistId) {
-            return true;
-        }
-        if (this.state.currentVideo.id != nextProps.currentVideo.id) {
-            return true;
-        }
-        if (!document.getElementById('playlist-page')) {
-            return true;
-        }
-        return false;
-    }
-
     changeVideo(e) {
         let element = e.target;
         while (element.className.indexOf("playlist-video") < 0) {
             element = element.parentNode;
         }
-        const videoId = this.state.playlist[element.id].snippet.resourceId.videoId;
-        this.props.videoActions.getVideo(videoId).then(() => {
-            this.setState({
-                currentVideo: Object.assign({}, this.props.currentVideo),
-                videoInPlaylist: parseInt(element.id)
-            });
-        });
+        const videoId = this.props.playlist[element.id].snippet.resourceId.videoId;
+        this.props.videoActions.getVideo(videoId, videoTypes.CURRENT, parseInt(element.id));
     }
 
     updatePlaylist(playlistIndex) {
-        const nowPlaying = this.state.videoInPlaylist;
+        const nowPlaying = this.props.videoInPlaylist;
         if (nowPlaying != playlistIndex) {
-            const videoId = this.state.playlist[playlistIndex].snippet.resourceId.videoId;
-            this.props.videoActions.getVideo(videoId).then(() => {
-                this.setState({
-                    currentVideo: Object.assign({}, this.props.currentVideo),
-                    videoInPlaylist: parseInt(playlistIndex)
-                });
-            });
+            const videoId = this.props.playlist[playlistIndex].snippet.resourceId.videoId;
+            this.props.videoActions.getVideo(videoId, videoTypes.CURRENT, parseInt(playlistIndex));
         }
     }
 
     loadMoreVideos() {
-        const nextPageToken = this.state.videoPageToken.nextPageToken;
+        const nextPageToken = this.props.videoPageToken.nextPageToken;
         const id = this.props.playlistId;
-        this.props.playlistActions.getNextVideos(id, nextPageToken).then(() => {
-            this.setState({ 
-                playlist: Object.assign([], this.props.playlist),
-                videoPageToken: Object.assign({}, this.props.videoPageToken)
-            });
-        });
+        this.props.playlistActions.getNextVideos(id, nextPageToken);
     }
 
     renderViewMore() {
-        if (this.state.videoPageToken.nextPageToken) {
+        if (this.props.videoPageToken.nextPageToken) {
             return (
                 <a id="view-more" onClick={this.loadMoreVideos}>
                     <div><b>View More</b></div>
@@ -140,12 +82,12 @@ export class PlaylistPage extends React.Component {
 
     render() {
         if (this.state.isLoading) return <div />;
-        const playlist = this.state.playlist;
-        const nowPlaying = this.state.videoInPlaylist;
+        const playlist = this.props.playlist;
+        const nowPlaying = this.props.videoInPlaylist;
         if (playlist.length > 0) {
             return(
                 <div id="playlist-page">
-                    <h2>{this.state.playlistInfo.snippet.title}</h2> 
+                    <h2>{this.props.playlistInfo.snippet.title}</h2> 
                     <div id="video-list">
                         {playlist.map(playlistItem => {
                             let video = playlistItem.snippet;
@@ -165,7 +107,7 @@ export class PlaylistPage extends React.Component {
                         {this.renderViewMore()}
                     </div>
                     <VideoPlayer 
-                        video={this.state.currentVideo} 
+                        video={this.props.currentVideo} 
                         playlistIndex={nowPlaying}
                         playlistId={this.props.playlistId} 
                         updatePlaylist={this.updatePlaylist}/>
@@ -178,12 +120,13 @@ export class PlaylistPage extends React.Component {
 
 PlaylistPage.propTypes = {
     playlist: PropTypes.array.isRequired,
+    playlistId: PropTypes.string.isRequired,
     playlistInfo: PropTypes.object.isRequired,
     videoPageToken: PropTypes.object.isRequired,
+    videoInPlaylist: PropTypes.number.isRequired,
     currentVideo: PropTypes.object.isRequired,
     playlistActions: PropTypes.object.isRequired,
     videoActions: PropTypes.object.isRequired,
-    playlistId: PropTypes.string,
     match: PropTypes.object
 };
 
@@ -193,7 +136,8 @@ function mapStateToProps(state, ownProps) {
         playlistInfo: state.playlistInfo,
         playlistId: ownProps.match.params.id,
         videoPageToken: state.videoPageToken,
-        currentVideo: state.video
+        videoInPlaylist: state.playlistIndex,
+        currentVideo: state.video.current
     };
 }
 

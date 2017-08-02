@@ -2,13 +2,18 @@ import expect from 'expect';
 import {createStore} from 'redux';
 import rootReducer from '../../src/reducers';
 import initialState from '../../src/reducers/initialState';
+import * as videoTypes from '../../src/reducers/videoTypes';
 import * as channelActions from '../../src/actions/channelActions';
 import * as commentActions from '../../src/actions/commentActions';
 import * as playlistActions from '../../src/actions/playlistActions';
 import * as videoActions from '../../src/actions/videoActions';
 
 describe('Store', () => {
-    const store = createStore(rootReducer, initialState);
+    let store;
+    beforeEach(() => {
+        store = createStore(rootReducer, initialState);
+    });
+    
     it('Should handle setting channelInfo', () => {
         // arrange
         const channelInfo = {
@@ -145,19 +150,57 @@ describe('Store', () => {
         expect(result).toEqual(expected);
     });
 
-    it('Should handle setting video', () => {
+    it('Should handle setting video for CURRENT video', () => {
         // arrange
+        const playlistIndex = 0;
+        const videoType = videoTypes.CURRENT;
         const video = {
             items: [{id: 'XXXXX'}]
         };
 
         // act
-        const action = videoActions.getVideoSuccess(video);
+        const action = videoActions.getVideoSuccess(video, videoType, playlistIndex);
         store.dispatch(action);
 
         // assert
-        const expected = {id: 'XXXXX'};
+        const expected = {current: {id: 'XXXXX'}, queued: {}};
         const result = store.getState().video;
+        expect(result).toEqual(expected);
+    });
+
+    it('Should handle setting video for QUEUED video', () => {
+        // arrange
+        const playlistIndex = 0;
+        const videoType = videoTypes.QUEUED;
+        const video = {
+            items: [{id: 'XXXXX'}]
+        };
+
+        // act
+        const action = videoActions.getVideoSuccess(video, videoType, playlistIndex);
+        store.dispatch(action);
+
+        // assert
+        const expected = {current: {}, queued: {id: 'XXXXX'}};
+        const result = store.getState().video;
+        expect(result).toEqual(expected);
+    });
+
+    it('Should handle setting playlistIndex of a video', () => {
+        // arrange
+        const playlistIndex = 1;
+        const videoType = videoTypes.CURRENT;
+        const video = {
+            items: [{id: 'XXXXX'}]
+        };
+
+        // act
+        const action = videoActions.getVideoSuccess(video, videoType, playlistIndex);
+        store.dispatch(action);
+
+        // assert
+        const expected = 1;
+        const result = store.getState().playlistIndex;
         expect(result).toEqual(expected);
     });
 

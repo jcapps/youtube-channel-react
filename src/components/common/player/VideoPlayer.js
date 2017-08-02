@@ -26,6 +26,10 @@ class VideoPlayer extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        player.destroy();
+    }
+
     initializePlayer(props) {
         let params = {
             height: '360',
@@ -47,8 +51,9 @@ class VideoPlayer extends React.Component {
         if (player) player.destroy();
         player = YouTubePlayer('player-iframe', params);
         player.on('stateChange', e => {
+            let playerState = e.target.getPlayerState();
             let playlistIndex = e.target.getPlaylistIndex(); // -1 if not a playlist
-            if (playlistIndex > -1) {
+            if (playlistIndex > -1 && playerState == 0 || playerState == 1) { // -1 = UNSTARTED, 0 = ENDED, 1 = PLAYING, 2 = PAUSED, 3 = BUFFERING, 5 = VIDEO CUED
                 props.updatePlaylist(playlistIndex);
             }
         });

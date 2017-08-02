@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
+import * as videoTypes from '../../reducers/videoTypes';
 
 export class VideoResult extends React.Component {
     constructor(props) {
@@ -14,7 +15,7 @@ export class VideoResult extends React.Component {
     }
 
     componentWillMount() {
-        this.props.actions.getVideo(this.props.videoId);
+        this.props.actions.getVideo(this.props.videoId, videoTypes.QUEUED);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -26,7 +27,7 @@ export class VideoResult extends React.Component {
         }
 
         if (this.props.videoId != nextProps.videoId) {
-            this.props.actions.getVideo(nextProps.videoId).then(() => {
+            this.props.actions.getVideo(nextProps.videoId, videoTypes.QUEUED).then(() => {
                 this.setState({ 
                     video: Object.assign({}, this.props.video),
                     isLoading: false
@@ -65,7 +66,7 @@ VideoResult.propTypes = {
 };
 
 function mapStateToProps(state) {
-    return { video: state.video };
+    return { video: state.video.queued };
 }
 
 function mapDispatchToProps(dispatch) {

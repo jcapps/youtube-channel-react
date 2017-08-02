@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
+import * as videoTypes from '../../reducers/videoTypes';
 import VideoPlayer from '../common/player/VideoPlayer';
 
 export class VideoWatchPage extends React.Component {
@@ -16,7 +17,7 @@ export class VideoWatchPage extends React.Component {
 
     componentWillMount() {
         this.setState({ isLoading: true });
-        this.props.actions.getVideo(this.props.videoId).then(() => {
+        this.props.actions.getVideo(this.props.videoId, videoTypes.CURRENT).then(() => {
             this.setState({ isLoading: this.props.isLoading });
         });
     }
@@ -56,7 +57,7 @@ VideoWatchPage.propTypes = {
 
 function mapStateToProps(state, ownProps) {
     return {
-        video: state.video,
+        video: state.video.current,
         videoId: ownProps.match.params.id,
         isLoading: state.ajaxCallsInProgress > 0
     };

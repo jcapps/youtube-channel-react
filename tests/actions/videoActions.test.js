@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import sinon from 'sinon';
 import configureMockStore from 'redux-mock-store';
 import * as types from '../../src/actions/actionTypes';
+import * as videoTypes from '../../src/reducers/videoTypes';
 import * as videoActions from '../../src/actions/videoActions';
 import * as playlistActions from '../../src/actions/playlistActions';
 import * as youtubeActions from '../../src/actions/youtubeActions';
@@ -15,13 +16,17 @@ describe('Video Actions', () => {
         it('Should create a GET_VIDEO_SUCCESS action', () => {
             // arrange
             const video = {};
+            const videoType = videoTypes.CURRENT;
+            const playlistIndex = 0;
             const expectedAction = {
+                playlistIndex: playlistIndex,
                 type: types.GET_VIDEO_SUCCESS,
-                video: video
+                video: video,
+                videoType: videoType
             };
 
             // act
-            const action = videoActions.getVideoSuccess(video);
+            const action = videoActions.getVideoSuccess(video, videoType, playlistIndex);
 
             // assert
             expect(action).toEqual(expectedAction);
@@ -46,21 +51,79 @@ describe('Video Actions', () => {
     });
 
     describe('getVideo', () => {
-        it('Should dispatch BEGIN_AJAX_CALL and GET_VIDEO_SUCCESS actions', (done) => {
+        it('Should dispatch BEGIN_AJAX_CALL and GET_VIDEO_SUCCESS actions for CURRENT video', (done) => {
             // arrange
             const video = {items: [{}]};
             const expectedActions = {
                 type: types.GET_VIDEO_SUCCESS, 
-                body: {video: video}
+                body: {
+                    video: video,
+                    videoTypes: videoTypes.CURRENT
+                }
             };
             
-            const store = mockStore({video: video}, expectedActions);
+            const store = mockStore({video: {current: {}, queued: {}}}, expectedActions);
 
             let mockAction = sinon.stub(youtubeActions, 'getVideoInfo');
             mockAction.resolves(video);
 
             // act
-            store.dispatch(videoActions.getVideo("ID")).then(() => {
+            store.dispatch(videoActions.getVideo("ID", videoTypes.CURRENT)).then(() => {
+                const actions = store.getActions();
+                // assert
+                expect(actions[0].type).toEqual(types.BEGIN_AJAX_CALL);
+                expect(actions[1].type).toEqual(types.GET_VIDEO_SUCCESS);
+                mockAction.restore();
+                done();
+            });
+        });
+
+        it('Should dispatch BEGIN_AJAX_CALL and GET_VIDEO_SUCCESS actions for QUEUED video', (done) => {
+            // arrange
+            const video = {items: [{}]};
+            const expectedActions = {
+                type: types.GET_VIDEO_SUCCESS, 
+                body: {
+                    video: video,
+                    videoTypes: videoTypes.QUEUED
+                }
+            };
+            
+            const store = mockStore({video: {current: {}, queued: {}}}, expectedActions);
+
+            let mockAction = sinon.stub(youtubeActions, 'getVideoInfo');
+            mockAction.resolves(video);
+
+            // act
+            store.dispatch(videoActions.getVideo("ID", videoTypes.QUEUED)).then(() => {
+                const actions = store.getActions();
+                // assert
+                expect(actions[0].type).toEqual(types.BEGIN_AJAX_CALL);
+                expect(actions[1].type).toEqual(types.GET_VIDEO_SUCCESS);
+                mockAction.restore();
+                done();
+            });
+        });
+
+        it('Should dispatch BEGIN_AJAX_CALL and GET_VIDEO_SUCCESS actions with optional playlistIndex', (done) => {
+            // arrange
+            const video = {items: [{}]};
+            const expectedActions = {
+                type: types.GET_VIDEO_SUCCESS, 
+                body: {
+                    video: video,
+                    videoTypes: videoTypes.CURRENT,
+                    playlistIndex: 1
+                }
+            };
+            
+            const store = mockStore({video: {current: {}, queued: {}}}, expectedActions);
+
+            let mockAction = sinon.stub(youtubeActions, 'getVideoInfo');
+            mockAction.resolves(video);
+
+            // act
+            store.dispatch(videoActions.getVideo("ID", videoTypes.CURRENT, 1)).then(() => {
                 const actions = store.getActions();
                 // assert
                 expect(actions[0].type).toEqual(types.BEGIN_AJAX_CALL);

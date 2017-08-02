@@ -8,6 +8,7 @@ import playlistPageToken from './playlistPageTokenReducer';
 import videoPageToken from './videoPageTokenReducer';
 import playlist from './playlistReducer';
 import playlistInfo from './playlistInfoReducer';
+import playlistIndex from './playlistIndexReducer';
 import video from './videoReducer';
 import comments from './commentsReducer';
 import replies from './repliesReducer';
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
     videoPageToken,
     playlist,
     playlistInfo,
+    playlistIndex,
     video,
     searchResults,
     searchInfo,

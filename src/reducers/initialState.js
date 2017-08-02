@@ -7,11 +7,12 @@ export default {
     playlistPageToken: {prevPageToken: "", nextPageToken: ""},
     playlist: [],
     playlistInfo: {},
+    playlistIndex: 0,
     replies: {},
     searchResults: [],
     searchInfo: {totalResults: 0},
     searchPageToken: {prevPageToken: "", nextPageToken: ""},
-    video: {},
+    video: {current: {}, queued: {}},
     videoPageToken: {prevPageToken: "", nextPageToken: ""},
     ajaxCallsInProgress: 0
 };
