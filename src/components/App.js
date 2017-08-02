@@ -3,7 +3,7 @@ import React from 'react';
 import Header from './common/Header';
 import Routes from './Routes';
 
-class App extends React.Component {
+class App extends React.PureComponent {
     render() {
         return (
             <div>

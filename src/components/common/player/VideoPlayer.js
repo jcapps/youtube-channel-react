@@ -7,7 +7,7 @@ import VideoPlayerStats from './VideoPlayerStats';
 
 let player;
 
-class VideoPlayer extends React.Component {
+class VideoPlayer extends React.PureComponent {
     constructor() {
         super();
         this.videoSeek = this.videoSeek.bind(this);

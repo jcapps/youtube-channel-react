@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withRouter} from "react-router-dom";
 
-class SearchBar extends React.Component {
+class SearchBar extends React.PureComponent {
     constructor() {
         super();
         this.state = {

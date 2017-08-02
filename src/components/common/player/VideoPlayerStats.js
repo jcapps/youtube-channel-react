@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class VideoPlayerStats extends React.Component {
+class VideoPlayerStats extends React.PureComponent {
     componentDidMount() {
         this.setLikeBarWidths();
     }

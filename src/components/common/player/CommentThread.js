@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as commentActions from '../../../actions/commentActions';
 import CommentBlock from './CommentBlock';
 
-export class CommentThread extends React.Component {
+export class CommentThread extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {

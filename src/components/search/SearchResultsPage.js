@@ -7,7 +7,7 @@ import * as channelActions from '../../actions/channelActions';
 import PlaylistResult from '../playlist/PlaylistResult';
 import VideoResult from '../video/VideoResult';
 
-export class SearchResultsPage extends React.Component {
+export class SearchResultsPage extends React.PureComponent {
     constructor() {
         super();
         this.loadMoreResults = this.loadMoreResults.bind(this);

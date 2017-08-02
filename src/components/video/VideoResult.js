@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
 import * as videoTypes from '../../reducers/videoTypes';
 
-export class VideoResult extends React.Component {
+export class VideoResult extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = { 
@@ -37,7 +37,6 @@ export class VideoResult extends React.Component {
     }
 
     render() {
-        if (this.state.isLoading) return <div />;
         let video = this.state.video;
         if (video.snippet) {
             return (

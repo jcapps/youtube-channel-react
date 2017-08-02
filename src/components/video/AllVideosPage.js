@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
 import VideoResult from './VideoResult';
 
-export class AllVideosPage extends React.Component {
+export class AllVideosPage extends React.PureComponent {
     constructor() {
         super();
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
@@ -45,7 +45,7 @@ export class AllVideosPage extends React.Component {
                                 <VideoResult videoId={id}/>
                             </Link>
                         );
-                    })}
+                    })} 
                     {this.renderViewMore()}
                 </div>
             </div>

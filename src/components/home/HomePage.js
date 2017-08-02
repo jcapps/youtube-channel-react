@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
 import VideoPlayer from '../common/player/VideoPlayer';
 
-export class HomePage extends React.Component {
+export class HomePage extends React.PureComponent {
     constructor() {
         super();
         this.state = {

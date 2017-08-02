@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 const DOMPurify = require('dompurify')(window);
 
-export class CommentBlock extends React.Component {
+export class CommentBlock extends React.PureComponent {
     constructor() {
         super();
         this.clickTimeStamp = this.clickTimeStamp.bind(this);

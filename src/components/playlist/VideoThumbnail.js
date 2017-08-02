@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
 import * as videoTypes from '../../reducers/videoTypes';
 
-export class VideoThumbnail extends React.Component {
+export class VideoThumbnail extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = { 

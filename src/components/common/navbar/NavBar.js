@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import PlaylistLink from './PlaylistLink';
 
-export class NavBar extends React.Component {
+export class NavBar extends React.PureComponent {
     constructor() {
         super();
         this.showSubmenu = this.showSubmenu.bind(this);

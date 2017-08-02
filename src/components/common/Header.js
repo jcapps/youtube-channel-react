@@ -6,7 +6,7 @@ import NavBar from './navbar/NavBar';
 import SearchBar from './SearchBar';
 import SubscribeButton from './SubscribeButton';
 
-export class Header extends React.Component {
+export class Header extends React.PureComponent {
     render() {
         return (
             <header>

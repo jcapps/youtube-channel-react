@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as commentActions from '../../../actions/commentActions';
 import CommentThread from './CommentThread';
 
-export class VideoPlayerComments extends React.Component {
+export class VideoPlayerComments extends React.PureComponent {
     constructor() {
         super();
         this.state = {

@@ -7,7 +7,7 @@ import * as videoActions from '../../actions/videoActions';
 import * as videoTypes from '../../reducers/videoTypes';
 import VideoPlayer from '../common/player/VideoPlayer';
 
-export class VideoWatchPage extends React.Component {
+export class VideoWatchPage extends React.PureComponent {
     constructor() {
         super();
         this.state = {

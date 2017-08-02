@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-export class AboutPage extends React.Component {
+export class AboutPage extends React.PureComponent {
     render() {
         if (this.props.channel && this.props.channel.snippet) {
             let profilePicUrl = this.props.channel.snippet.thumbnails.medium.url;
