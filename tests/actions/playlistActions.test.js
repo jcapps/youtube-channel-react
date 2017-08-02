@@ -292,8 +292,8 @@ describe('Playlist Actions', () => {
                 const actions = store.getActions();
                 // assert
                 expect(actions[0].type).toEqual(types.BEGIN_AJAX_CALL);
-                expect(actions[1].type).toEqual(types.GET_RECENT_UPLOADS_PLAYLIST_ID_SUCCESS);
-                expect(actions[2].type).toEqual(types.BEGIN_AJAX_CALL);
+                expect(actions[1].type).toEqual(types.BEGIN_AJAX_CALL);
+                expect(actions[2].type).toEqual(types.GET_RECENT_UPLOADS_PLAYLIST_ID_SUCCESS);
                 expect(actions[3].type).toEqual(types.GET_RECENT_UPLOADS_PLAYLIST_SUCCESS);
                 mockAction.restore();
                 mockAction2.restore();
