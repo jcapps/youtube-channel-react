@@ -84,10 +84,10 @@ export function getPlaylistInfo(id) {
 export function getRecentUploadsPlaylist() {
     return function(dispatch) {
         dispatch(beginAjaxCall());
+        dispatch(beginAjaxCall());
         return youtubeActions.getChannelDetails().then(channelContent => {
             let playlistId = channelContent.items[0].contentDetails.relatedPlaylists.uploads;
             dispatch(getRecentUploadsPlaylistIdSuccess(playlistId));
-            dispatch(beginAjaxCall());
             return youtubeActions.getPlaylist(playlistId).then(playlist => {
                 dispatch(getRecentUploadsPlaylistSuccess(playlist));
                 return playlist;

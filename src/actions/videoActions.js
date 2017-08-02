@@ -23,9 +23,9 @@ export function getVideo(id, type, playlistIndex = 0) {
 
 export function getMostRecentUpload() {
     return function(dispatch) {
+        dispatch(beginAjaxCall());
         const helperActions = bindActionCreators(playlistActions, dispatch);
 
-        dispatch(beginAjaxCall());
         return helperActions.getRecentUploadsPlaylist().then(playlist => {
             let videoId = playlist.items[0].snippet.resourceId.videoId;
             return youtubeActions.getVideoInfo(videoId).then(video => {
