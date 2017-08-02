@@ -53,7 +53,8 @@ export class HomePage extends React.Component {
 
 HomePage.propTypes = {
     mostRecentUpload: PropTypes.object.isRequired,
-    isLoading: PropTypes.bool.isRequired
+    isLoading: PropTypes.bool.isRequired,
+    actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
