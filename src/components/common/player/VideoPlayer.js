@@ -26,10 +26,6 @@ class VideoPlayer extends React.PureComponent {
         }
     }
 
-    componentWillUnmount() {
-        player.destroy();
-    }
-
     initializePlayer(props) {
         let params = {
             height: '360',
