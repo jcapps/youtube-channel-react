@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
+import * as ajax from './ajaxStatusActions';
 import * as youtubeActions from './youtubeActions';
 
 export function getCommentsSuccess(comments) {
@@ -20,7 +20,7 @@ export function getNextRepliesSuccess(replies) {
 
 export function getComments(videoId, sortOrder = "relevance") {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingVideoComments());
         return youtubeActions.getVideoComments(videoId, sortOrder).then(comments => {
             dispatch(getCommentsSuccess(comments));
         });
@@ -29,7 +29,7 @@ export function getComments(videoId, sortOrder = "relevance") {
 
 export function getNextComments(videoId, sortOrder, pageToken) {
     return function(dispatch, getState) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingVideoComments());
         return youtubeActions.getVideoComments(videoId, sortOrder, pageToken).then(comments => {
             const state = getState();
             const commentItems = [...state.comments.items, ...comments.items];
@@ -41,7 +41,7 @@ export function getNextComments(videoId, sortOrder, pageToken) {
 
 export function getReplies(commentId) {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingCommentReplies());
         return youtubeActions.getCommentReplies(commentId, 2).then(replies => {
             dispatch(getRepliesSuccess(replies));
         });
@@ -50,7 +50,7 @@ export function getReplies(commentId) {
 
 export function getNextReplies(commentId, currentReplies, pageToken) {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingCommentReplies());
         return youtubeActions.getCommentReplies(commentId, 10, pageToken).then(replies => {
             let oldReplies = Object.assign([], currentReplies.items);
             if (oldReplies[oldReplies.length - 1].id == replies.items[0].id) {

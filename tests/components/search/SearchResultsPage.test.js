@@ -2,7 +2,6 @@ import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
-import {Link} from 'react-router-dom';
 import {SearchResultsPage} from '../../../src/components/search/SearchResultsPage';
 import PlaylistResult from '../../../src/components/playlist/PlaylistResult';
 import VideoResult from '../../../src/components/video/VideoResult';
@@ -17,8 +16,8 @@ describe('Search Results Page', () => {
         props = {
             query: 'QUERY',
             results: [
-                {id: {videoId: '0'}},
-                {id: {playlistId: '1'}}
+                {id: {kind: 'youtube#video', videoId: '0'}},
+                {id: {kind: 'youtube#playlist', playlistId: '1'}}
             ],
             resultsCount: 10,
             pageToken: {nextPageToken: 'TOKEN'},
@@ -47,6 +46,7 @@ describe('Search Results Page', () => {
     it('Should create page heading if results found', () => {
         // act
         const component = shallow(<SearchResultsPage {...props}/>);
+        component.setState({ isLoading: false });
         const title = component.find('h3');
         const querySpan = title.children('span').at(1);
         const resultsCount = component.find('h4');
@@ -65,6 +65,7 @@ describe('Search Results Page', () => {
 
         // act
         const component = shallow(<SearchResultsPage {...props}/>);
+        component.setState({ isLoading: false });
         const title = component.find('h3');
         const querySpan = title.children('span').at(1);
         const resultsCount = component.find('h4');
@@ -79,23 +80,23 @@ describe('Search Results Page', () => {
     it('Should create list of results', () => {
         // act
         const component = shallow(<SearchResultsPage {...props}/>);
+        component.setState({ isLoading: false });
         const list = component.find('.search-list');
-        const links = list.find(Link);
+        const videoResult = list.find(VideoResult);
+        const playlistResult = list.find(PlaylistResult);
 
         // assert
         expect(list.length).toEqual(1);
-        expect(links.length).toEqual(2);
-        expect(links.at(0).prop('to')).toEqual('/watch/0');
-        expect(links.at(1).prop('to')).toEqual('/playlist/1');
-        expect(links.at(0).find(VideoResult).length).toEqual(1);
-        expect(links.at(1).find(PlaylistResult).length).toEqual(1);
-        expect(links.at(0).find(VideoResult).props().videoId).toEqual('0');
-        expect(links.at(1).find(PlaylistResult).props().playlist).toEqual(props.results[1]);
+        expect(videoResult.length).toEqual(1);
+        expect(playlistResult.length).toEqual(1);
+        expect(videoResult.props().videoId).toEqual('0');
+        expect(playlistResult.props().playlist).toEqual(props.results[1]);
     });
 
     it('Should create "View More" link if has nextPageToken', () => {
         // act
         const component = shallow(<SearchResultsPage {...props}/>);
+        component.setState({ isLoading: false });
         const list = component.find('.search-list');
         const link = list.find('a');
 
@@ -107,6 +108,7 @@ describe('Search Results Page', () => {
     it('Should load more results when "View More" is clicked', () => {
         // act
         const component = shallow(<SearchResultsPage {...props}/>);
+        component.setState({ isLoading: false });
         const list = component.find('.search-list');
         const link = list.find('a');
 

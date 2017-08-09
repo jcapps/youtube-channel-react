@@ -1,45 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as videoActions from '../../actions/videoActions';
 import * as videoTypes from '../../reducers/videoTypes';
 
 export class VideoResult extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = { 
-            video: Object.assign({}),
-            isLoading: true
-        };
-    }
-
     componentWillMount() {
         this.props.actions.getVideo(this.props.videoId, videoTypes.QUEUED);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.videoId == nextProps.video.id) { // Avoid race condition in IE
-            this.setState({ 
-                video: Object.assign({}, nextProps.video),
-                isLoading: false
-            });
-        }
-
-        if (this.props.videoId != nextProps.videoId) {
-            this.props.actions.getVideo(nextProps.videoId, videoTypes.QUEUED).then(() => {
-                this.setState({ 
-                    video: Object.assign({}, this.props.video),
-                    isLoading: false
-                });
-            });
-        }
-    }
-
     render() {
-        let video = this.state.video;
-        if (video.snippet) {
-            return (
+        const video = this.props.video;
+        const isLoading = !video.snippet;
+        if (isLoading) return <div/>;
+        return (
+            <Link to={"/watch/" + video.id}>
                 <div className="video-result">
                     <img 
                         height="90" 
@@ -52,9 +29,8 @@ export class VideoResult extends React.PureComponent {
                         <p>{video.snippet.description}</p>
                     </div>
                 </div>
-            );
-        }
-        return <div>(Can't find video)</div>;
+            </Link>
+        );
     }
 }
 
@@ -72,4 +48,14 @@ function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(videoActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(VideoResult);
+function mergeProps(state, actions, props) {
+    return Object.assign({}, state, actions, props);
+}
+
+const connectOptions = {
+    areMergedPropsEqual: (next, prev) => {
+        return next.videoId !== next.video.id; // Only want to render when these two values are the same. (Returning false causes a re-render.)
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps, connectOptions)(VideoResult);

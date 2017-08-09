@@ -9,58 +9,41 @@ export class HomePage extends React.PureComponent {
     constructor() {
         super();
         this.state = {
-            isLoading: false
+            isLoading: true
         };
     }
 
     componentWillMount() {
-        this.setState({ isLoading: true });
-        this.props.actions.getMostRecentUpload().then(() => {
-            this.setState({ isLoading: this.props.isLoading });
-        });
+        this.props.actions.getMostRecentUpload();
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.mostRecentUpload.id == nextProps.mostRecentUpload.id) {
+        if (!nextProps.isLoading) {
             this.setState({ isLoading: false });
         }
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (this.props.mostRecentUpload.id != nextProps.mostRecentUpload.id) {
-            return true;
-        }
-        if (!document.getElementById('home-page')) {
-            return true;
-        }
-        return false;
-    }
-
     render() {
-        if (this.state.isLoading) { return <div />; }
-        const mostRecentUpload = this.props.mostRecentUpload;
-        if (mostRecentUpload.id) {
-            return(
-                <div id="home-page">
-                    <h2>Most Recent Upload</h2>
-                    <VideoPlayer video={mostRecentUpload}/>
-                </div>
-            );
-        }
-        return <div>(Video not found.)</div>;
+        if (this.state.isLoading) return <div/>;
+        return(
+            <div id="home-page">
+                <h2>Most Recent Upload</h2>
+                <VideoPlayer video={this.props.mostRecentUpload}/>
+            </div>
+        );
     }
 }
 
 HomePage.propTypes = {
-    mostRecentUpload: PropTypes.object.isRequired,
     isLoading: PropTypes.bool.isRequired,
+    mostRecentUpload: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
     return { 
         mostRecentUpload: state.mostRecentUpload,
-        isLoading: state.ajaxCallsInProgress > 0
+        isLoading: state.ajaxCallsInProgress.home > 0
     };
 }
 
@@ -68,4 +51,10 @@ function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(videoActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+const connectOptions = {
+    areStatePropsEqual: (next, prev) => {
+        return prev.isLoading === next.isLoading;
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(HomePage);

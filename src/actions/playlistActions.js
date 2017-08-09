@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
+import * as ajax from './ajaxStatusActions';
 import * as youtubeActions from './youtubeActions';
 
 export function getAllPlaylistsSuccess(playlists) {
@@ -32,7 +32,7 @@ export function getRecentUploadsPlaylistSuccess(playlist) {
 
 export function getAllPlaylists() {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingAllPlaylists());
         return youtubeActions.getAllPlaylists().then(playlists => {
             dispatch(getAllPlaylistsSuccess(playlists));
         });
@@ -41,7 +41,7 @@ export function getAllPlaylists() {
 
 export function getNextPlaylists(nextPageToken) {
     return function(dispatch, getState) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingAllPlaylists());
         return youtubeActions.getAllPlaylists(nextPageToken).then(playlists => {
             const state = getState();
             const allPlaylists = [...state.allPlaylists, ...playlists.items];
@@ -53,7 +53,7 @@ export function getNextPlaylists(nextPageToken) {
 
 export function getPlaylist(id) {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingPlaylist());
         return youtubeActions.getPlaylist(id).then(playlist => {
             dispatch(getPlaylistSuccess(playlist));
         });
@@ -62,7 +62,7 @@ export function getPlaylist(id) {
 
 export function getNextVideos(id, nextPageToken) {
     return function(dispatch, getState) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingPlaylist());
         return youtubeActions.getPlaylist(id, nextPageToken).then(videos => {
             const state = getState();
             const playlist = [...state.playlist, ...videos.items];
@@ -74,7 +74,7 @@ export function getNextVideos(id, nextPageToken) {
 
 export function getPlaylistInfo(id) {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingPlaylistInfo());
         return youtubeActions.getPlaylistInfo(id).then(playlist => {
             dispatch(getPlaylistInfoSuccess(playlist));
         });
@@ -83,8 +83,8 @@ export function getPlaylistInfo(id) {
 
 export function getRecentUploadsPlaylist() {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingRecentUploadsPlaylistId());
+        dispatch(ajax.gettingRecentUploadsPlaylist());
         return youtubeActions.getChannelDetails().then(channelContent => {
             let playlistId = channelContent.items[0].contentDetails.relatedPlaylists.uploads;
             dispatch(getRecentUploadsPlaylistIdSuccess(playlistId));

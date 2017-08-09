@@ -6,12 +6,6 @@ class VideoPlayerStats extends React.PureComponent {
         this.setLikeBarWidths();
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.video.id != nextProps.video.id) {
-            this.setLikeBarWidths();
-        }
-    }
-
     setLikeBarWidths() {
         setTimeout(() => {
             const stats = this.props.video.statistics;

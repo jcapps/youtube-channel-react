@@ -8,19 +8,14 @@ import CommentThread from '../../../../src/components/common/player/CommentThrea
 
 describe('VideoPlayerComments', () => {
     let props;
+    let retrievedComments;
     let mockGetComments;
     let mockGetNextComments;
 
     beforeEach(() => {
         // arrange
         props = {
-            comments: {
-                items: [
-                    {id: '11'},
-                    {id: '22'}
-                ],
-                nextPageToken: 'TOKEN'
-            },
+            comments: {},
             video: {
                 id: '1',
                 statistics: {
@@ -29,6 +24,14 @@ describe('VideoPlayerComments', () => {
             },
             videoSeek: new Function(),
             actions: commentActions
+        };
+        
+        retrievedComments = {
+            items: [
+                {id: '11'},
+                {id: '22'}
+            ],
+            nextPageToken: 'TOKEN'
         };
 
         mockGetComments = sinon.stub(props.actions, 'getComments');
@@ -52,9 +55,6 @@ describe('VideoPlayerComments', () => {
     });
 
     it('Should create "Loading comments..." div when still retrieving data', () => {
-        // arrange
-        props.comments = {};
-
         // act
         const component = shallow(<VideoPlayerComments {...props}/>);
 
@@ -63,11 +63,10 @@ describe('VideoPlayerComments', () => {
     });
 
     it('Should create "Comments: 0" div when video has no comments', () => {
-        // arrange
-        props.comments = {items: []};
-
         // act
         const component = shallow(<VideoPlayerComments {...props}/>);
+        component.setProps({ comments: {items: []} });
+        component.setState({ isLoading: false });
 
         // assert
         expect(component.text()).toEqual("Comments: 0");
@@ -76,6 +75,8 @@ describe('VideoPlayerComments', () => {
     it('Should create comments header', () => {
         // act
         const component = shallow(<VideoPlayerComments {...props}/>);
+        component.setProps({ comments: retrievedComments });
+        component.setState({ isLoading: false });
         const commentHeader = component.find('div.comment-header');
         const commentStats = commentHeader.find('div.comment-stats');
         const commentSort = commentHeader.find('select.comment-sort');
@@ -100,13 +101,15 @@ describe('VideoPlayerComments', () => {
     it('Should create comments section', () => {
         // act
         const component = shallow(<VideoPlayerComments {...props}/>);
+        component.setProps({ comments: retrievedComments });
+        component.setState({ isLoading: false });
         const commentSection = component.find('div.comment-section');
         const commentThreads = commentSection.find(CommentThread);
 
         // assert
         expect(commentThreads.length).toEqual(2);
-        expect(commentThreads.at(0).props().thread).toEqual(props.comments.items[0]);
-        expect(commentThreads.at(1).props().thread).toEqual(props.comments.items[1]);
+        expect(commentThreads.at(0).props().thread).toEqual(retrievedComments.items[0]);
+        expect(commentThreads.at(1).props().thread).toEqual(retrievedComments.items[1]);
         expect(commentThreads.at(0).props().videoId).toEqual(props.video.id);
         expect(commentThreads.at(1).props().videoId).toEqual(props.video.id);
         expect(commentThreads.at(0).props().videoSeek).toEqual(props.videoSeek);
@@ -116,6 +119,8 @@ describe('VideoPlayerComments', () => {
     it('Should create a "View More" link if has nextPageToken', () => {
         // act
         const component = shallow(<VideoPlayerComments {...props}/>);
+        component.setProps({ comments: retrievedComments });
+        component.setState({ isLoading: false });
         const commentSection = component.find('div.comment-section');
         const viewMore = commentSection.find('#view-more-comments');
 
@@ -126,10 +131,12 @@ describe('VideoPlayerComments', () => {
 
     it('Should not create a "View More" link if no nextPageToken exists', () => {
         // arrange
-        props.comments.nextPageToken = "";
+        retrievedComments.nextPageToken = "";
         
         // act
         const component = shallow(<VideoPlayerComments {...props}/>);
+        component.setProps({ comments: retrievedComments });
+        component.setState({ isLoading: false });
         const commentSection = component.find('div.comment-section');
         const viewMore = commentSection.find('#view-more-comments');
 
@@ -140,6 +147,8 @@ describe('VideoPlayerComments', () => {
     it('Should load more comments when "View More" is clicked', () => {
         // act
         const component = shallow(<VideoPlayerComments {...props}/>);
+        component.setProps({ comments: retrievedComments });
+        component.setState({ isLoading: false });
         const commentSection = component.find('div.comment-section');
         const viewMore = commentSection.find('#view-more-comments');
 

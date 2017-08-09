@@ -11,36 +11,24 @@ export class VideoWatchPage extends React.PureComponent {
     constructor() {
         super();
         this.state = {
-            isLoading: false
+            isLoading: true
         };
     }
 
     componentWillMount() {
-        this.setState({ isLoading: true });
-        this.props.actions.getVideo(this.props.videoId, videoTypes.CURRENT).then(() => {
-            this.setState({ isLoading: this.props.isLoading });
-        });
+        this.props.actions.getVideo(this.props.videoId, videoTypes.CURRENT);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.video.id == nextProps.videoId) {
+        if (!nextProps.isLoading) {
             this.setState({ isLoading: false });
         }
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (this.props.video.id != nextProps.video.id) {
-            return true;
-        }
-        if (!document.getElementById('videos-watch-page')) {
-            return true;
-        }
-        return false;
-    }
-
     render() {
-        if (this.state.isLoading) return <div />;
-        return (
+        if (this.state.isLoading) return <div/>;
+        const video = this.props.video;
+        return(
             <div id="videos-watch-page">
                 <VideoPlayer video={this.props.video}/>
             </div>
@@ -49,9 +37,9 @@ export class VideoWatchPage extends React.PureComponent {
 }
 
 VideoWatchPage.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     video: PropTypes.object.isRequired,
     videoId: PropTypes.string.isRequired,
-    isLoading: PropTypes.bool.isRequired,
     actions: PropTypes.object.isRequired
 };
 
@@ -59,7 +47,7 @@ function mapStateToProps(state, ownProps) {
     return {
         video: state.video.current,
         videoId: ownProps.match.params.id,
-        isLoading: state.ajaxCallsInProgress > 0
+        isLoading: state.ajaxCallsInProgress.watch > 0
     };
 }
 
@@ -67,4 +55,10 @@ function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(videoActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(VideoWatchPage);
+const connectOptions = {
+    areStatePropsEqual: (next, prev) => {
+        return prev.isLoading === next.isLoading;
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(VideoWatchPage);

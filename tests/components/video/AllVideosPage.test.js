@@ -2,7 +2,6 @@ import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
-import {Link} from 'react-router-dom';
 import {AllVideosPage} from '../../../src/components/video/AllVideosPage';
 import VideoResult from '../../../src/components/video/VideoResult';
 import * as playlistActions from '../../../src/actions/playlistActions';
@@ -57,26 +56,22 @@ describe('All Videos Page', () => {
     it('Should create list of videos', () => {
         // act
         const component = shallow(<AllVideosPage {...props}/>);
+        component.setState({ isLoading: false });
         const list = component.find('.search-list');
-        const links = list.find(Link);
+        const listItem = list.find(VideoResult);
 
         // assert
         expect(list.length).toEqual(1);
-        expect(links.length).toEqual(3);
-        expect(links.at(0).prop('to')).toEqual('/watch/1');
-        expect(links.at(1).prop('to')).toEqual('/watch/2');
-        expect(links.at(2).prop('to')).toEqual('/watch/3');
-        expect(links.at(0).find(VideoResult).length).toEqual(1);
-        expect(links.at(1).find(VideoResult).length).toEqual(1);
-        expect(links.at(2).find(VideoResult).length).toEqual(1);
-        expect(links.at(0).find(VideoResult).props().videoId).toEqual('1');
-        expect(links.at(1).find(VideoResult).props().videoId).toEqual('2');
-        expect(links.at(2).find(VideoResult).props().videoId).toEqual('3');
+        expect(listItem.length).toEqual(3);
+        expect(listItem.at(0).props().videoId).toEqual(props.playlist[0].snippet.resourceId.videoId);
+        expect(listItem.at(1).props().videoId).toEqual(props.playlist[1].snippet.resourceId.videoId);
+        expect(listItem.at(2).props().videoId).toEqual(props.playlist[2].snippet.resourceId.videoId);
     });
 
     it('Should create "View More" link if has nextPageToken', () => {
         // act
         const component = shallow(<AllVideosPage {...props}/>);
+        component.setState({ isLoading: false });
         const list = component.find('.search-list');
         const link = list.find('a');
 
@@ -88,6 +83,7 @@ describe('All Videos Page', () => {
     it('Should load more results when "View More" is clicked', () => {
         // act
         const component = shallow(<AllVideosPage {...props}/>);
+        component.setState({ isLoading: false });
         const list = component.find('.search-list');
         const link = list.find('a');
 

@@ -9,7 +9,6 @@ export class CommentThread extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            replies: Object.assign({}, props.replies),
             canHideReplies: false
         };
         this.loadMoreReplies = this.loadMoreReplies.bind(this);
@@ -20,38 +19,28 @@ export class CommentThread extends React.PureComponent {
         const numReplies = this.props.thread.snippet.totalReplyCount;
         if (numReplies > 0) {
             const parentCommentId = this.props.thread.snippet.topLevelComment.id;
-            this.props.actions.getReplies(parentCommentId).then(() => {
-                this.setState({ 
-                    replies: Object.assign({}, this.props.replies)
-                });
-            });
+            this.props.actions.getReplies(parentCommentId);
         }
     }
 
     loadMoreReplies() {
-        const nextPageToken = this.state.replies.nextPageToken;
+        const nextPageToken = this.props.replies.nextPageToken;
         const parentCommentId = this.props.thread.snippet.topLevelComment.id;
-        this.props.actions.getNextReplies(parentCommentId, this.state.replies, nextPageToken).then(() => {
-            this.setState({
-                replies: Object.assign({}, this.props.replies),
-                canHideReplies: true
-            });
+        this.props.actions.getNextReplies(parentCommentId, this.props.replies, nextPageToken).then(() => {
+            this.setState({ canHideReplies: true });
         });
     }
 
     hideReplies() {
         const parentCommentId = this.props.thread.snippet.topLevelComment.id;
         this.props.actions.getReplies(parentCommentId).then(() => {
-            this.setState({ 
-                replies: Object.assign({}, this.props.replies),
-                canHideReplies: false
-            });
+            this.setState({ canHideReplies: false });
         });
     }
 
     renderViewMoreReplies() {
         const replyCount = this.props.thread.snippet.totalReplyCount;
-        const nextPageToken = this.state.replies.nextPageToken;
+        const nextPageToken = this.props.replies.nextPageToken;
         if (replyCount > 0 && nextPageToken) {
             return (
                 <a className="view-more-replies" onClick={this.loadMoreReplies}>
@@ -75,8 +64,8 @@ export class CommentThread extends React.PureComponent {
         const comment = this.props.thread.snippet.topLevelComment;
         const numReplies = this.props.thread.snippet.totalReplyCount;
         let replies = [];
-        if (numReplies > 0 && this.state.replies.items) {
-            replies = Object.assign([], this.state.replies.items).reverse();
+        if (numReplies > 0 && this.props.replies.items) {
+            replies = Object.assign([], this.props.replies.items).reverse();
         }
 
         return (
@@ -123,4 +112,16 @@ function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(commentActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommentThread);
+function mergeProps(state, actions, props) {
+    return Object.assign({}, state, actions, props);
+}
+
+const connectOptions = {
+    areMergedPropsEqual: (next, prev) => {
+        if (!next.replies.items) return true;
+        // Only want to render when these two values are the same. (Returning false causes a re-render.)
+        return (next.thread.id !== next.replies.items[0].snippet.parentId);
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps, connectOptions)(CommentThread);

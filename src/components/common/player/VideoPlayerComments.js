@@ -9,7 +9,8 @@ export class VideoPlayerComments extends React.PureComponent {
     constructor() {
         super();
         this.state = {
-            sortOrder: "relevance"
+            sortOrder: "relevance",
+            isLoading: true
         };
         this.changeOrder = this.changeOrder.bind(this);
         this.loadMoreComments = this.loadMoreComments.bind(this);
@@ -19,19 +20,21 @@ export class VideoPlayerComments extends React.PureComponent {
         this.props.actions.getComments(this.props.video.id);
     }
 
-    componentWillUpdate(nextProps) {
-        if (this.props.video.id != nextProps.video.id) {
-            this.props.actions.getComments(nextProps.video.id).then(() => {
-                this.setState({ sortOrder: "relevance" });
-            });
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.isLoading) {
+            this.setState({ isLoading: false });
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return (!nextState.isLoading && this.props.comments !== nextProps.comments) || 
+            (this.state.sortOrder !== nextState.sortOrder);
     }
 
     changeOrder(e) {
         const sortOrder = e.target.value;
-        this.props.actions.getComments(this.props.video.id, sortOrder).then(() => {
-            this.setState({ sortOrder: sortOrder });
-        });
+        this.setState({ sortOrder: sortOrder });
+        this.props.actions.getComments(this.props.video.id, sortOrder);
     }
 
     loadMoreComments() {
@@ -54,7 +57,7 @@ export class VideoPlayerComments extends React.PureComponent {
     render() {
         const comments = this.props.comments.items;
         const stats = this.props.video.statistics;
-        if (!comments || !stats) return <div>(Loading comments...)</div>;
+        if (this.state.isLoading) return <div>(Loading comments...)</div>;
         if (comments.length == 0) return <div className="comment-stats">Comments: 0</div>;
         return (
             <div>
@@ -83,6 +86,7 @@ export class VideoPlayerComments extends React.PureComponent {
 }
 
 VideoPlayerComments.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     comments: PropTypes.object.isRequired,
     video: PropTypes.object.isRequired,
     videoSeek: PropTypes.func.isRequired,
@@ -90,11 +94,49 @@ VideoPlayerComments.propTypes = {
 };
 
 function mapStateToProps(state) {
-    return { comments: state.comments };
+    return {
+        comments: state.comments,
+        isLoading: state.ajaxCallsInProgress.comments > 0
+    };
 }
 
 function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(commentActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(VideoPlayerComments);
+function mergeProps(state, actions, props) {
+    let videoId = '';
+    if (state.comments.items && state.comments.items.length > 0)
+        videoId = state.comments.items[0].snippet.videoId;
+    if ((videoId !== '' && props.video.id !== videoId)) {
+        state.isLoading = true;
+        actions.actions.getComments(props.video.id);
+    }
+    return Object.assign({}, state, actions, props);
+}
+
+// Compare comment arrays
+// Return true if the two arrays contain the same comments in same order
+function compareComments(prev, next) {
+    if (prev.length != next.length) return false;
+    for (let i = 0; i < prev.length; i++) {
+        if (prev[i].id !== next[i].id) return false;
+    }
+    return true;
+}
+
+const connectOptions = {
+    areMergedPropsEqual: (next, prev) => {
+        let areCommentsEqual = false;
+        if (!!prev.comments.items && !!next.comments.items) {
+            // In case sorting by Relevance vs Most Recent doesn't actually change the order
+            areCommentsEqual = compareComments(prev.comments.items, next.comments.items);
+        }
+        return !( // if the condition below is true, then return false to render
+            (prev.isLoading && !next.isLoading) || 
+            (!next.isLoading && !areCommentsEqual)
+        );
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps, connectOptions)(VideoPlayerComments);

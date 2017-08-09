@@ -5,7 +5,7 @@ import {mount} from 'enzyme';
 import {VideoThumbnail} from '../../../src/components/playlist/VideoThumbnail';
 import * as videoActions from '../../../src/actions/videoActions';
 
-describe('Playlist Page', () => {
+describe('Video Thumbnail', () => {
     let props;
     let mockGetVideo;
     beforeEach(() => {
@@ -44,11 +44,9 @@ describe('Playlist Page', () => {
     it('Should create an empty div if still loading', () => {
         // act
         const component = mount(<VideoThumbnail {...props}/>);
-        const div = component.find('div');
         
         // assert
-        expect(div.length).toEqual(1);
-        expect(div.text()).toEqual('');
+        expect(component.html()).toEqual('<div></div>');
     });
 
     it('Should create an image thumbnail', () => {
@@ -84,20 +82,5 @@ describe('Playlist Page', () => {
         expect(channelName.length).toEqual(1);
         expect(videoTitle.text()).toEqual(+props.playlistIndex + 1 + '. ' + props.video.snippet.title);
         expect(channelName.text()).toEqual(props.video.snippet.channelTitle);
-    });
-
-    it('Should display "Can\'t find video" if no video found', () => {
-        // arrange
-        props.video = {};
-
-        // act
-        const component = mount(<VideoThumbnail {...props}/>);
-        component.setState({
-            video: props.video,
-            isLoading: false
-        });
-
-        // assert
-        expect(component.text()).toEqual('(Can\'t find video)');
     });
 });

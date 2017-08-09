@@ -21,6 +21,11 @@ export class CommentBlock extends React.PureComponent {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // Don't render again if comment already exists
+        return !(this.props.comment.id === nextProps.comment.id);
+    }
+
     minimizeComment(e) {
         const text = e.target.previousSibling;
         text.classList.add('comment-text');

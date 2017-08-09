@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as channelActions from '../../actions/channelActions';
@@ -10,6 +9,9 @@ import VideoResult from '../video/VideoResult';
 export class SearchResultsPage extends React.PureComponent {
     constructor() {
         super();
+        this.state = {
+            isLoading: true
+        };
         this.loadMoreResults = this.loadMoreResults.bind(this);
     }
 
@@ -18,8 +20,8 @@ export class SearchResultsPage extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.query != nextProps.match.params.q) {
-            this.props.actions.getSearchResults(nextProps.match.params.q);
+        if (!nextProps.isLoading) {
+            this.setState({ isLoading: false });
         }
     }
 
@@ -34,20 +36,14 @@ export class SearchResultsPage extends React.PureComponent {
             return (
                 <div className="search-list">
                     {this.props.results.map(result => {
-                        const videoId = result.id.videoId;
-                        const playlistId = result.id.playlistId;
-                        if (videoId) {
+                        if (result.id.kind == 'youtube#video') {
                             return (
-                                <Link to={"/watch/" + videoId} key={videoId}>
-                                    <VideoResult videoId={videoId}/>
-                                </Link>
+                                <VideoResult videoId={result.id.videoId} key={result.id.videoId}/>
                             );
                         }
-                        if (playlistId) {
+                        if (result.id.kind == 'youtube#playlist') {
                             return (
-                                <Link to={"/playlist/" + playlistId} key={playlistId}>
-                                    <PlaylistResult playlist={result}/>
-                                </Link>
+                                <PlaylistResult playlist={result} key={result.id.playlistId}/>
                             );
                         }
                     })}
@@ -68,6 +64,7 @@ export class SearchResultsPage extends React.PureComponent {
     }
 
     render() {
+        if (this.state.isLoading) return <h3>Searching...</h3>;
         const pageTitle = 'Search results for: ';
         const isResults = this.props.resultsCount > 0;
         let resultsFound = 'no-results';
@@ -88,6 +85,7 @@ export class SearchResultsPage extends React.PureComponent {
 }
 
 SearchResultsPage.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     pageToken: PropTypes.object.isRequired,
     query: PropTypes.string.isRequired,
     results: PropTypes.array.isRequired,
@@ -101,7 +99,8 @@ function mapStateToProps(state, ownProps) {
         pageToken: state.searchPageToken,
         query: ownProps.match.params.q,
         results: state.searchResults,
-        resultsCount: state.searchInfo.totalResults
+        resultsCount: state.searchInfo.totalResults,
+        isLoading: state.ajaxCallsInProgress.searchResults > 0
     };
 }
 
@@ -109,4 +108,10 @@ function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(channelActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchResultsPage);
+const connectOptions = {
+    areStatePropsEqual: (next, prev) => {
+        return (prev.isLoading === next.isLoading || prev.pageToken === next.pageToken);
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(SearchResultsPage);

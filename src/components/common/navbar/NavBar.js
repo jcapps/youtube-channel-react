@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import PlaylistLink from './PlaylistLink';
 
 export class NavBar extends React.PureComponent {
@@ -38,7 +36,7 @@ export class NavBar extends React.PureComponent {
                         <li className="has-submenu" onMouseOver={this.showSubmenu} onMouseOut={this.hideSubmenu}>
                             <Link to="/playlists"><div>Playlists</div></Link>
                             <ul className="hidden">
-                                {allPlaylists.slice(0, 5).map(playlist => <PlaylistLink key={playlist.id} playlist={playlist} />)}
+                                {allPlaylists.map(playlist => <PlaylistLink key={playlist.id} playlist={playlist} />)}
                                 <li><Link to="/playlists"><div className="nav-view-all">View All</div></Link></li>
                             </ul>
                         </li>
@@ -55,8 +53,4 @@ NavBar.propTypes = {
     allPlaylists: PropTypes.array.isRequired
 };
 
-function mapStateToProps(state) {
-    return { allPlaylists: state.allPlaylists };
-}
-
-export default connect(mapStateToProps)(NavBar);
+export default NavBar;

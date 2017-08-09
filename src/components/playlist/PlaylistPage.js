@@ -3,15 +3,14 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
-import * as videoActions from '../../actions/videoActions';
-import * as videoTypes from '../../reducers/videoTypes';
-import VideoPlayer from '../common/player/VideoPlayer';
+import PlaylistPlayer from './PlaylistPlayer';
 import VideoThumbnail from './VideoThumbnail';
 
 export class PlaylistPage extends React.PureComponent {
     constructor() {
         super();
         this.state = {
+            playlistIndex: 0,
             isLoading: true
         };
         this.changeVideo = this.changeVideo.bind(this);
@@ -19,30 +18,13 @@ export class PlaylistPage extends React.PureComponent {
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
     }
 
-    componentWillMount() {
-        this.props.playlistActions.getPlaylistInfo(this.props.playlistId).then(() => {
-            this.props.playlistActions.getPlaylist(this.props.playlistId).then(() => {
-                if (this.props.playlist.length > 0) {
-                    const videoId = this.props.playlist[this.props.videoInPlaylist].snippet.resourceId.videoId;
-                    this.props.videoActions.getVideo(videoId, videoTypes.CURRENT).then(() => {
-                        this.setState({ isLoading: false });
-                    });
-                }
-            });
-        });
-    }
-
     componentWillReceiveProps(nextProps) {
-        if (this.props.playlistId != nextProps.match.params.id) {
-            this.props.playlistActions.getPlaylistInfo(nextProps.match.params.id).then(() => {
-                this.props.playlistActions.getPlaylist(nextProps.match.params.id).then(() => {
-                    if (this.props.playlist.length > 0) {
-                        const videoId = this.props.playlist[0].snippet.resourceId.videoId;
-                        this.props.videoActions.getVideo(videoId, videoTypes.CURRENT).then(() => {
-                            this.setState({ isLoading: false });
-                        });
-                    }
-                });
+        if (nextProps.isLoading) {
+            this.setState({ isLoading: true });
+        } else {
+            this.setState({
+                playlistIndex: nextProps.videoInPlaylist,
+                isLoading: false
             });
         }
     }
@@ -52,22 +34,20 @@ export class PlaylistPage extends React.PureComponent {
         while (element.className.indexOf("playlist-video") < 0) {
             element = element.parentNode;
         }
-        const videoId = this.props.playlist[element.id].snippet.resourceId.videoId;
-        this.props.videoActions.getVideo(videoId, videoTypes.CURRENT, parseInt(element.id));
+        this.setState({ playlistIndex: parseInt(element.id) });
     }
 
     updatePlaylist(playlistIndex) {
-        const nowPlaying = this.props.videoInPlaylist;
+        const nowPlaying = this.state.playlistIndex;
         if (nowPlaying != playlistIndex) {
-            const videoId = this.props.playlist[playlistIndex].snippet.resourceId.videoId;
-            this.props.videoActions.getVideo(videoId, videoTypes.CURRENT, parseInt(playlistIndex));
+            this.setState({ playlistIndex: parseInt(playlistIndex) });
         }
     }
 
     loadMoreVideos() {
         const nextPageToken = this.props.videoPageToken.nextPageToken;
         const id = this.props.playlistId;
-        this.props.playlistActions.getNextVideos(id, nextPageToken);
+        this.props.actions.getNextVideos(id, nextPageToken);
     }
 
     renderViewMore() {
@@ -81,13 +61,13 @@ export class PlaylistPage extends React.PureComponent {
     }
 
     render() {
-        if (this.state.isLoading) return <div />;
+        if (this.state.isLoading) return <div/>;
         const playlist = this.props.playlist;
-        const nowPlaying = this.props.videoInPlaylist;
-        if (playlist.length > 0) {
+        const nowPlaying = this.state.playlistIndex;
+        if (playlist.length > nowPlaying) {
             return(
                 <div id="playlist-page">
-                    <h2>{this.props.playlistInfo.snippet.title}</h2> 
+                    <h2>{this.props.playlistInfo.snippet.title}</h2>
                     <div id="video-list">
                         {playlist.map(playlistItem => {
                             let video = playlistItem.snippet;
@@ -106,10 +86,10 @@ export class PlaylistPage extends React.PureComponent {
                         })}
                         {this.renderViewMore()}
                     </div>
-                    <VideoPlayer 
-                        video={this.props.currentVideo} 
+                    <PlaylistPlayer 
+                        videoId={playlist[nowPlaying].snippet.resourceId.videoId}
                         playlistIndex={nowPlaying}
-                        playlistId={this.props.playlistId} 
+                        playlistId={this.props.playlistId}
                         updatePlaylist={this.updatePlaylist}/>
                 </div>
             );
@@ -119,14 +99,13 @@ export class PlaylistPage extends React.PureComponent {
 }
 
 PlaylistPage.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     playlist: PropTypes.array.isRequired,
     playlistId: PropTypes.string.isRequired,
     playlistInfo: PropTypes.object.isRequired,
     videoPageToken: PropTypes.object.isRequired,
     videoInPlaylist: PropTypes.number.isRequired,
-    currentVideo: PropTypes.object.isRequired,
-    playlistActions: PropTypes.object.isRequired,
-    videoActions: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
     match: PropTypes.object
 };
 
@@ -137,15 +116,32 @@ function mapStateToProps(state, ownProps) {
         playlistId: ownProps.match.params.id,
         videoPageToken: state.videoPageToken,
         videoInPlaylist: state.playlistIndex,
-        currentVideo: state.video.current
+        isLoading: state.ajaxCallsInProgress.playlist > 0
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return { 
-        playlistActions: bindActionCreators(playlistActions, dispatch),
-        videoActions: bindActionCreators(videoActions, dispatch)
+        actions: bindActionCreators(playlistActions, dispatch)
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaylistPage);
+function mergeProps(state, actions, props) {
+    if (state.playlistId != state.playlistInfo.id) {
+        state.isLoading = true;
+        actions.actions.getPlaylistInfo(state.playlistId);
+        actions.actions.getPlaylist(state.playlistId);
+    }
+    return Object.assign({}, state, actions, props);
+}
+
+const connectOptions = {
+    areMergedPropsEqual: (next, prev) => {
+        return !( // Only want to render if the condition below is true. (Returning false causes a re-render.)
+            (!next.isLoading) || 
+            (next.isLoading && next.playlistInfo.id !== next.playlistId)
+        );
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps, connectOptions)(PlaylistPage);

@@ -1,6 +1,6 @@
 import {bindActionCreators} from 'redux';
 import * as types from './actionTypes';
-import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
+import * as ajax from './ajaxStatusActions';
 import * as playlistActions from './playlistActions';
 import * as youtubeActions from './youtubeActions';
 
@@ -14,7 +14,7 @@ export function getMostRecentUploadSuccess(video) {
 
 export function getVideo(id, type, playlistIndex = 0) {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingVideoInfo());
         return youtubeActions.getVideoInfo(id).then(video => {
             dispatch(getVideoSuccess(video, type, playlistIndex));
         });
@@ -23,7 +23,7 @@ export function getVideo(id, type, playlistIndex = 0) {
 
 export function getMostRecentUpload() {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingMostRecentUpload());
         const helperActions = bindActionCreators(playlistActions, dispatch);
 
         return helperActions.getRecentUploadsPlaylist().then(playlist => {

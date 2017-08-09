@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
@@ -9,11 +8,20 @@ import VideoResult from './VideoResult';
 export class AllVideosPage extends React.PureComponent {
     constructor() {
         super();
+        this.state = {
+            isLoading: true
+        };
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
     }
 
     componentWillMount() {
         this.props.actions.getRecentUploadsPlaylist();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.isLoading) {
+            this.setState({ isLoading: false });
+        }
     }
 
     loadMoreVideos() {
@@ -40,12 +48,8 @@ export class AllVideosPage extends React.PureComponent {
                 <div className="search-list">
                     {playlist.map(video => {
                         const id = video.snippet.resourceId.videoId;
-                        return (
-                            <Link to={"/watch/" + id} key={id}>
-                                <VideoResult videoId={id}/>
-                            </Link>
-                        );
-                    })} 
+                        return <VideoResult videoId={id} key={id}/>;
+                    })}
                     {this.renderViewMore()}
                 </div>
             </div>
@@ -54,6 +58,7 @@ export class AllVideosPage extends React.PureComponent {
 }
 
 AllVideosPage.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     playlist: PropTypes.array.isRequired,
     playlistId: PropTypes.string.isRequired,
     videoPageToken: PropTypes.object.isRequired,
@@ -64,7 +69,8 @@ function mapStateToProps(state) {
     return { 
         playlist: state.playlist,
         playlistId: state.recentUploadsPlaylistId,
-        videoPageToken: state.videoPageToken
+        videoPageToken: state.videoPageToken,
+        isLoading: state.ajaxCallsInProgress.allVideos > 0
     };
 }
 
@@ -72,4 +78,10 @@ function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(playlistActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllVideosPage);
+const connectOptions = {
+    areStatePropsEqual: (next, prev) => {
+        return (prev.isLoading === next.isLoading || prev.videoPageToken === next.videoPageToken);
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(AllVideosPage);

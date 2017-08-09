@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
@@ -9,11 +8,20 @@ import PlaylistResult from './PlaylistResult';
 export class AllPlaylistsPage extends React.PureComponent {
     constructor() {
         super();
+        this.state = {
+            isLoading: true
+        };
         this.loadMorePlaylists = this.loadMorePlaylists.bind(this);
     }
 
     componentWillMount() {
         this.props.actions.getAllPlaylists();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.isLoading) {
+            this.setState({ isLoading: false });
+        }
     }
 
     loadMorePlaylists() {
@@ -38,9 +46,7 @@ export class AllPlaylistsPage extends React.PureComponent {
                 <h2>Playlists</h2>
                 <div className="search-list">
                     {playlists.map(playlist =>
-                        <Link to={"/playlist/" + playlist.id} key={playlist.id}>
-                            <PlaylistResult playlist={playlist}/>
-                        </Link>
+                        <PlaylistResult playlist={playlist} key={playlist.id}/>
                     )}
                     {this.renderViewMore()}
                 </div>
@@ -50,15 +56,17 @@ export class AllPlaylistsPage extends React.PureComponent {
 }
 
 AllPlaylistsPage.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     playlists: PropTypes.array.isRequired,
     playlistPageToken: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     return { 
         playlists: state.allPlaylists,
-        playlistPageToken: state.playlistPageToken
+        playlistPageToken: state.playlistPageToken,
+        isLoading: state.ajaxCallsInProgress.allPlaylists > 0
     };
 }
 
@@ -66,4 +74,10 @@ function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(playlistActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllPlaylistsPage);
+const connectOptions = {
+    areStatePropsEqual: (next, prev) => {
+        return (prev.isLoading === next.isLoading || prev.playlistPageToken === next.playlistPageToken);
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(AllPlaylistsPage);

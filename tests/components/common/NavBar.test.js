@@ -15,11 +15,7 @@ describe('NavBar', () => {
                 {id: '2', snippet: {title: 'Title 2'}},
                 {id: '3', snippet: {title: 'Title 3'}},
                 {id: '4', snippet: {title: 'Title 4'}},
-                {id: '5', snippet: {title: 'Title 5'}},
-                {id: '6', snippet: {title: 'Title 6'}},
-                {id: '7', snippet: {title: 'Title 7'}},
-                {id: '8', snippet: {title: 'Title 8'}},
-                {id: '9', snippet: {title: 'Title 9'}}
+                {id: '5', snippet: {title: 'Title 5'}}
             ]
         };
     });

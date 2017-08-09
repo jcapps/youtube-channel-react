@@ -4,17 +4,14 @@ import sinon from 'sinon';
 import {shallow} from 'enzyme';
 import {PlaylistPage} from '../../../src/components/playlist/PlaylistPage';
 import VideoThumbnail from '../../../src/components/playlist/VideoThumbnail';
-import VideoPlayer from '../../../src/components/common/player/VideoPlayer';
-import * as videoTypes from '../../../src/reducers/videoTypes';
+import PlaylistPlayer from '../../../src/components/playlist/PlaylistPlayer';
 import * as playlistActions from '../../../src/actions/playlistActions';
-import * as videoActions from '../../../src/actions/videoActions';
 
 describe('Playlist Page', () => {
     let props;
     let mockGetPlaylist;
     let mockGetNextVideos;
     let mockGetPlaylistInfo;
-    let mockGetVideo;
     beforeEach(() => {
         // arrange
         props = {
@@ -32,46 +29,31 @@ describe('Playlist Page', () => {
             playlistId: '1',
             videoPageToken: {nextPageToken: 'TOKEN'},
             videoInPlaylist: 0,
-            currentVideo: {
-                snippet: {
-                    title: 'Video Title',
-                    description: 'Video Description',
-                    thumbnails: {
-                        medium: {
-                            url: 'test.url'
-            }}}},
-            playlistActions: playlistActions,
-            videoActions: videoActions
+            actions: playlistActions
         };
 
-        mockGetPlaylist = sinon.stub(props.playlistActions, 'getPlaylist');
+        mockGetPlaylist = sinon.stub(props.actions, 'getPlaylist');
         mockGetPlaylist.resolves();
         
-        mockGetNextVideos = sinon.stub(props.playlistActions, 'getNextVideos');
+        mockGetNextVideos = sinon.stub(props.actions, 'getNextVideos');
         mockGetNextVideos.resolves();
 
-        mockGetPlaylistInfo = sinon.stub(props.playlistActions, 'getPlaylistInfo');
+        mockGetPlaylistInfo = sinon.stub(props.actions, 'getPlaylistInfo');
         mockGetPlaylistInfo.resolves();
-
-        mockGetVideo = sinon.stub(props.videoActions, 'getVideo');
-        mockGetVideo.resolves();
     });
 
     afterEach(() => {
         mockGetPlaylist.restore();
         mockGetNextVideos.restore();
         mockGetPlaylistInfo.restore();
-        mockGetVideo.restore();
     });
 
     it('Should create an empty div if still loading', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
-        const div = component.find('div');
         
         // assert
-        expect(div.length).toEqual(1);
-        expect(div.text()).toEqual('');
+        expect(component.html()).toEqual('<div></div>');
     });
 
     it('Should create playlist title', () => {
@@ -137,16 +119,16 @@ describe('Playlist Page', () => {
         expect(viewMore.length).toEqual(0);
     });
 
-    it('Should create a VideoPlayer', () => {
+    it('Should create a PlaylistPlayer', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
         component.setState({ isLoading: false });
-        const player = component.find(VideoPlayer);
+        const player = component.find(PlaylistPlayer);
         const updatePlaylist = component.instance().updatePlaylist;
 
         // assert
         expect(player.length).toEqual(1);
-        expect(player.prop('video')).toEqual(props.currentVideo);
+        expect(player.prop('videoId')).toEqual(props.playlist[0].snippet.resourceId.videoId);
         expect(player.prop('playlistIndex')).toEqual(0);
         expect(player.prop('playlistId')).toEqual(props.playlistId);
         expect(player.prop('updatePlaylist')).toEqual(updatePlaylist);
@@ -165,36 +147,42 @@ describe('Playlist Page', () => {
     });
 
     it('Should change video on VideoThumbnail click', () => {
+        // arrange
+        const playlistIndex = 1;
+
         // act
         const component = shallow(<PlaylistPage {...props}/>);
         component.setState({ isLoading: false });
         let videoList = component.find('#video-list');
-        const nextVideo = videoList.children('div').at(1);
+        const nextVideo = videoList.children('div').at(playlistIndex);
         const mockTarget = {id: nextVideo.prop('id'), className: 'playlist-video'};
-        
-        mockGetVideo.resolves();
 
         nextVideo.simulate('click', {target: mockTarget});
 
         videoList = component.find('#video-list');
         const videoDivs = videoList.children('div');
-        const player = component.find(VideoPlayer);
+        const player = component.find(PlaylistPlayer);
 
         // assert
-        expect(mockGetVideo.calledOnce).toEqual(true);
-        expect(mockGetVideo.getCalls()[0].args).toEqual(['1', videoTypes.CURRENT, 1]);
+        expect(player.props().playlistIndex).toEqual(playlistIndex);
     });
 
     it('Should update playlist on state change', () => {
+        // arrange
+        const playlistIndex = 1;
+
         // act
         const component = shallow(<PlaylistPage {...props}/>);
         component.setState({ isLoading: false });
-        const playlistIndex = 1;
+
         component.instance().updatePlaylist(playlistIndex);
 
+        const videoList = component.find('#video-list');
+        const videoDivs = videoList.children('div');
+        const player = component.find(PlaylistPlayer);
+
         // assert
-        expect(mockGetVideo.calledOnce).toEqual(true);
-        expect(mockGetVideo.getCalls()[0].args).toEqual(['1', videoTypes.CURRENT, 1]);
+        expect(player.props().playlistIndex).toEqual(playlistIndex);
     });
 
     it('Should load more videos when "View More" is clicked', () => {

@@ -8,8 +8,6 @@ import {Provider} from 'react-redux';
 import {Route} from 'react-router';
 import {BrowserRouter as Router} from 'react-router-dom';
 import {getChannelInfo} from './actions/channelActions';
-import {getMostRecentUpload} from './actions/videoActions';
-import {getAllPlaylists} from './actions/playlistActions';
 import App from './components/App';
 import './styles/styles.scss';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -21,7 +19,6 @@ if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
 
 const store = configureStore();
 store.dispatch(getChannelInfo());
-store.dispatch(getAllPlaylists());
 
 render(
     <Provider store={store}>

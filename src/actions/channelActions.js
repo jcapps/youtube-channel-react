@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
+import * as ajax from './ajaxStatusActions';
 import * as youtubeActions from './youtubeActions';
 
 export function getChannelInfoSuccess(channelInfo) {
@@ -16,7 +16,7 @@ export function getNextResultsSuccess(result) {
 
 export function getChannelInfo() {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.gettingChannelInfo());
         return youtubeActions.getChannelInfo().then(channelInfo => {
             dispatch(getChannelInfoSuccess(channelInfo));
         }).catch(error => {
@@ -27,7 +27,7 @@ export function getChannelInfo() {
 
 export function getSearchResults(query) {
     return function(dispatch) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.searchingChannel());
         return youtubeActions.searchChannel(query).then(result => {
             dispatch(getSearchResultsSuccess(result));
         }).catch(error => {
@@ -38,7 +38,7 @@ export function getSearchResults(query) {
 
 export function getNextResults(query, pageToken) {
     return function(dispatch, getState) {
-        dispatch(beginAjaxCall());
+        dispatch(ajax.searchingChannel());
         return youtubeActions.searchChannel(query, pageToken).then(result => {
             const state = getState();
             const searchResults = [...state.searchResults, ...result.items];

@@ -13,7 +13,6 @@ describe('Home Page', () => {
         // arrange
         props = {
             mostRecentUpload: {id: '0'},
-            isLoading: false,
             actions: videoActions
         };
         mockGetVideo = sinon.stub(props.actions, 'getMostRecentUpload');
@@ -22,6 +21,22 @@ describe('Home Page', () => {
 
     afterEach(() => {
         mockGetVideo.restore();
+    });
+
+    it('Should create an empty div if still loading', () => {
+        // act
+        const component = shallow(<HomePage {...props}/>);
+        
+        // assert
+        expect(component.html()).toEqual('<div></div>');
+    });
+
+    it('Should get mostRecentUpload on mount', () => {
+        // act
+        const component = shallow(<HomePage {...props}/>);
+        
+        // assert
+        expect(mockGetVideo.calledOnce).toEqual(true);
     });
 
     it('Should create page heading', () => {
@@ -42,36 +57,5 @@ describe('Home Page', () => {
 
         // assert
         expect(player.length).toEqual(1);
-    });
-
-    it('Should return empty div while page is loading', () => {
-        // arrange
-        props = {
-            mostRecentUpload: {id: '0'},
-            isLoading: true,
-            actions: videoActions
-        };
-
-        // act
-        const component = shallow(<HomePage {...props}/>);
-
-        // assert
-        expect(component.text()).toEqual('');
-    });
-
-    it('Should return "Video not found" if no ID found for mostRecentUpload', () => {
-        // arrange
-        props = {
-            mostRecentUpload: {id: null},
-            isLoading: false,
-            actions: videoActions
-        };
-
-        // act
-        const component = shallow(<HomePage {...props}/>);
-        component.setState({ isLoading: false });
-
-        // assert
-        expect(component.text()).toEqual('(Video not found.)');
     });
 });

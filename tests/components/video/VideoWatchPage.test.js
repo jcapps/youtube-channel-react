@@ -21,7 +21,6 @@ describe('Video Watch Page', () => {
                             url: 'test.url'
                 }}}},
             videoId: '0',
-            isLoading: false,
             actions: videoActions
         };
         mockGetVideo = sinon.stub(props.actions, 'getVideo');
