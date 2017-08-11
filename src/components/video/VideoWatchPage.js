@@ -57,7 +57,9 @@ function mapDispatchToProps(dispatch) {
 
 const connectOptions = {
     areStatePropsEqual: (next, prev) => {
-        return prev.isLoading === next.isLoading;
+        return !(
+            (!next.isLoading && prev.video !== next.video)
+        );
     }
 };
 
