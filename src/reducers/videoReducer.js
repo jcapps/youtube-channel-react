@@ -23,6 +23,8 @@ export default function videoReducer(state = initialState.video, action) {
                 }
             }
         }
+        case types.CLEAR_STORE:
+            return {current: {}, queued: {}};
         default:
             return state;
     }

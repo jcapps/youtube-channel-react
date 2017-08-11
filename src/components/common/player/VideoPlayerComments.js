@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as commentActions from '../../../actions/commentActions';
+import clearStore from '../../../actions/clearAction';
 import CommentThread from './CommentThread';
 
 export class VideoPlayerComments extends React.PureComponent {
@@ -29,6 +30,10 @@ export class VideoPlayerComments extends React.PureComponent {
     shouldComponentUpdate(nextProps, nextState) {
         return (!nextState.isLoading && this.props.comments !== nextProps.comments) || 
             (this.state.sortOrder !== nextState.sortOrder);
+    }
+
+    componentWillUnmount() {
+        this.props.clearStore();
     }
 
     changeOrder(e) {
@@ -90,7 +95,8 @@ VideoPlayerComments.propTypes = {
     comments: PropTypes.object.isRequired,
     video: PropTypes.object.isRequired,
     videoSeek: PropTypes.func.isRequired,
-    actions: PropTypes.object.isRequired
+    actions: PropTypes.object.isRequired,
+    clearStore: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
@@ -101,7 +107,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators(commentActions, dispatch) };
+    return {
+        actions: bindActionCreators(commentActions, dispatch),
+        clearStore: bindActionCreators(clearStore, dispatch)
+    };
 }
 
 function mergeProps(state, actions, props) {

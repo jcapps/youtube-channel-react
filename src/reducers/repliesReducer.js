@@ -7,6 +7,8 @@ export default function repliesReducer(state = initialState.replies, action) {
             return action.replies;
         case types.GET_NEXT_REPLIES_SUCCESS:
             return action.replies;
+        case types.CLEAR_STORE:
+            return {};
         default:
             return state;
     }

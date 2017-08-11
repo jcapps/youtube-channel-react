@@ -5,6 +5,8 @@ export default function playlistIndexReducer(state = initialState.playlistIndex,
     switch(action.type) {
         case types.GET_VIDEO_SUCCESS:
             return action.playlistIndex;
+        case types.CLEAR_STORE:
+            return 0;
         default:
             return state;
     }

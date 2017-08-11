@@ -13,6 +13,8 @@ export default function playlistPageTokenReducer(state = initialState.playlistPa
                 prevPageToken: action.playlists.prevPageToken,
                 nextPageToken: action.playlists.nextPageToken
             };
+        case types.CLEAR_STORE:
+            return {prevPageToken: "", nextPageToken: ""};
         default:
             return state;
     }

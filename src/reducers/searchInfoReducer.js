@@ -7,6 +7,8 @@ export default function searchInfoReducer(state = initialState.searchInfo, actio
             return action.result.pageInfo;
         case types.GET_NEXT_RESULTS_SUCCESS:
             return action.result.pageInfo;
+        case types.CLEAR_STORE:
+            return {totalResults: 0};
         default:
             return state;
     }

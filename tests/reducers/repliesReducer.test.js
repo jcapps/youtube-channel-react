@@ -1,6 +1,7 @@
 import expect from 'expect';
 import repliesReducer from '../../src/reducers/repliesReducer';
 import * as commentActions from '../../src/actions/commentActions';
+import clearStore from '../../src/actions/clearAction';
 
 describe('Replies Reducer', () => {
     it('Should set replies when passed GET_REPLIES_SUCCESS', () => {
@@ -33,6 +34,19 @@ describe('Replies Reducer', () => {
 
         // assert
         expect(newState).toEqual({items: [{id: 'XXXXX'}]});    
+    });
+
+    it('Should clear replies when passed CLEAR_STORE', () => {
+        // arrange
+        const initialState = {items: [{id: 'XXXXX'}]};
+
+        const action = clearStore();
+
+        // act
+        const newState = repliesReducer(initialState, action);
+
+        // assert
+        expect(newState).toEqual({});
     });
 
     it('Should default to initial state when not passed a valid action', () => {

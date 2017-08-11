@@ -1,6 +1,7 @@
 import expect from 'expect';
 import playlistReducer from '../../src/reducers/playlistReducer';
 import * as playlistActions from '../../src/actions/playlistActions';
+import clearStore from '../../src/actions/clearAction';
 
 describe('Playlist Reducer', () => {
     it('Should set playlist when passed GET_PLAYLIST_SUCCESS', () => {
@@ -49,6 +50,19 @@ describe('Playlist Reducer', () => {
 
         // assert
         expect(newState).toEqual([{video: 'A'}, {video: 'B'}, {video: 'C'}]);    
+    });
+
+    it('Should clear playlist when passed CLEAR_STORE', () => {
+        // arrange
+        const initialState = [{video: 'A'}, {video: 'B'}];
+
+        const action = clearStore();
+
+        // act
+        const newState = playlistReducer(initialState, action);
+
+        // assert
+        expect(newState).toEqual([]);
     });
 
     it('Should default to initial state when not passed a valid action', () => {

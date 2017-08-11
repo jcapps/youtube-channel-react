@@ -2,6 +2,7 @@ import expect from 'expect';
 import playlistIndexReducer from '../../src/reducers/playlistIndexReducer';
 import * as videoTypes from '../../src/reducers/videoTypes';
 import * as videoActions from '../../src/actions/videoActions';
+import clearStore from '../../src/actions/clearAction';
 
 describe('Playlist Index Reducer', () => {
     it('Should set playlistIndex when passed GET_VIDEO_SUCCESS with playlistIndex', () => {
@@ -17,6 +18,19 @@ describe('Playlist Index Reducer', () => {
 
         // assert
         expect(newState).toEqual(1);    
+    });
+
+    it('Should clear playlistIndex when passed CLEAR_STORE', () => {
+        // arrange
+        const initialState = {items: [{id: 'XXXXX'}]};
+
+        const action = clearStore();
+
+        // act
+        const newState = playlistIndexReducer(initialState, action);
+
+        // assert
+        expect(newState).toEqual(0);
     });
 
     it('Should default to initial state when not passed a valid action', () => {

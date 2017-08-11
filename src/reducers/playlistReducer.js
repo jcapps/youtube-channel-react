@@ -9,6 +9,8 @@ export default function playlistReducer(state = initialState.playlist, action) {
             return action.playlist.items;
         case types.GET_NEXT_VIDEOS_SUCCESS:
             return action.playlist.items;
+        case types.CLEAR_STORE:
+            return [];
         default:
             return state;
     }

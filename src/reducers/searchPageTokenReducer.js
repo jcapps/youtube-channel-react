@@ -13,6 +13,8 @@ export default function searchPageTokenReducer(state = initialState.searchPageTo
                 prevPageToken: action.result.prevPageToken,
                 nextPageToken: action.result.nextPageToken
             };
+        case types.CLEAR_STORE:
+            return {prevPageToken: "", nextPageToken: ""};
         default:
             return state;
     }

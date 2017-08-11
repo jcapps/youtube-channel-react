@@ -2,6 +2,7 @@ import expect from 'expect';
 import videoReducer from '../../src/reducers/videoReducer';
 import * as videoTypes from '../../src/reducers/videoTypes';
 import * as videoActions from '../../src/actions/videoActions';
+import clearStore from '../../src/actions/clearAction';
 
 describe('Video Reducer', () => {
     it('Should set video when passed GET_VIDEO_SUCCESS for CURRENT video', () => {
@@ -36,9 +37,22 @@ describe('Video Reducer', () => {
         expect(newState).toEqual({current: {}, queued: {id: 'XXXXX'}});    
     });
 
+    it('Should clear video when passed CLEAR_STORE', () => {
+        // arrange
+        const initialState = {current: {id: 'XXXXX'}, queued: {}};
+
+        const action = clearStore();
+
+        // act
+        const newState = videoReducer(initialState, action);
+
+        // assert
+        expect(newState).toEqual({current: {}, queued: {}});
+    });
+
     it('Should default to initial state when not passed a valid action', () => {
         // arrange
-        const initialState = {};
+        const initialState = {current: {}, queued: {}};
 
         const video = {
             items: [{id: 'XXXXX'}]
@@ -49,6 +63,6 @@ describe('Video Reducer', () => {
         const newState = videoReducer(initialState, action);
 
         // assert
-        expect(newState).toEqual({});    
+        expect(newState).toEqual({current: {}, queued: {}});
     });
 });

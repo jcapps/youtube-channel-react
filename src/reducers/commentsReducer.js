@@ -7,6 +7,8 @@ export default function commentsReducer(state = initialState.comments, action) {
             return action.comments;
         case types.GET_NEXT_COMMENTS_SUCCESS:
             return action.comments;
+        case types.CLEAR_STORE:
+            return {};
         default:
             return state;
     }

@@ -7,6 +7,8 @@ export default function searchResultsReducer(state = initialState.searchResults,
             return action.result.items;
         case types.GET_NEXT_RESULTS_SUCCESS:
             return action.result.items;
+        case types.CLEAR_STORE:
+            return [];
         default:
             return state;
     }

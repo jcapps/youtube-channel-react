@@ -1,8 +1,9 @@
 import React from 'react';
 import expect from 'expect';
 import sinon from 'sinon';
-import {shallow} from 'enzyme';
+import {shallow, unmount} from 'enzyme';
 import * as commentActions from '../../../../src/actions/commentActions';
+import clearStore from '../../../../src/actions/clearAction';
 import {VideoPlayerComments} from '../../../../src/components/common/player/VideoPlayerComments';
 import CommentThread from '../../../../src/components/common/player/CommentThread';
 
@@ -11,6 +12,7 @@ describe('VideoPlayerComments', () => {
     let retrievedComments;
     let mockGetComments;
     let mockGetNextComments;
+    let mockClearStore;
 
     beforeEach(() => {
         // arrange
@@ -23,7 +25,8 @@ describe('VideoPlayerComments', () => {
                 }
             },
             videoSeek: new Function(),
-            actions: commentActions
+            actions: commentActions,
+            clearStore: () => clearStore
         };
         
         retrievedComments = {
@@ -39,11 +42,15 @@ describe('VideoPlayerComments', () => {
 
         mockGetNextComments = sinon.stub(props.actions, 'getNextComments');
         mockGetNextComments.resolves();
+
+        mockClearStore = sinon.stub(props, 'clearStore');
+        mockClearStore.resolves();
     });
 
     afterEach(() => {
         mockGetComments.restore();
         mockGetNextComments.restore();
+        mockClearStore.restore();
     });
 
     it('Should load comments on mount', () => {
@@ -156,5 +163,14 @@ describe('VideoPlayerComments', () => {
 
         // assert
         expect(mockGetNextComments.calledOnce).toEqual(true);
+    });
+
+    it('Should clearStore on unmount', () => {
+        // act
+        const component = shallow(<VideoPlayerComments {...props}/>);
+        component.unmount();
+
+        // assert
+        expect(mockClearStore.calledOnce).toEqual(true);
     });
 });

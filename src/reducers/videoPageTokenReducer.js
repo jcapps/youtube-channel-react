@@ -18,6 +18,8 @@ export default function videoPageTokenReducer(state = initialState.videoPageToke
                 prevPageToken: action.playlist.prevPageToken,
                 nextPageToken: action.playlist.nextPageToken
             };
+        case types.CLEAR_STORE:
+            return {prevPageToken: "", nextPageToken: ""};
         default:
             return state;
     }
