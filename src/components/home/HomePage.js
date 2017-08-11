@@ -14,7 +14,11 @@ export class HomePage extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.props.actions.getMostRecentUpload();
+        if (!this.props.mostRecentUpload.id) {
+            this.props.actions.getMostRecentUpload();
+        } else {
+            this.setState({ isLoading: false });
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -53,7 +57,9 @@ function mapDispatchToProps(dispatch) {
 
 const connectOptions = {
     areStatePropsEqual: (next, prev) => {
-        return prev.isLoading === next.isLoading;
+        return !(
+            (!next.isLoading && prev.mostRecentUpload !== next.mostRecentUpload)
+        );
     }
 };
 

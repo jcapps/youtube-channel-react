@@ -24,6 +24,9 @@ describe('Home Page', () => {
     });
 
     it('Should create an empty div if still loading', () => {
+        // arrange
+        props.mostRecentUpload = {};
+
         // act
         const component = shallow(<HomePage {...props}/>);
         
@@ -31,7 +34,10 @@ describe('Home Page', () => {
         expect(component.html()).toEqual('<div></div>');
     });
 
-    it('Should get mostRecentUpload on mount', () => {
+    it('Should get mostRecentUpload on mount if not already retrieved', () => {
+        // arrange
+        props.mostRecentUpload = {};
+
         // act
         const component = shallow(<HomePage {...props}/>);
         
@@ -39,10 +45,17 @@ describe('Home Page', () => {
         expect(mockGetVideo.calledOnce).toEqual(true);
     });
 
+    it('Should NOT get mostRecentUpload on mount if already retrieved', () => {
+        // act
+        const component = shallow(<HomePage {...props}/>);
+        
+        // assert
+        expect(mockGetVideo.calledOnce).toEqual(false);
+    });
+
     it('Should create page heading', () => {
         // act
         const component = shallow(<HomePage {...props}/>);
-        component.setState({ isLoading: false });
         const title = component.find('h2').text();
 
         // assert
@@ -52,7 +65,6 @@ describe('Home Page', () => {
     it('Should create a VideoPlayer', () => {
         // act
         const component = shallow(<HomePage {...props}/>);
-        component.setState({ isLoading: false });
         const player = component.find(VideoPlayer);
 
         // assert
