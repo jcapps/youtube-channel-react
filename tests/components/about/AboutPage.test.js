@@ -8,6 +8,7 @@ describe('About Page', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             channel: {
                 snippet: {
                     thumbnails: {
@@ -16,6 +17,17 @@ describe('About Page', () => {
                     }},
                     description: 'Dummy description.\nThis is a test.'
         }}};
+    });
+
+    it('Should create an empty div if still loading', () => {
+        // arrange
+        props.isLoading = true;
+
+        // act
+        const component = mount(<AboutPage {...props}/>);
+        
+        // assert
+        expect(component.html()).toEqual('<div></div>');
     });
 
     it('Should create profile image', () => {

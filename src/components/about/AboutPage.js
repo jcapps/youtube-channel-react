@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 
 export class AboutPage extends React.PureComponent {
     render() {
+        if (this.props.isLoading) return <div/>;
         if (this.props.channel && this.props.channel.snippet) {
             let profilePicUrl = this.props.channel.snippet.thumbnails.medium.url;
             let description = this.props.channel.snippet.description.split("\n");
@@ -27,12 +28,14 @@ export class AboutPage extends React.PureComponent {
 }
 
 AboutPage.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     channel: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
     return {
-        channel: state.channelInfo
+        channel: state.channelInfo,
+        isLoading: state.ajaxCallsInProgress.about > 0
     };
 }
 
