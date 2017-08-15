@@ -15,6 +15,7 @@ describe('Playlist Page', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             playlist: [
                 {snippet: {
                     position: 0,
@@ -27,7 +28,7 @@ describe('Playlist Page', () => {
             ],
             playlistInfo: {snippet: {title: 'Playlist Title'}},
             playlistId: '1',
-            videoPageToken: {nextPageToken: 'TOKEN'},
+            videoPageToken: {prevPageToken: '', nextPageToken: 'TOKEN'},
             videoInPlaylist: 0,
             actions: playlistActions
         };
@@ -107,7 +108,7 @@ describe('Playlist Page', () => {
 
     it('Should not create a "View More" link if no nextPageToken exists', () => {
         // arrange
-        props.videoPageToken = '';
+        props.videoPageToken = {prevPageToken: '', nextPageToken: ''};
 
         // act
         const component = shallow(<PlaylistPage {...props}/>);

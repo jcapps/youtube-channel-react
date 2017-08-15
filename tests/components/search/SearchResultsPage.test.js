@@ -14,6 +14,7 @@ describe('Search Results Page', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             query: 'QUERY',
             results: [
                 {id: {kind: 'youtube#video', videoId: '0'}},

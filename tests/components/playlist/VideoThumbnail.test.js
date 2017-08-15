@@ -11,6 +11,7 @@ describe('Video Thumbnail', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             playlistIndex: 0,
             videoId: '0',
             video: {

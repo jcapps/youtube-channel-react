@@ -13,6 +13,7 @@ describe('All Videos Page', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             playlist: [
                 {snippet: {title: 'Title 1', resourceId: {videoId: '1'}}},
                 {snippet: {title: 'Title 2', resourceId: {videoId: '2'}}},

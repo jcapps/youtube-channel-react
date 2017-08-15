@@ -12,6 +12,7 @@ describe('Video Watch Page', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             video: {
                 snippet: {
                     title: 'Video Title',

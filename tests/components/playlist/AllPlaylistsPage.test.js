@@ -13,6 +13,7 @@ describe('All Playlists Page', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             playlists: [
                 {id: '1', snippet: {title: 'Title 1'}},
                 {id: '2', snippet: {title: 'Title 2'}},

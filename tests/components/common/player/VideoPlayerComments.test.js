@@ -17,6 +17,7 @@ describe('VideoPlayerComments', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             comments: {},
             video: {
                 id: '1',

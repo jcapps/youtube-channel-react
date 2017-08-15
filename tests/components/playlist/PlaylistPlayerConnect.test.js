@@ -76,7 +76,7 @@ describe('Playlist Player Connect', () => {
         // act
         const mergedProps = mergeProps(stateProps, actionProps, props);
 
-        const expectedProps = Object.assign({}, stateProps, actionProps, props);
+        const expectedProps = Object.assign({}, stateProps, props); // actionProps are not passed
         
         // assert
         expect(mergedProps).toEqual(expectedProps);
@@ -104,7 +104,7 @@ describe('Playlist Player Connect', () => {
         const mergedProps = mergeProps(stateProps, actionProps, props);
 
         stateProps.isLoading = true;
-        const expectedProps = Object.assign({}, stateProps, actionProps, props);
+        const expectedProps = Object.assign({}, stateProps, props); // actionProps are not passed
 
         // assert
         expect(mergedProps).toEqual(expectedProps);

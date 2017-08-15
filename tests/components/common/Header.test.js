@@ -15,6 +15,7 @@ describe('Header', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             allPlaylists: [],
             channel: {},
             actions: playlistActions

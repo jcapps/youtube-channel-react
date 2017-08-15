@@ -12,6 +12,7 @@ describe('Home Page', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             mostRecentUpload: {id: '0'},
             actions: videoActions
         };

@@ -38,8 +38,7 @@ PlaylistPlayer.propTypes = {
     playlistIndex: PropTypes.number.isRequired,
     videoId: PropTypes.string.isRequired,
     video: PropTypes.object.isRequired,
-    updatePlaylist: PropTypes.func.isRequired,
-    actions: PropTypes.object.isRequired
+    updatePlaylist: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -60,7 +59,7 @@ export function mergeProps(state, actions, props) {
         state.isLoading = true;
         actions.actions.getVideo(props.videoId, videoTypes.CURRENT, props.playlistIndex);
     }
-    return Object.assign({}, state, actions, props);
+    return Object.assign({}, state, props);
 }
 
 export const connectOptions = {

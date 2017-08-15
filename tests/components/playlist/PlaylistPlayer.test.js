@@ -9,6 +9,7 @@ describe('Playlist Player', () => {
     beforeEach(() => {
         // arrange
         props = {
+            isLoading: false,
             video: {
                 snippet: {
                     title: 'Video Title',
@@ -20,7 +21,7 @@ describe('Playlist Player', () => {
             videoId: 'ID',
             playlistId: 'PLAYLISTID',
             playlistIndex: 0,
-            updatePlaylist: function() {}
+            updatePlaylist: () => {}
         };
     });
 
