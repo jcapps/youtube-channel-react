@@ -19,8 +19,13 @@ export class VideoWatchPage extends React.PureComponent {
         this.props.actions.getVideo(this.props.videoId, videoTypes.CURRENT);
     }
 
+    componentDidMount() {
+        window.scrollTo(0, 0);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!nextProps.isLoading) {
+            document.title = nextProps.video.snippet.title;
             this.setState({ isLoading: false });
         }
     }

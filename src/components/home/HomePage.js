@@ -21,6 +21,11 @@ export class HomePage extends React.PureComponent {
         }
     }
 
+    componentDidMount() {
+        document.title = "Home: Most Recent Upload";
+        window.scrollTo(0, 0);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!nextProps.isLoading) {
             this.setState({ isLoading: false });

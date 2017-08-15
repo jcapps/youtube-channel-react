@@ -18,12 +18,17 @@ export class PlaylistPage extends React.PureComponent {
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
     }
 
+    componentDidMount() {
+        window.scrollTo(0, 0);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.isLoading) {
             this.setState({ isLoading: true });
         } else {
+            document.title = nextProps.playlistInfo.snippet.title;
             this.setState({
-                playlistIndex: nextProps.videoInPlaylist,
+                playlistIndex: nextProps.playlistIndex,
                 isLoading: false
             });
         }
@@ -104,7 +109,7 @@ PlaylistPage.propTypes = {
     playlistId: PropTypes.string.isRequired,
     playlistInfo: PropTypes.object.isRequired,
     videoPageToken: PropTypes.object.isRequired,
-    videoInPlaylist: PropTypes.number.isRequired,
+    playlistIndex: PropTypes.number.isRequired,
     actions: PropTypes.object.isRequired,
     match: PropTypes.object
 };
@@ -115,7 +120,7 @@ export function mapStateToProps(state, ownProps) {
         playlistInfo: state.playlistInfo,
         playlistId: ownProps.match.params.id,
         videoPageToken: state.videoPageToken,
-        videoInPlaylist: state.playlistIndex,
+        playlistIndex: state.playlistIndex,
         isLoading: state.ajaxCallsInProgress.playlist > 0
     };
 }

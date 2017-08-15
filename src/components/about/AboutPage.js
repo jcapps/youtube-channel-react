@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 export class AboutPage extends React.PureComponent {
+    componentDidMount() {
+        document.title = "About My Channel";
+        window.scrollTo(0, 0);
+    }
+
     render() {
         if (this.props.isLoading) return <div/>;
         if (this.props.channel && this.props.channel.snippet) {

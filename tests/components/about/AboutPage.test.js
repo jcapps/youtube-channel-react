@@ -1,6 +1,6 @@
 import React from 'react';
 import expect from 'expect';
-import {mount} from 'enzyme';
+import {shallow} from 'enzyme';
 import {AboutPage} from '../../../src/components/about/AboutPage';
 
 describe('About Page', () => {
@@ -24,7 +24,7 @@ describe('About Page', () => {
         props.isLoading = true;
 
         // act
-        const component = mount(<AboutPage {...props}/>);
+        const component = shallow(<AboutPage {...props}/>);
         
         // assert
         expect(component.html()).toEqual('<div></div>');
@@ -32,7 +32,7 @@ describe('About Page', () => {
 
     it('Should create profile image', () => {
         // act
-        const component = mount(<AboutPage {...props}/>);
+        const component = shallow(<AboutPage {...props}/>);
         const image = component.find('img');
 
         // assert
@@ -44,7 +44,7 @@ describe('About Page', () => {
 
     it('Should create page heading', () => {
         // act
-        const component = mount(<AboutPage {...props}/>);
+        const component = shallow(<AboutPage {...props}/>);
         const title = component.find('h3').text();
 
         // assert
@@ -53,7 +53,7 @@ describe('About Page', () => {
 
     it('Should create channel description', () => {
         // act
-        const component = mount(<AboutPage {...props}/>);
+        const component = shallow(<AboutPage {...props}/>);
         const description = component.find('p');
         const descriptionParts = description.find('span');
 
@@ -66,7 +66,7 @@ describe('About Page', () => {
     it('Should display "Unable to load About page" if no channelInfo', () => {
         props.channel = {};
         // act
-        const component = mount(<AboutPage {...props}/>);
+        const component = shallow(<AboutPage {...props}/>);
 
         // assert
         expect(component.text()).toEqual('(Unable to load About page)');

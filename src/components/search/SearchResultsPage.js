@@ -19,6 +19,11 @@ export class SearchResultsPage extends React.PureComponent {
         this.props.actions.getSearchResults(this.props.query);
     }
 
+    componentDidMount() {
+        document.title = "Search Results for: " + this.props.query;
+        window.scrollTo(0, 0);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!nextProps.isLoading) {
             this.setState({ isLoading: false });

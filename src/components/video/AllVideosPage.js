@@ -18,6 +18,11 @@ export class AllVideosPage extends React.PureComponent {
         this.props.actions.getRecentUploadsPlaylist();
     }
 
+    componentDidMount() {
+        document.title = "Videos";
+        window.scrollTo(0, 0);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!nextProps.isLoading) {
             this.setState({ isLoading: false });

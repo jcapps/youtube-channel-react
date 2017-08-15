@@ -18,6 +18,11 @@ export class AllPlaylistsPage extends React.PureComponent {
         this.props.actions.getAllPlaylists();
     }
 
+    componentDidMount() {
+        document.title = "Playlists";
+        window.scrollTo(0, 0);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!nextProps.isLoading) {
             this.setState({ isLoading: false });
