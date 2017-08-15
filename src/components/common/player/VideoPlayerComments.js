@@ -99,25 +99,25 @@ VideoPlayerComments.propTypes = {
     clearStore: PropTypes.func.isRequired
 };
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
     return {
         comments: state.comments,
         isLoading: state.ajaxCallsInProgress.comments > 0
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(commentActions, dispatch),
         clearStore: bindActionCreators(clearStore, dispatch)
     };
 }
 
-function mergeProps(state, actions, props) {
+export function mergeProps(state, actions, props) {
     let videoId = '';
     if (state.comments.items && state.comments.items.length > 0)
         videoId = state.comments.items[0].snippet.videoId;
-    if ((videoId !== '' && props.video.id !== videoId)) {
+    if (videoId !== '' && props.video.id !== videoId) {
         state.isLoading = true;
         actions.actions.getComments(props.video.id);
     }
@@ -134,14 +134,14 @@ function compareComments(prev, next) {
     return true;
 }
 
-const connectOptions = {
+export const connectOptions = {
     areMergedPropsEqual: (next, prev) => {
         let areCommentsEqual = false;
         if (!!prev.comments.items && !!next.comments.items) {
             // In case sorting by Relevance vs Most Recent doesn't actually change the order
             areCommentsEqual = compareComments(prev.comments.items, next.comments.items);
         }
-        return !( // if the condition below is true, then return false to render
+        return !( // Only want to render if the condition below is true. (Returning false causes a re-render.)
             (prev.isLoading && !next.isLoading) || 
             (!next.isLoading && !areCommentsEqual)
         );

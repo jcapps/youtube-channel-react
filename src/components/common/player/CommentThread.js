@@ -104,19 +104,19 @@ CommentThread.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
     return { replies: state.replies };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(commentActions, dispatch) };
 }
 
-function mergeProps(state, actions, props) {
+export function mergeProps(state, actions, props) {
     return Object.assign({}, state, actions, props);
 }
 
-const connectOptions = {
+export const connectOptions = {
     areMergedPropsEqual: (next, prev) => {
         if (!next.replies.items) return true;
         // Only want to render when these two values are the same. (Returning false causes a re-render.)

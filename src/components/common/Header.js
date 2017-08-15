@@ -50,7 +50,7 @@ Header.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
     const playlists = state.allPlaylists.slice(0, 5);
     return {
         allPlaylists: playlists,
@@ -59,15 +59,17 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(playlistActions, dispatch)
     };
 }
 
-const connectOptions = {
+export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
-        return prev.isLoading === next.isLoading;
+        return !( // Only want to render if the condition below is true. (Returning false causes a re-render.)
+            prev.isLoading !== next.isLoading
+        );
     }
 };
 

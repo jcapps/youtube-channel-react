@@ -52,25 +52,27 @@ VideoThumbnail.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
     return {
         video: state.video.queued,
         isLoading: !state.video.queued.snippet
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(videoActions, dispatch) };
 }
 
-function mergeProps(state, actions, props) {
+export function mergeProps(state, actions, props) {
     return Object.assign({}, state, actions, props);
 }
 
-const connectOptions = {
+export const connectOptions = {
     areMergedPropsEqual: (next, prev) => {
         // Only want to render when these two values are the same. (Returning false causes a re-render.)
-        return next.videoId !== next.video.id;
+        return !(
+            next.videoId == next.video.id
+        );
     }
 };
 

@@ -109,7 +109,7 @@ PlaylistPage.propTypes = {
     match: PropTypes.object
 };
 
-function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
     return { 
         playlist: state.playlist,
         playlistInfo: state.playlistInfo,
@@ -120,13 +120,13 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return { 
         actions: bindActionCreators(playlistActions, dispatch)
     };
 }
 
-function mergeProps(state, actions, props) {
+export function mergeProps(state, actions, props) {
     if (state.playlistId != state.playlistInfo.id) {
         state.isLoading = true;
         actions.actions.getPlaylistInfo(state.playlistId);
@@ -135,7 +135,7 @@ function mergeProps(state, actions, props) {
     return Object.assign({}, state, actions, props);
 }
 
-const connectOptions = {
+export const connectOptions = {
     areMergedPropsEqual: (next, prev) => {
         return !( // Only want to render if the condition below is true. (Returning false causes a re-render.)
             (!next.isLoading) || 

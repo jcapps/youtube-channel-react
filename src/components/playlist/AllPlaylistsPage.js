@@ -62,7 +62,7 @@ AllPlaylistsPage.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
     return { 
         playlists: state.allPlaylists,
         playlistPageToken: state.playlistPageToken,
@@ -70,13 +70,16 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(playlistActions, dispatch) };
 }
 
-const connectOptions = {
+export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
-        return (prev.isLoading === next.isLoading || prev.playlistPageToken === next.playlistPageToken);
+        return !( // Only want to render if the condition below is true. (Returning false causes a re-render.)
+            (!next.isLoading) && 
+            (prev.playlistPageToken !== next.playlistPageToken)
+        );
     }
 };
 

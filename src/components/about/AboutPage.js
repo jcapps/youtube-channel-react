@@ -32,7 +32,7 @@ AboutPage.propTypes = {
     channel: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
     return {
         channel: state.channelInfo,
         isLoading: state.ajaxCallsInProgress.about > 0

@@ -44,18 +44,18 @@ HomePage.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
     return { 
         mostRecentUpload: state.mostRecentUpload,
         isLoading: state.ajaxCallsInProgress.home > 0
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(videoActions, dispatch) };
 }
 
-const connectOptions = {
+export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading && prev.mostRecentUpload !== next.mostRecentUpload)

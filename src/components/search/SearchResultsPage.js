@@ -94,7 +94,7 @@ SearchResultsPage.propTypes = {
     match: PropTypes.object
 };
 
-function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
     return {
         pageToken: state.searchPageToken,
         query: ownProps.match.params.q,
@@ -104,13 +104,16 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(channelActions, dispatch) };
 }
 
-const connectOptions = {
+export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
-        return (prev.isLoading === next.isLoading || prev.pageToken === next.pageToken);
+        return !( // Only want to render if the condition below is true. (Returning false causes a re-render.)
+            (!next.isLoading) && 
+            (prev.pageToken !== next.pageToken)
+        );
     }
 };
 

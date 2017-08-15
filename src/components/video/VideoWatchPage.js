@@ -43,7 +43,7 @@ VideoWatchPage.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
     return {
         video: state.video.current,
         videoId: ownProps.match.params.id,
@@ -51,14 +51,15 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(videoActions, dispatch) };
 }
 
-const connectOptions = {
+export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
-        return !(
-            (!next.isLoading && prev.video !== next.video)
+        return !( // Only want to render if the condition below is true. (Returning false causes a re-render.)
+            (!next.isLoading) && 
+            (prev.video !== next.video)
         );
     }
 };

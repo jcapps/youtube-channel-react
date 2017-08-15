@@ -42,20 +42,20 @@ PlaylistPlayer.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
     return {
         video: state.video.current,
         isLoading: state.ajaxCallsInProgress.watch > 0
     };
 }
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
     return { 
         actions: bindActionCreators(videoActions, dispatch)
     };
 }
 
-function mergeProps(state, actions, props) {
+export function mergeProps(state, actions, props) {
     if (props.videoId != state.video.id) {
         state.isLoading = true;
         actions.actions.getVideo(props.videoId, videoTypes.CURRENT, props.playlistIndex);
@@ -63,11 +63,10 @@ function mergeProps(state, actions, props) {
     return Object.assign({}, state, actions, props);
 }
 
-const connectOptions = {
+export const connectOptions = {
     areMergedPropsEqual: (next, prev) => {
         return !( // if the condition below is true, then return false to render
-            (!next.isLoading) || 
-            (!next.isLoading && next.videoId !== next.video.id)
+            !next.isLoading
         );
     }
 };
