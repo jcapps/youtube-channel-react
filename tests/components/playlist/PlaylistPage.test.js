@@ -29,7 +29,7 @@ describe('Playlist Page', () => {
             playlistInfo: {snippet: {title: 'Playlist Title'}},
             playlistId: '1',
             videoPageToken: {prevPageToken: '', nextPageToken: 'TOKEN'},
-            videoInPlaylist: 0,
+            playlistIndex: 0,
             actions: playlistActions
         };
 

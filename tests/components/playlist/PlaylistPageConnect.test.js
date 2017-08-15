@@ -44,7 +44,7 @@ describe('Playlist Page Connect', () => {
             playlistInfo: state.playlistInfo,
             playlistId: ownProps.match.params.id,
             videoPageToken: state.videoPageToken,
-            videoInPlaylist: state.playlistIndex,
+            playlistIndex: state.playlistIndex,
             isLoading: state.ajaxCallsInProgress.playlist > 0
         };
 
@@ -78,7 +78,7 @@ describe('Playlist Page Connect', () => {
             playlistInfo: {id: ownProps.match.params.id},
             playlistId: ownProps.match.params.id,
             videoPageToken: state.videoPageToken,
-            videoInPlaylist: state.playlistIndex,
+            playlistIndex: state.playlistIndex,
             isLoading: state.ajaxCallsInProgress.playlist > 0
         };
         const actionProps = {
@@ -104,7 +104,7 @@ describe('Playlist Page Connect', () => {
             playlistInfo: state.playlistInfo,
             playlistId: ownProps.match.params.id,
             videoPageToken: state.videoPageToken,
-            videoInPlaylist: state.playlistIndex,
+            playlistIndex: state.playlistIndex,
             isLoading: state.ajaxCallsInProgress.playlist > 0
         };
         const actionProps = {
