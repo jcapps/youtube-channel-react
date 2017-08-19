@@ -22,8 +22,10 @@ export class CommentBlock extends React.PureComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        // Don't render again if comment already exists
-        return !(this.props.comment.id === nextProps.comment.id);
+        // Only render if comment does not already exist OR
+        // if state has changed.
+        return !(this.props.comment.id === nextProps.comment.id) || 
+            (nextState.readMoreText !== this.state.readMoreText);
     }
 
     minimizeComment(e) {
