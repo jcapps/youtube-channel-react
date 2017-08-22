@@ -71,7 +71,7 @@ export function getVideoInfo(videoId) {
 }
 
 /**
- * Retrieve video comment threads given video ID
+ * Retrieve video comment threads in sortOrder given video ID
  */
 export function getVideoComments(videoId, sortOrder, pageToken = "") {
     return YouTubeApi.getCommentThreads(videoId, sortOrder, pageToken).then(comments => {
@@ -82,7 +82,7 @@ export function getVideoComments(videoId, sortOrder, pageToken = "") {
 }
 
 /**
- * Retrieve video comment threads given video ID
+ * Retrieve comment thread replies up to maxResults given comment ID
  */
 export function getCommentReplies(commentId, maxResults, pageToken = "") {
     return YouTubeApi.getReplyThreads(commentId, maxResults, pageToken).then(replies => {
