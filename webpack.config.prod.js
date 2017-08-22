@@ -39,7 +39,11 @@ export default {
     ],
     module: {
         loaders: [
-            {test: /\.js$/, include: path.join(__dirname, 'src'), use: 'babel-loader'},
+            {
+                test: /\.js$/,
+                include: [path.join(__dirname, 'src'), path.join(__dirname,'analytics')],
+                use: 'babel-loader'
+            },
             {
                 test: /(\.css)$/, use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',

@@ -2,20 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as channelActions from '../../../actions/channelActions';
+import * as loginActions from '../../actions/loginActions';
+import * as channelActions from '../../actions/channelActions';
 
 export class AnalyticsHomePage extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoading: false
-        };
+    constructor() {
+        super();
         this.login = this.login.bind(this);
         this.getChannelViews = this.getChannelViews.bind(this);
     }
 
     componentWillMount() {
-        this.props.actions.isLoggedIn();
+        this.props.loginActions.isLoggedIn();
     }
 
     componentDidMount() {
@@ -23,22 +21,16 @@ export class AnalyticsHomePage extends React.PureComponent {
         window.scrollTo(0, 0);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!nextProps.isLoading) {
-            this.setState({ isLoading: false });
-        }
-    }
-
     login() {
-        this.props.actions.login();
+        this.props.loginActions.login();
     }
 
     getChannelViews() {
-        this.props.actions.getChannelAnalytics();
+        this.props.channelActions.getChannelAnalytics();
     }
 
     render() {
-        if (this.state.isLoading) return <div/>;
+        if (this.props.isLoading) return <div/>;
         if (!this.props.isLoggedIn) {
             return (
                 <div id="analytics-home-page">
@@ -62,7 +54,8 @@ export class AnalyticsHomePage extends React.PureComponent {
 AnalyticsHomePage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     isLoggedIn: PropTypes.bool.isRequired,
-    actions: PropTypes.object.isRequired
+    loginActions: PropTypes.object.isRequired,
+    channelActions: PropTypes.object.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -73,7 +66,10 @@ export function mapStateToProps(state) {
 }
 
 export function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators(channelActions, dispatch) };
+    return {
+        loginActions: bindActionCreators(loginActions, dispatch),
+        channelActions: bindActionCreators(channelActions, dispatch)
+    };
 }
 
 export const connectOptions = {

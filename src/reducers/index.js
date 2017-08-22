@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import ajaxCallsInProgress from './ajaxStatusReducer';
-import isAuthenticated from './isAuthenticatedReducer';
 import channelInfo from './channelInfoReducer';
 import mostRecentUpload from './mostRecentUploadReducer';
 import recentUploadsPlaylistId from './recentUploadsPlaylistIdReducer';
@@ -19,7 +18,6 @@ import searchPageToken from './searchPageTokenReducer';
 
 const rootReducer = combineReducers({
     ajaxCallsInProgress,
-    isAuthenticated,
     channelInfo,
     mostRecentUpload,
     recentUploadsPlaylistId,

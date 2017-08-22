@@ -1,0 +1,38 @@
+#sidebar {
+    position: fixed;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    font-weight: bold;
+    background-color: $sidebar-primary;
+
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        a, a:active, a:visited, a:focus {
+            text-decoration: none;
+            color: $sidebar-contrast;
+
+            div {
+                padding: 10px 25px;
+            }
+        }
+
+        a:hover {
+            text-decoration: none;
+
+            div {
+                background-color: $sidebar-contrast;
+                color: $sidebar-primary;
+            }
+        }
+    }
+    
+    & > ul > li {
+        height: 40px;
+        vertical-align: top;
+    }
+}

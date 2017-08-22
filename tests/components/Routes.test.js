@@ -21,6 +21,6 @@ describe('Routes', () => {
         const routes = component.find(Route);
         
         // assert
-        expect(routes.length).toEqual(7);
+        expect(routes.length).toEqual(8);
     });
 });

@@ -37,7 +37,11 @@ export default {
     ],
     module: {
         rules: [
-            {test: /\.js$/, include: path.join(__dirname, 'src'), use: 'babel-loader'},
+            {
+                test: /\.js$/,
+                include: [path.join(__dirname, 'src'), path.join(__dirname,'analytics')],
+                use: 'babel-loader'
+            },
             {test: /(\.css)$/, use: ['style-loader', 'css-loader']},
             {test: /(\.scss)$/, use: ['style-loader', 'css-loader', 'sass-loader']},
             {

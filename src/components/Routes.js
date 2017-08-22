@@ -7,6 +7,7 @@ import AllVideosPage from './video/AllVideosPage';
 import VideoWatchPage from './video/VideoWatchPage';
 import AboutPage from './about/AboutPage';
 import SearchResultsPage from './search/SearchResultsPage';
+import AnalyticsPortal from './analytics/AnalyticsPortal';
 
 const Routes = () => {
     return (
@@ -18,6 +19,7 @@ const Routes = () => {
             <Route path="/watch/:id?" component={VideoWatchPage} />
             <Route path="/about" component={AboutPage} />
             <Route path="/search/:q?" component={SearchResultsPage} />
+            <Route path="/analytics" component={AnalyticsPortal} />
         </Switch>
     );
 };

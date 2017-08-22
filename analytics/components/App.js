@@ -1,15 +1,15 @@
 // This component handles the App template used on every page.
 import React from 'react';
-import Header from './common/Header';
+import SideBar from './common/SideBar';
 import Routes from './Routes';
 
 class App extends React.PureComponent {
     render() {
         return (
-            <div>
-                <Header/>
-                <div id="content">
-                    <Routes />
+            <div id="analytics-app">
+                <SideBar/>
+                <div id="analytics-content">
+                    <Routes/>
                 </div>
             </div>
         );

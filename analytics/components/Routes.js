@@ -1,8 +1,8 @@
 import React from 'react';
 import {Switch, Route} from 'react-router';
-import AnalyticsHomePage from './analytics/home/AnalyticsHomePage';
+import AnalyticsHomePage from './home/AnalyticsHomePage';
 
-const RoutesAnalytics = () => {
+const Routes = () => {
     return (
         <Switch>
             <Route exact path="/analytics" component={AnalyticsHomePage} />
@@ -10,4 +10,4 @@ const RoutesAnalytics = () => {
     );
 };
 
-export default RoutesAnalytics;
+export default Routes;
