@@ -42,6 +42,7 @@ export class NavBar extends React.PureComponent {
                         </li>
                         <li><Link to="/videos"><div>Videos</div></Link></li>
                         <li><Link to="/about"><div>About</div></Link></li>
+                        <li id="analytics-tab"><Link to="/analytics"><div>Analytics</div></Link></li>
                     </ul>
                 </nav>
             </div>

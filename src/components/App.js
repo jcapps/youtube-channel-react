@@ -2,6 +2,7 @@
 import React from 'react';
 import Header from './common/Header';
 import Routes from './Routes';
+import RoutesAnalytics from './RoutesAnalytics';
 
 class App extends React.PureComponent {
     render() {
@@ -10,6 +11,7 @@ class App extends React.PureComponent {
                 <Header/>
                 <div id="content">
                     <Routes />
+                    <RoutesAnalytics />
                 </div>
             </div>
         );

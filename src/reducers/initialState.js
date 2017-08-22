@@ -1,4 +1,5 @@
 export default {
+    isAuthenticated: false,
     channelInfo: {},
     mostRecentUpload: {},
     recentUploadsPlaylistId: "",
@@ -21,6 +22,7 @@ export default {
         comments: 0,
         header: 0,
         home: 0,
+        login: 0,
         playlist: 0,
         replies: 0,
         searchResults: 0,

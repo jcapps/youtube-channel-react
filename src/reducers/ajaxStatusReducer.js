@@ -87,6 +87,20 @@ function isHomeActionSuccessType(type) {
     );
 }
 
+function isLoginActionStartingType(type) {
+    return (
+        type == types.LOGGING_IN ||
+        type == types.GETTING_IS_LOGGED_IN
+    );
+}
+
+function isLoginActionSuccessType(type) {
+    return (
+        type == types.LOGIN_SUCCESS || 
+        type == types.GET_IS_LOGGED_IN_SUCCESS
+    );
+}
+
 function isPlaylistActionStartingType(type) {
     return (
         type == types.GETTING_PLAYLIST_INFO ||
@@ -180,6 +194,12 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isHomeActionSuccessType(action.type)) {
         currentState.home -= 1;
+    }
+    if (isLoginActionStartingType(action.type)) {
+        currentState.login += 1;
+    }
+    if (isLoginActionSuccessType(action.type)) {
+        currentState.login -= 1;
     }
     if (isPlaylistActionStartingType(action.type)) {
         currentState.playlist += 1;
