@@ -56,6 +56,9 @@ class YouTubeAnalyticsApi {
         const accessParams = {
             access_token: this.getAccessToken()
         };
+        if (!accessParams.access_token) {
+            return Promise.resolve(false);
+        };
 
         return new Promise((resolve, reject) => {
             axios.get(validateTokenUrl, {params: accessParams}).then(res => {
