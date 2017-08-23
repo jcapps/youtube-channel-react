@@ -36,8 +36,8 @@ $sidebar-width: 200px;
         }
         
         & > ul > li {
+            display: block;
             height: 40px;
-            vertical-align: top;
         }
     }
 }
