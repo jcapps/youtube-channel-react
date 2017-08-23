@@ -1,38 +1,43 @@
+$sidebar-width: 200px;
+
 #sidebar {
     position: fixed;
     left: 0;
     height: 100%;
-    width: 200px;
+    width: $sidebar-width;
     font-weight: bold;
     background-color: $sidebar-primary;
 
-    ul {
-        margin: 0;
-        padding: 0;
-    }
-
-    li {
-        a, a:active, a:visited, a:focus {
-            text-decoration: none;
-            color: $sidebar-contrast;
-
-            div {
-                padding: 10px 25px;
-            }
+    nav {
+        ul {
+            margin: 0;
+            padding: 0;
         }
 
-        a:hover {
-            text-decoration: none;
+        li {
+            a, a:active, a:visited, a:focus {
+                text-decoration: none;
+                color: $sidebar-contrast;
 
-            div {
-                background-color: $sidebar-contrast;
-                color: $sidebar-primary;
+                div {
+                    padding: 10px 25px;
+                }
+            }
+
+            a:hover {
+                text-decoration: none;
+
+                div {
+                    width: $sidebar-width;
+                    background-color: $sidebar-contrast;
+                    color: $sidebar-primary;
+                }
             }
         }
-    }
-    
-    & > ul > li {
-        height: 40px;
-        vertical-align: top;
+        
+        & > ul > li {
+            height: 40px;
+            vertical-align: top;
+        }
     }
 }
