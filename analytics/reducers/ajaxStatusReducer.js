@@ -25,6 +25,18 @@ function isLoginActionSuccessType(type) {
     );
 }
 
+function isViewsActionStartingType(type) {
+    return (
+        type == types.GETTING_VIEWS
+    );
+}
+
+function isViewsActionSuccessType(type) {
+    return (
+        type == types.GET_VIEWS_SUCCESS
+    );
+}
+
 export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgress, action) {
     let currentState = Object.assign({}, state);
 
@@ -39,6 +51,12 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isLoginActionSuccessType(action.type)) {
         currentState.login -= 1;
+    }
+    if (isViewsActionStartingType(action.type)) {
+        currentState.views += 1;
+    }
+    if (isViewsActionSuccessType(action.type)) {
+        currentState.views -= 1;
     }
 
     return currentState;

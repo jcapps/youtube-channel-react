@@ -1,3 +1,4 @@
+import formatDateString from '../helpers/formatDateString';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
@@ -14,20 +15,4 @@ export function getChannelAnalytics() {
             throw(error);
         });
     };
-}
-
-function formatDateString(date) {
-    let yyyy = date.getFullYear().toString();
-    let mm = padToTwoCharacters(date.getMonth() + 1);
-    let dd = padToTwoCharacters(date.getDate());
-
-    return yyyy + '-' + mm + '-' + dd;
-}
-
-function padToTwoCharacters(number) {
-    if (number < 10) {
-        return '0' + number;
-    } else {
-        return number.toString();
-    }
 }

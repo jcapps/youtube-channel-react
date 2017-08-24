@@ -48,7 +48,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 export const connectOptions = {
-    areMergedPropsEqual: (next, prev) => {
+    areStatePropsEqual: (next, prev) => {
         return !(
             !next.isLoading
         );

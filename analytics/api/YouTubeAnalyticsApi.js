@@ -33,6 +33,7 @@ class YouTubeAnalyticsApi {
                             const isLoggedIn = GoogleAuth.isSignedIn.get();
                             if (isLoggedIn) {
                                 localStorage.setItem('access_token', GoogleAuth.$K.Q7.access_token);
+                                localStorage.setItem('expires_at', GoogleAuth.$K.Q7.expires_at)
                                 toastr.success('Signed in!');
                             } else {
                                 toastr.error('Unable to sign in.');
@@ -52,12 +53,20 @@ class YouTubeAnalyticsApi {
         return localStorage.getItem('access_token');
     }
 
+    static getExpiration() {
+        return localStorage.getItem('expires_at');
+    }
+
     static isAccessTokenValid() {
-        const accessParams = {
-            access_token: this.getAccessToken()
-        };
-        if (!accessParams.access_token) {
+        const accessToken = this.getAccessToken();
+        const expiresAt = this.getExpiration();
+        const now = new Date();
+        if (!accessToken || !expiresAt || expiresAt - now.getTime() <= 0) {
             return Promise.resolve(false);
+        };
+
+        const accessParams = {
+            access_token: accessToken
         };
 
         return new Promise((resolve, reject) => {
@@ -75,7 +84,7 @@ class YouTubeAnalyticsApi {
         });
     }
 
-    static getReport(startDate, endDate, metrics) {
+    static getReport(startDate, endDate, metrics, dimensions, filters) {
         const authHeader = {
             'Authorization': 'Bearer ' + this.getAccessToken()
         };
@@ -83,7 +92,9 @@ class YouTubeAnalyticsApi {
             'ids': 'channel==' + CHANNEL_ID,
             'start-date': startDate,
             'end-date': endDate,
-            'metrics': metrics
+            'metrics': metrics,
+            'dimensions': dimensions,
+            'filters': filters
         };
 
         return new Promise((resolve, reject) => {

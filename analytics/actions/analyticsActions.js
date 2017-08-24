@@ -23,10 +23,10 @@ export function isLoggedIn() {
 }
 
 /**
- * Get an analytics report given startDate, endDate, and metrics
+ * Get an analytics report given startDate, endDate, metrics, dimensions, and filters
  */
-export function getReport(startDate, endDate, metrics) {
-    return YouTubeAnalyticsApi.getReport(startDate, endDate, metrics).then(report => {
+export function getReport(startDate, endDate, metrics, dimensions, filters) {
+    return YouTubeAnalyticsApi.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
         return report;
     }).catch(error => {
         throw(error);
