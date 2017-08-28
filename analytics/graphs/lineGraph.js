@@ -41,6 +41,12 @@ const lineGraph = (container, viewsInfo, xColumnName, yColumnName) => {
     y.domain([0, d3.max(data, d => { return d.get(yColumnName); })]).nice();
 
     g.append("g")
+        .attr("class", "grid-line")
+        .call(d3.axisLeft(y)
+            .tickSize(-width)
+            .tickFormat(""));
+
+    g.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x)
             .tickFormat(formatTime));

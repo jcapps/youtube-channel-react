@@ -16,3 +16,7 @@ circle.highlight-datum-outline {
     fill: none;
     stroke: $highlight;
 }
+
+.grid-line line {
+    stroke: $grid-line;
+}
