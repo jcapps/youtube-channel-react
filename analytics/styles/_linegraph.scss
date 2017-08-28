@@ -1,0 +1,30 @@
+path.line {
+    fill: none;
+    stroke: $line;
+    stroke-width: 2px;
+}
+
+circle.datum {
+    fill: $line;
+}
+
+circle.highlight-datum {
+    fill: $highlight;
+}
+
+circle.highlight-datum-outline {
+    fill: none;
+    stroke: $highlight;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 80px;
+    height: 30px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background-color: $tooltip-background;
+    border: 0px;
+    pointer-events: none;
+}

@@ -1,6 +1,14 @@
 $white: white;
+$red: red;
 $purple-gray: rgb(65, 58, 78);
+$steelblue: steelblue;
+$lightsteelblue: lightsteelblue;
 
 /* SideBar colors */
 $sidebar-primary: $purple-gray;
 $sidebar-contrast: $white;
+
+/* Line Graph colors */
+$line: $steelblue;
+$highlight: $red;
+$tooltip-background: $lightsteelblue;
