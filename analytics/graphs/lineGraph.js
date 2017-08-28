@@ -86,6 +86,10 @@ const lineGraph = (container, viewsInfo, xColumnName, yColumnName) => {
         return g.node().getBoundingClientRect();
     }
 
+    const getTooltipSize = tooltipElem => {
+        return tooltipElem.node().getBoundingClientRect()
+    }
+
     const highlight = d => {
         if (!d) {
             d3.select(".highlight-datum")
@@ -107,16 +111,20 @@ const lineGraph = (container, viewsInfo, xColumnName, yColumnName) => {
             const gClientRect = getGraphPosition();
             const top = gClientRect.top;
             const left = gClientRect.left;
+            const yLabel = yColumnName.charAt(0).toUpperCase() + yColumnName.slice(1);
+            d3.select(".tooltip")
+                .html(formatTime(d.get(xColumnName)) + "<br/>" + yLabel + ": " + d.get(yColumnName))
+                .style("display", "");
+
+            const tooltipSize = getTooltipSize(d3.select(".tooltip"));
             let horizontalTranslate = left + document.body.scrollLeft + x(d.get(xColumnName)) + leftAxis.node().getBoundingClientRect().width;
-            const verticalTranslate = top + document.body.scrollTop + y(d.get(yColumnName));
-            if (horizontalTranslate > left + width - 75) {
-                horizontalTranslate = horizontalTranslate - 75;
+            const verticalTranslate = top + document.body.scrollTop + y(d.get(yColumnName)) - tooltipSize.height;
+            if (horizontalTranslate > left + width - tooltipSize.width) {
+                horizontalTranslate = horizontalTranslate - tooltip.width;
             }
             d3.select(".tooltip")
-                .html(formatTime(d.get(xColumnName)) + "<br/>Views: " + d.get(yColumnName))
-                .style("display", "")
                 .style("left", horizontalTranslate + "px")
-                .style("top", (verticalTranslate - 40) + "px");
+                .style("top", verticalTranslate + "px");
         }
     }
 
