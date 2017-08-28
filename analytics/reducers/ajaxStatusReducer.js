@@ -37,6 +37,12 @@ function isViewsActionSuccessType(type) {
     );
 }
 
+function isViewsActionErrorType(type) {
+    return (
+        type == types.GET_VIEWS_ERROR
+    );
+}
+
 export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgress, action) {
     let currentState = Object.assign({}, state);
 
@@ -56,6 +62,9 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
         currentState.views += 1;
     }
     if (isViewsActionSuccessType(action.type)) {
+        currentState.views -= 1;
+    }
+    if (isViewsActionErrorType(action.type)) {
         currentState.views -= 1;
     }
 

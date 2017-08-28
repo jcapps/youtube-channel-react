@@ -12,6 +12,10 @@ export function getViewsSuccess(report) {
     return { type: types.GET_VIEWS_SUCCESS, report };
 }
 
+export function getViewsError() {
+    return { type: types.GET_VIEWS_ERROR };
+}
+
 export function getViews(period = Periods.THIRTY_DAY, dimensions = 'day', filters = '') {
     return function(dispatch) {
         const {startDate, endDate} = getStartEndDates(period);
@@ -23,8 +27,11 @@ export function getViews(period = Periods.THIRTY_DAY, dimensions = 'day', filter
                 return analyticsActions.getReport(startDate, endDate, 'views', dimensions, filters).then(report => {
                     dispatch(getViewsSuccess(report));
                 }).catch(error => {
+                    dispatch(getViewsError());
                     throw(error);
                 });
+            } else {
+                dispatch(getViewsError());
             }
         });
     };
