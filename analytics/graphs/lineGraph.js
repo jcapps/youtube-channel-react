@@ -23,7 +23,7 @@ const lineGraph = (container, viewsInfo, xColumnName, yColumnName) => {
 
     const tooltip = container.append("div")
         .attr("class", "tooltip")
-        .style("opacity", 0);
+        .style("display", "none");
 
     const columns = viewsInfo.columnHeaders.map(item => {
         return item.name;
@@ -87,8 +87,7 @@ const lineGraph = (container, viewsInfo, xColumnName, yColumnName) => {
             d3.select(".highlight-datum-outline")
                 .style("display", "none");
             d3.select(".tooltip")
-                .style("display", "none")
-                .style("opacity", 0);
+                .style("display", "none");
         } else {
             d3.select(".highlight-datum")
                 .attr("cx", x(d.get(xColumnName)))
@@ -111,8 +110,7 @@ const lineGraph = (container, viewsInfo, xColumnName, yColumnName) => {
                 .html(formatTime(d.get(xColumnName)) + "<br/>Views: " + d.get(yColumnName))
                 .style("display", "")
                 .style("left", horizontalTranslate + "px")
-                .style("top", (verticalTranslate - 40) + "px")
-                .style("opacity", .9);
+                .style("top", (verticalTranslate - 40) + "px");
         }
     }
 

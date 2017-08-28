@@ -1,5 +1,6 @@
 $white: white;
 $darkgray: darkgray;
+$black: #1a1a1a;
 $red: red;
 $purple-gray: rgb(65, 58, 78);
 $steelblue: steelblue;
@@ -14,5 +15,5 @@ $line: $steelblue;
 $highlight: $red;
 
 /* Tooltip colors */
-$tooltip-background: $white;
-$tooltip-border: $darkgray;
+$tooltip-color: $white;
+$tooltip-background: $black;
