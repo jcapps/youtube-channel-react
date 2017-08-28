@@ -4,7 +4,7 @@ const formatDateString = date => {
     let dd = padToTwoCharacters(date.getDate());
 
     return yyyy + '-' + mm + '-' + dd;
-}
+};
 
 const padToTwoCharacters = number => {
     if (number < 10) {
@@ -12,6 +12,6 @@ const padToTwoCharacters = number => {
     } else {
         return number.toString();
     }
-}
+};
 
 export default formatDateString;
