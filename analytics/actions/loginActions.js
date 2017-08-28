@@ -26,6 +26,7 @@ export function isLoggedIn() {
         dispatch(ajax.gettingIsLoggedIn());
         return analyticsActions.isLoggedIn().then(isLoggedIn => {
             dispatch(getIsLoggedInSuccess(isLoggedIn));
+            return isLoggedIn;
         }).catch(error => {
             throw(error);
         });

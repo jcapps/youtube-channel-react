@@ -6,7 +6,6 @@ const KEY = process.env.YOUTUBE_KEY;
 const CHANNEL_ID = process.env.CHANNEL_ID;
 
 const googleClientApiUrl = 'https://apis.google.com/js/api.js';
-const validateTokenUrl = 'https://www.googleapis.com/oauth2/v3/tokeninfo';
 const analyticsApiUrl = 'https://www.googleapis.com/youtube/analytics/v1/';
 const reportsUrl = analyticsApiUrl + 'reports';
 const analyticsScope = 'https://www.googleapis.com/auth/yt-analytics.readonly';
@@ -63,19 +62,9 @@ class YouTubeAnalyticsApi {
         const now = new Date();
         if (!accessToken || !expiresAt || expiresAt - now.getTime() <= 0) {
             return Promise.resolve(false);
+        } else {
+            return Promise.resolve(true);
         };
-
-        const accessParams = {
-            access_token: accessToken
-        };
-
-        return new Promise((resolve, reject) => {
-            axios.get(validateTokenUrl, {params: accessParams}).then(res => {
-                resolve(true);
-            }).catch(error => {
-                resolve(false);
-            });
-        });
     }
 
     static isLoggedIn() {
