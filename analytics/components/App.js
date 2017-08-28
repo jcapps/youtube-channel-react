@@ -64,11 +64,6 @@ export function mapDispatchToProps(dispatch) {
 
 export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
-        if (
-            (prev.isLoading !== next.isLoading) || 
-            (!next.isLoggedIn) || 
-            (!next.isCheckingLogin && (prev.isLoggedIn !== next.isLoggedIn))
-        ) console.log('render App', prev, next);
         return !(
             (prev.isLoading !== next.isLoading) || 
             (!next.isLoggedIn) || 
