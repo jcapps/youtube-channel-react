@@ -102,13 +102,16 @@ const lineGraph = (container, viewsInfo, xColumnName, yColumnName) => {
             const gClientRect = getGraphPosition();
             const top = gClientRect.top;
             const left = gClientRect.left;
-            const horizontalTranslate = left + document.body.scrollLeft + x(d.get(xColumnName)) + leftAxis.node().getBoundingClientRect().width;
+            let horizontalTranslate = left + document.body.scrollLeft + x(d.get(xColumnName)) + leftAxis.node().getBoundingClientRect().width;
             const verticalTranslate = top + document.body.scrollTop + y(d.get(yColumnName));
+            if (horizontalTranslate > left + width - 75) {
+                horizontalTranslate = horizontalTranslate - 75;
+            }
             d3.select(".tooltip")
                 .html(formatTime(d.get(xColumnName)) + "<br/>Views: " + d.get(yColumnName))
                 .style("display", "")
                 .style("left", horizontalTranslate + "px")
-                .style("top", (verticalTranslate - 30) + "px")
+                .style("top", (verticalTranslate - 40) + "px")
                 .style("opacity", .9);
         }
     }
