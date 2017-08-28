@@ -12,7 +12,7 @@ export function getViewsSuccess(report) {
     return { type: types.GET_VIEWS_SUCCESS, report };
 }
 
-export function getViews(period = Periods.ThirtyDay, dimensions = 'day', filters = '') {
+export function getViews(period = Periods.THIRTY_DAY, dimensions = 'day', filters = '') {
     return function(dispatch) {
         const {startDate, endDate} = getStartEndDates(period);
         dispatch(ajax.gettingViews());

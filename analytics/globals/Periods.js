@@ -1,6 +1,8 @@
 const Periods = {
-    SevenDay: '7Day',
-    ThirtyDay: '30Day'
+    SEVEN_DAY: '7DAY',
+    THIRTY_DAY: '30DAY',
+    YEAR: 'YEAR',
+    CUSTOM: 'CUSTOM'
 };
 
 export default Periods;
