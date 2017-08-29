@@ -1,148 +1,253 @@
 import * as d3 from 'd3';
 import computeVoronoi from '../helpers/computeVoronoi';
 
-const lineGraph = (container, viewsInfo, xColumnName, yColumnName) => {
-    const svg = container.append("svg")
-        .attr("width", "960")
-        .attr("height", "400");
-    
-    const margin = {top: 20, right: 25, bottom: 30, left: 50};
-    const width = +svg.attr("width") - margin.left - margin.right;
-    const height = +svg.attr("height") - margin.top - margin.bottom;
-    const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    
-    const parseTime = d3.timeParse("%Y-%m-%d");
-    const formatTime = d3.timeFormat("%x");
-    
+const svgWidth = 960;
+const svgHeight = 400;
+const svgMargin = {top: 20, right: 25, bottom: 30, left: 50};
+const width = svgWidth - svgMargin.left - svgMargin.right; // Does not include y-axis
+const height = svgHeight - svgMargin.top - svgMargin.bottom; // Does not include x-axis
+
+// Parse the Date time
+const parseTime = d3.timeParse('%Y-%m-%d');
+
+// Format the time to be "d/m/yyyy"
+const formatTime = d3.timeFormat('%x');
+
+// Get the page position of the d3 element
+const getD3ElementPosition = element => {
+    return element.node().getBoundingClientRect();
+};
+
+// Create the scales in x and y directions
+// Returns functions that scale the data
+const createXYScales = () => {
     const x = d3.scaleLinear().rangeRound([0, width]);
     const y = d3.scaleLinear().rangeRound([height, 0]);
-    
-    const line = d3.line()
-        .x(d => { return x(d.get(xColumnName)); })
-        .y(d => { return y(d.get(yColumnName)); });
+    return {x, y};
+};
 
-    const tooltip = container.append("div")
-        .attr("class", "tooltip")
-        .style("display", "none");
-
-    const columns = viewsInfo.columnHeaders.map(item => {
+// Prepares data for graphing
+const prepareData = (dataInfo, xyInfo) => {
+    const columns = dataInfo.columnHeaders.map(item => {
         return item.name;
     });
-    const data = viewsInfo.rows;
+    const data = dataInfo.rows;
     data.forEach((item, i) => {
         data[i] = d3.map(item, (d, i) => {
             return columns[i];
         });
         const dataEntry = data[i];
-        dataEntry.set(xColumnName, parseTime(dataEntry.get(xColumnName)));
+        dataEntry.set(xyInfo.xColumnName, parseTime(dataEntry.get(xyInfo.xColumnName)));
     });
+    return data;
+};
 
-    x.domain(d3.extent(data, d => { return d.get(xColumnName); })).nice();
-    y.domain([0, d3.max(data, d => { return d.get(yColumnName); })]).nice();
+// Set the domains of the graph in x and y directions
+const setXYDomains = (data, xyInfo) => {
+    xyInfo.x.domain(d3.extent(data, d => { return d.get(xyInfo.xColumnName); })).nice();
+    xyInfo.y.domain([0, d3.max(data, d => { return d.get(xyInfo.yColumnName); })]).nice();
+};
 
-    g.append("g")
-        .attr("class", "grid-line")
+// Create containing svg
+const createSvg = container => {
+    return container.append('svg')
+        .attr('id', 'lineGraph')
+        .attr('width', svgWidth.toString())
+        .attr('height', svgHeight.toString());
+};
+
+// Create group containing actual graph
+const createGraphCanvas = () => {
+    return d3.select('svg#lineGraph').append('g')
+        .attr('id', 'graphCanvas')
+        .attr('transform', 'translate(' + svgMargin.left + ',' + svgMargin.top + ')');
+};
+
+// Draws connecting line between two data points on graph
+const drawLineBetweenPoints = xyInfo => {
+    return d3.line()
+        .x(d => { return xyInfo.x(d.get(xyInfo.xColumnName)); })
+        .y(d => { return xyInfo.y(d.get(xyInfo.yColumnName)); });
+};
+
+// Creates a Tooltip for viewing data information on hover
+const createTooltip = container => {
+    return container.append('div')
+        .attr('class', 'tooltip')
+        .style('display', 'none');
+};
+
+// Draw Grid Lines
+const drawGridLines = y => {
+    d3.select('#graphCanvas').append('g')
+        .attr('class', 'grid-line')
         .call(d3.axisLeft(y)
             .tickSize(-width)
-            .tickFormat(""));
+            .tickFormat(''));
+};
 
-    g.append("g")
-        .attr("transform", "translate(0," + height + ")")
+// Draw X-Axis
+const drawXAxis = x => {
+    d3.select('#graphCanvas').append('g')
+        .attr('class', 'xAxis')
+        .attr('transform', 'translate(0,' + height + ')')
         .call(d3.axisBottom(x)
             .tickFormat(formatTime));
-    
-    const leftAxis = g.append("g")
+};
+
+// Draw Y-Axis
+const drawYAxis = y => {
+    d3.select('#graphCanvas').append('g')
+        .attr('class', 'yAxis')
         .call(d3.axisLeft(y));
-        
-    g.append("path")
+};
+
+// Draw the path of the line graph
+const drawLinePath = (data, drawLine) => {
+    d3.select('#graphCanvas').append('path')
         .data([data])
-        .attr("class", "line")
-        .attr("d", line);
+        .attr('class', 'line')
+        .attr('d', drawLine);
+};
+
+// Draw data points on the line path
+const drawDataPoints = (data, xyInfo) => {
+    d3.select('#graphCanvas').selectAll('circle.datum')
+        .data(data)
+        .enter()
+        .append('circle')
+            .attr('class', 'datum')
+            .attr('r', 3)
+            .attr('cx', d => { return xyInfo.x(d.get(xyInfo.xColumnName)); })
+            .attr('cy', d => { return xyInfo.y(d.get(xyInfo.yColumnName)); });
+};
+
+// Draw a highlighted point to be used on data point hover
+// Display set to "none" until needed
+const drawHighlightedDataPoint = () => {
+    const graphCanvas = d3.select('#graphCanvas');
+    graphCanvas.append('circle')
+        .attr('class', 'highlight-datum')
+        .attr('r', 3)
+        .style('display', 'none');
+
+    graphCanvas.append('circle')
+        .attr('class', 'highlight-datum-outline')
+        .attr('r', 5)
+        .style('display', 'none');
+};
+
+// Show highlighted data point, and set position over correct point
+const showAndSetHighlightedDataPoint = (d, xyInfo) => {
+    d3.select('.highlight-datum')
+        .attr('cx', xyInfo.x(d.get(xyInfo.xColumnName)))
+        .attr('cy', xyInfo.y(d.get(xyInfo.yColumnName)))
+        .style('display', '');
+    d3.select('.highlight-datum-outline')
+        .attr('cx', xyInfo.x(d.get(xyInfo.xColumnName)))
+        .attr('cy', xyInfo.y(d.get(xyInfo.yColumnName)))
+        .style('display', '');
+};
+
+// Show tooltip with correct info, and set position over correct point
+const showAndSetTooltip = (d, xyInfo) => {
+    // Update tooltip with correct info to display
+    const yLabel = xyInfo.yColumnName.charAt(0).toUpperCase() + xyInfo.yColumnName.slice(1);
+    const tooltip = d3.select('.tooltip')
+        .html(formatTime(d.get(xyInfo.xColumnName)) + '<br/>' + yLabel + ': ' + d.get(xyInfo.yColumnName))
+        .style('display', ''); // Html must be created to calculate the size of the tooltip below
+
+    // Gather positioning information
+    const graphCanvas = d3.select('#graphCanvas');
+    const gClientRect = getD3ElementPosition(graphCanvas);
+    const top = gClientRect.top;
+    const left = gClientRect.left;
+    const tooltipSize = getD3ElementPosition(tooltip);
+    const leftAxis = d3.select('.yAxis');
+    const leftAxisWidth = getD3ElementPosition(leftAxis).width;
+
+    // Set vertical and horizontal translations relative to page
+    const verticalTranslate = top + document.body.scrollTop + xyInfo.y(d.get(xyInfo.yColumnName)) - tooltipSize.height;
+    let horizontalTranslate = left + document.body.scrollLeft + xyInfo.x(d.get(xyInfo.xColumnName)) + leftAxisWidth;
+    if (horizontalTranslate > left + leftAxisWidth + width - tooltipSize.width) {
+        horizontalTranslate = horizontalTranslate - tooltipSize.width;
+    }
+
+    // Set translations to tooltip
+    tooltip.style('left', horizontalTranslate + 'px')
+        .style('top', verticalTranslate + 'px');
+};
+
+// Hide highlighted data point
+const hideHighlightedDataPoint = () => {
+    d3.select('.highlight-datum')
+        .style('display', 'none');
+    d3.select('.highlight-datum-outline')
+        .style('display', 'none');
+};
+
+// Hide tooltip
+const hideTooltip = () => {
+    d3.select('.tooltip')
+        .style('display', 'none');
+};
+
+// Show/hide data points and tooltip
+const highlight = (d, xyInfo) => {
+    if (!d) {
+        hideHighlightedDataPoint();
+        hideTooltip();
+    } else {
+        showAndSetHighlightedDataPoint(d, xyInfo);
+        showAndSetTooltip(d, xyInfo);
+    }
+};
+
+// Overlays invisible canvas to handle hovering over data points
+const prepareVoronoiCanvas = (voronoiDiagram, xyInfo) => {
+    const graphCanvas = d3.select('#graphCanvas');
+
+    const hoverHandler = () => {
+        const [mx, my] = d3.mouse(graphCanvas.node());
+        const site = voronoiDiagram.find(mx, my, 25);
+        highlight(site && site.data, xyInfo);
+    };  
+
+    graphCanvas.append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .style('opacity', 0)
+        .on('mousemove', hoverHandler)
+        .on('mouseleave', () => {
+            highlight(null, xyInfo);
+        });
+};
+
+// Create a line graph
+const lineGraph = (container, dataInfo, xColumnName, yColumnName) => {
+    const {x, y} = createXYScales();
+    const xyInfo = {x, y, xColumnName, yColumnName};
+
+    const data = prepareData(dataInfo, xyInfo);
+    setXYDomains(data, xyInfo);
+
+    createSvg(container);
+    createGraphCanvas();
+    drawGridLines(y);
+    drawXAxis(x);
+    drawYAxis(y);
+    createTooltip(container);
+
+    const drawLineFn = drawLineBetweenPoints(xyInfo);
+    drawLinePath(data, drawLineFn);
 
     if (data.length < (width / 10)) { // if data points are closer than 10px apart, don't render points
-        g.selectAll("circle.datum")
-            .data(data)
-            .enter()
-            .append("circle")
-                .attr("class", "datum")
-                .attr("r", 3)
-                .attr("cx", d => { return x(d.get(xColumnName)); })
-                .attr("cy", d => { return y(d.get(yColumnName)); });
+        drawDataPoints(data, xyInfo);
     }
+    drawHighlightedDataPoint();
 
-    g.append("circle")
-        .attr("class", "highlight-datum")
-        .attr("r", 3)
-        .style("display", "none");
-
-    g.append("circle")
-        .attr("class", "highlight-datum-outline")
-        .attr("r", 5)
-        .style("display", "none");
-
-    const voronoiDiagram = computeVoronoi(width, height, x, y, data);
-
-    const getGraphPosition = () => {
-        return g.node().getBoundingClientRect();
-    }
-
-    const getTooltipSize = tooltipElem => {
-        return tooltipElem.node().getBoundingClientRect()
-    }
-
-    const highlight = d => {
-        if (!d) {
-            d3.select(".highlight-datum")
-                .style("display", "none");
-            d3.select(".highlight-datum-outline")
-                .style("display", "none");
-            d3.select(".tooltip")
-                .style("display", "none");
-        } else {
-            d3.select(".highlight-datum")
-                .attr("cx", x(d.get(xColumnName)))
-                .attr("cy", y(d.get(yColumnName)))
-                .style("display", "");
-            d3.select(".highlight-datum-outline")
-                .attr("cx", x(d.get(xColumnName)))
-                .attr("cy", y(d.get(yColumnName)))
-                .style("display", "");
-            
-            const gClientRect = getGraphPosition();
-            const top = gClientRect.top;
-            const left = gClientRect.left;
-            const yLabel = yColumnName.charAt(0).toUpperCase() + yColumnName.slice(1);
-            d3.select(".tooltip")
-                .html(formatTime(d.get(xColumnName)) + "<br/>" + yLabel + ": " + d.get(yColumnName))
-                .style("display", "");
-
-            const tooltipSize = getTooltipSize(d3.select(".tooltip"));
-            let horizontalTranslate = left + document.body.scrollLeft + x(d.get(xColumnName)) + leftAxis.node().getBoundingClientRect().width;
-            const verticalTranslate = top + document.body.scrollTop + y(d.get(yColumnName)) - tooltipSize.height;
-            if (horizontalTranslate > left + width - tooltipSize.width) {
-                horizontalTranslate = horizontalTranslate - tooltip.width;
-            }
-            d3.select(".tooltip")
-                .style("left", horizontalTranslate + "px")
-                .style("top", verticalTranslate + "px");
-        }
-    }
-
-    const mouseMoveHandler = () => {
-        const [mx, my] = d3.mouse(g.node());
-        const site = voronoiDiagram.find(mx, my, 25);
-        highlight(site && site.data);
-    }
-
-    g.append("rect")
-        .attr("class", "overlay")
-        .attr("width", width)
-        .attr("height", height)
-        .style("opacity", 0)
-        .on("mousemove", mouseMoveHandler)
-        .on("mouseleave", () => {
-            highlight(null);
-        });
-}
+    const voronoiDiagram = computeVoronoi(width, height, data, xyInfo);
+    prepareVoronoiCanvas(voronoiDiagram, xyInfo);
+};
 
 export default lineGraph;

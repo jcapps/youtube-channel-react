@@ -1,11 +1,11 @@
 import * as d3 from 'd3';
 
-const computeVoronoi = (plotAreaWidth, plotAreaHeight, xScale, yScale, data) => {
+const computeVoronoi = (graphWidth, graphHeight, data, xyInfo) => {
     const voronoiDiagram = d3.voronoi()
-        .x(d => xScale(d.get('day')))
-        .y(d => yScale(d.get('views')))
-        .size([plotAreaWidth, plotAreaHeight])(data);
+        .x(d => xyInfo.x(d.get(xyInfo.xColumnName)))
+        .y(d => xyInfo.y(d.get(xyInfo.yColumnName)))
+        .size([graphWidth, graphHeight])(data);
     return voronoiDiagram;
-}
+};
 
 export default computeVoronoi;
