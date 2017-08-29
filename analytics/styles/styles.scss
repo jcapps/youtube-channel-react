@@ -3,8 +3,14 @@
 @import 'linegraph';
 @import 'sidebar';
 @import 'tooltip';
+@import 'views';
 
 #analytics-app {
+    input {
+        height: 26.5px;
+        border: 2px solid $gray;
+    }
+
     #analytics-content {
         display: flex;
         margin: 0 auto;

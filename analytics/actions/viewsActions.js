@@ -16,9 +16,12 @@ export function getViewsError() {
     return { type: types.GET_VIEWS_ERROR };
 }
 
-export function getViews(period = Periods.THIRTY_DAY, dimensions = 'day', filters = '') {
+export function getViews(period = Periods.TWENTY_EIGHT_DAY, dateRange = null, dimensions = 'day', filters = '') {
     return function(dispatch) {
-        const {startDate, endDate} = getStartEndDates(period);
+        if (!dateRange) {
+            dateRange = getStartEndDates(period);
+        }
+        const {startDate, endDate} = dateRange;
         dispatch(ajax.gettingViews());
 
         const helperActions = bindActionCreators(loginActions, dispatch);
@@ -47,6 +50,11 @@ function getStartEndDates(period) {
                 startDate: formatDateString(new Date(yesterday.getTime() - DAY_IN_MILLISECONDS * 7)),
                 endDate: yesterdayString
             };
+        case Periods.TWENTY_EIGHT_DAY:
+            return {
+                startDate: formatDateString(new Date(yesterday.getTime() - DAY_IN_MILLISECONDS * 28)),
+                endDate: yesterdayString
+            };
         case Periods.THIRTY_DAY:
             return {
                 startDate: formatDateString(new Date(yesterday.getTime() - DAY_IN_MILLISECONDS * 30)),
@@ -59,7 +67,7 @@ function getStartEndDates(period) {
             };
         default: 
             return {
-                startDate: formatDateString(new Date(yesterday.getTime() - DAY_IN_MILLISECONDS * 7)),
+                startDate: formatDateString(new Date(yesterday.getTime() - DAY_IN_MILLISECONDS * 28)),
                 endDate: yesterdayString
             };
     }
