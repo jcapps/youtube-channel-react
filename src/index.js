@@ -10,6 +10,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {getChannelInfo} from './actions/channelActions';
 import App from './components/App';
 import './styles/styles.scss';
+import '../analytics/styles/styles.scss';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/toastr/build/toastr.min.css';
 
