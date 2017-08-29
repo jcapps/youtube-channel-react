@@ -31,6 +31,12 @@ html, #app {
         border-style: none;
     }
 
+    select {
+        height: 26.5px;
+        border: 2px solid $gray;
+        cursor: pointer;
+    }
+
     #content {
         margin: 0 auto;
         padding: 100px 10px 20px 10px;
