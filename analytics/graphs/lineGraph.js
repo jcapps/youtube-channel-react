@@ -31,7 +31,7 @@ const prepareData = (dataInfo, xyInfo) => {
     const columns = dataInfo.columnHeaders.map(item => {
         return item.name;
     });
-    const data = dataInfo.rows;
+    const data = Object.assign([], dataInfo.rows);
     data.forEach((item, i) => {
         data[i] = d3.map(item, (d, i) => {
             return columns[i];

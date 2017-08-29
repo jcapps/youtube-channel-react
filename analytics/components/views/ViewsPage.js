@@ -8,8 +8,12 @@ import Periods from '../../globals/Periods';
 import * as viewsActions from '../../actions/viewsActions';
 
 export class ViewsPage extends React.PureComponent {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectType: Periods.THIRTY_DAY
+        };
+        this.changeSelectType = this.changeSelectType.bind(this);
         this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
     }
 
@@ -22,9 +26,16 @@ export class ViewsPage extends React.PureComponent {
         window.scrollTo(0, 0);
     }
 
+    changeSelectType(e) {
+        const selectType = e.target.value;
+        this.setState({ selectType: selectType });
+        this.props.actions.getViews(selectType);
+    }
+
     renderLineGraphD3(viewsInfo) {
-        const container = d3.select("#views-graph");
+        const container = d3.select('#views-graph');
         if (!container._groups[0][0]) return;
+        container.html('');
         lineGraph(container, viewsInfo, 'day', 'views');
     }
 
@@ -34,6 +45,11 @@ export class ViewsPage extends React.PureComponent {
         return (
             <div id="views-page">
                 <h2>Views</h2>
+                <select className="views-select" value={this.state.selectType} onChange={this.changeSelectType}>
+                    <option value={Periods.SEVEN_DAY}>7 Days</option>
+                    <option value={Periods.THIRTY_DAY}>30 Days</option>
+                    <option value={Periods.YEAR}>365 Days</option>
+                </select>
                 <div id="views-graph" />
             </div>
         );
