@@ -153,8 +153,9 @@ const showAndSetHighlightedDataPoint = (d, xyInfo) => {
 const showAndSetTooltip = (d, xyInfo) => {
     // Update tooltip with correct info to display
     const yLabel = xyInfo.yColumnName.charAt(0).toUpperCase() + xyInfo.yColumnName.slice(1);
+    const yValue = d.get(xyInfo.yColumnName).toLocaleString();
     const tooltip = d3.select('.tooltip')
-        .html(formatTime(d.get(xyInfo.xColumnName)) + '<br/>' + yLabel + ': ' + d.get(xyInfo.yColumnName))
+        .html(formatTime(d.get(xyInfo.xColumnName)) + '<br/>' + yLabel + ': ' + yValue)
         .style('display', ''); // Html must be created to calculate the size of the tooltip below
 
     // Gather positioning information
