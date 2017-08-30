@@ -21,7 +21,7 @@ const getD3ElementPosition = element => {
 // Create the scales in x and y directions
 // Returns functions that scale the data
 const createXYScales = () => {
-    const x = d3.scaleLinear().rangeRound([0, width]);
+    const x = d3.scaleTime().rangeRound([0, width]);
     const y = d3.scaleLinear().rangeRound([height, 0]);
     return {x, y};
 };
@@ -44,8 +44,14 @@ const prepareData = (dataInfo, xyInfo) => {
 
 // Set the domains of the graph in x and y directions
 const setXYDomains = (data, xyInfo) => {
-    xyInfo.x.domain(d3.extent(data, d => { return d.get(xyInfo.xColumnName); })).nice();
-    xyInfo.y.domain([0, d3.max(data, d => { return d.get(xyInfo.yColumnName); })]).nice();
+    const xExtent = d3.extent(data, d => { return d.get(xyInfo.xColumnName); });
+    const yMax = d3.max(data, d => { return d.get(xyInfo.yColumnName); });
+
+    const xDomain = xExtent[1].getTime() - xExtent[0].getTime();
+    const xDomainMargin = xDomain * .02;
+
+    xyInfo.x.domain([xExtent[0].getTime() - xDomainMargin, xExtent[1].getTime() + xDomainMargin]);
+    xyInfo.y.domain([0, yMax]).nice();
 };
 
 // Create containing svg
@@ -87,11 +93,18 @@ const drawGridLines = y => {
 };
 
 // Draw X-Axis
-const drawXAxis = x => {
+const drawXAxis = (x, data) => {
+    const maxTicks = Math.min(data.length, Math.floor(width / 60)); // 60 = ~the width in px of the tick label + reasonable padding
+    const dayInterval = Math.floor(data.length / maxTicks);
+    const filterTicksToRender = d3.timeDay.filter(d => {
+        return d3.timeDay.count(0, d) % dayInterval === 0;
+    });
+
     d3.select('#graphCanvas').append('g')
         .attr('class', 'xAxis')
         .attr('transform', 'translate(0,' + height + ')')
         .call(d3.axisBottom(x)
+            .ticks(filterTicksToRender)
             .tickFormat(formatTime));
 };
 
@@ -235,7 +248,7 @@ const lineGraph = (container, dataInfo, xColumnName, yColumnName) => {
     createSvg(container);
     createGraphCanvas();
     drawGridLines(y);
-    drawXAxis(x);
+    drawXAxis(x, data);
     drawYAxis(y);
     createTooltip(container);
 
