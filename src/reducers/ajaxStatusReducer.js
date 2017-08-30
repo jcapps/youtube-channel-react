@@ -43,6 +43,18 @@ function isAllVideosActionSuccessType(type) {
     );
 }
 
+function isChannelActionStartingType(type) {
+    return (
+        type == types.GETTING_CHANNEL_INFO
+    );
+}
+
+function isChannelActionSuccessType(type) {
+    return (
+        type == types.GET_CHANNEL_INFO_SUCCESS
+    );
+}
+
 function isCommentsActionStartingType(type) {
     return (
         type == types.GETTING_VIDEO_COMMENTS
@@ -145,6 +157,12 @@ function isWatchActionSuccessType(type) {
 export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgress, action) {
     let currentState = Object.assign({}, state);
 
+    if (isChannelActionStartingType(action.type)) {
+        currentState.channel += 1;
+    }
+    if (isChannelActionSuccessType(action.type)) {
+        currentState.channel -= 1;
+    }
     if (isAboutActionStartingType(action.type)) {
         currentState.about += 1;
     }
