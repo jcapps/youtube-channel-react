@@ -14,7 +14,12 @@ export function getViewsError() {
     return { type: types.GET_VIEWS_ERROR };
 }
 
-export function getViews(period = Periods.TWENTY_EIGHT_DAY, dateRange = null, dimensions = 'day', filters = '') {
+export function getViews(
+    period = Periods.TWENTY_EIGHT_DAY,
+    dateRange = null,
+    dimensions = 'day',
+    filters = ''
+) {
     return function(dispatch, getState) {
         if (!dateRange) {
             const channelInfo = getState().channelInfo;
