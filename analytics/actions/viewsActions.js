@@ -17,8 +17,8 @@ export function getViewsError() {
 export function getViews(
     period = Periods.TWENTY_EIGHT_DAY,
     dateRange = null,
-    dimensions = 'day',
-    filters = ''
+    filters = '',
+    dimensions = 'day'
 ) {
     return function(dispatch, getState) {
         if (!dateRange) {
