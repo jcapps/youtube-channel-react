@@ -2,6 +2,22 @@ import formatDateString from '../helpers/formatDateString';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
+import * as youtubeActions from '../../src/actions/youtubeActions';
+
+export function getChannelInfoSuccess(channelInfo) {
+    return { type: types.GET_CHANNEL_INFO_SUCCESS, channelInfo };
+}
+
+export function getChannelInfo() {
+    return function(dispatch) {
+        dispatch(ajax.gettingChannelInfo());
+        return youtubeActions.getChannelInfo().then(channelInfo => {
+            dispatch(getChannelInfoSuccess(channelInfo));
+        }).catch(error => {
+            throw(error);
+        });
+    };
+}
 
 export function getChannelAnalytics() {
     return function(dispatch) {

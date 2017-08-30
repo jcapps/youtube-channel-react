@@ -52,7 +52,7 @@ export function mapStateToProps(state) {
     return {
         isLoggedIn: state.isAuthenticated,
         isCheckingLogin: state.ajaxCallsInProgress.isLoggedIn > 0,
-        isLoading: state.ajaxCallsInProgress.login > 0
+        isLoading: state.ajaxCallsInProgress.login > 0 || state.ajaxCallsInProgress.channel > 0
     };
 }
 

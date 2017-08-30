@@ -1,6 +1,18 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState';
 
+function isChannelActionStartingType(type) {
+    return (
+        type == types.GETTING_CHANNEL_INFO
+    );
+}
+
+function isChannelActionSuccessType(type) {
+    return (
+        type == types.GET_CHANNEL_INFO_SUCCESS
+    );
+}
+
 function isCheckingLoginActionStartingType(type) {
     return (
         type == types.GETTING_IS_LOGGED_IN
@@ -46,6 +58,12 @@ function isViewsActionErrorType(type) {
 export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgress, action) {
     let currentState = Object.assign({}, state);
 
+    if (isChannelActionStartingType(action.type)) {
+        currentState.channel += 1;
+    }
+    if (isChannelActionSuccessType(action.type)) {
+        currentState.channel -= 1;
+    }
     if (isCheckingLoginActionStartingType(action.type)) {
         currentState.isLoggedIn += 1;
     }

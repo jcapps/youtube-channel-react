@@ -8,6 +8,10 @@ export function gettingIsLoggedIn() {
     return {type: types.GETTING_IS_LOGGED_IN};
 }
 
+export function gettingChannelInfo() {
+    return {type: types.GETTING_CHANNEL_INFO};
+}
+
 export function gettingViews() {
     return {type: types.GETTING_VIEWS};
 }

@@ -6,8 +6,6 @@ import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
 import * as loginActions from './loginActions';
 
-const DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
-
 export function getViewsSuccess(report) {
     return { type: types.GET_VIEWS_SUCCESS, report };
 }
@@ -17,9 +15,12 @@ export function getViewsError() {
 }
 
 export function getViews(period = Periods.TWENTY_EIGHT_DAY, dateRange = null, dimensions = 'day', filters = '') {
-    return function(dispatch) {
+    return function(dispatch, getState) {
         if (!dateRange) {
-            dateRange = getStartEndDates(period);
+            const channelInfo = getState().channelInfo;
+            let channelBirthdate = '';
+            if (channelInfo.snippet) channelBirthdate = channelInfo.snippet.publishedAt;
+            dateRange = getStartEndDates(period, channelBirthdate);
         }
         const {startDate, endDate} = dateRange;
         dispatch(ajax.gettingViews());
@@ -40,10 +41,12 @@ export function getViews(period = Periods.TWENTY_EIGHT_DAY, dateRange = null, di
     };
 }
 
-function getStartEndDates(period) {
+function getStartEndDates(period, channelBirthdate) {
+    const DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
     const today = new Date();
     const yesterday = new Date(today.getTime() - DAY_IN_MILLISECONDS);
     const yesterdayString = formatDateString(yesterday);
+
     switch(period) {
         case Periods.SEVEN_DAY:
             return {
@@ -63,6 +66,11 @@ function getStartEndDates(period) {
         case Periods.YEAR:
             return {
                 startDate: formatDateString(new Date(yesterday.getTime() - DAY_IN_MILLISECONDS * 365)),
+                endDate: yesterdayString
+            };
+        case Periods.LIFETIME:
+            return {
+                startDate: formatDateString(new Date(Date.parse(channelBirthdate))),
                 endDate: yesterdayString
             };
         default: 

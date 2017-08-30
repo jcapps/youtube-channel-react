@@ -63,6 +63,7 @@ export class ViewsPage extends React.PureComponent {
                     <option value={Periods.TWENTY_EIGHT_DAY}>Last 28 Days</option>
                     <option value={Periods.THIRTY_DAY}>Last 30 Days</option>
                     <option value={Periods.YEAR}>Last 365 Days</option>
+                    <option value={Periods.LIFETIME}>Lifetime</option>
                     <option value={Periods.CUSTOM}>Custom range...</option>
                 </select>
                 <div id="select-custom-range" className="hidden">

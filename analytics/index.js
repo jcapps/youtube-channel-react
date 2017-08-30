@@ -5,11 +5,13 @@ import {Provider} from 'react-redux';
 import {Route} from 'react-router';
 import {BrowserRouter as Router} from 'react-router-dom';
 import {isLoggedIn} from './actions/loginActions';
+import {getChannelInfo} from './actions/channelActions';
 import App from './components/App';
 
 const AnalyticsApp = () => {
     const store = configureStore();
     store.dispatch(isLoggedIn());
+    store.dispatch(getChannelInfo());
     
     return (
         <Provider store={store}>
