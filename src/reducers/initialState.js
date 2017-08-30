@@ -18,6 +18,7 @@ export default {
         about: 0,
         allPlaylists: 0,
         allVideos: 0,
+        channel: 0,
         comments: 0,
         header: 0,
         home: 0,
