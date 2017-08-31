@@ -1,4 +1,3 @@
-import * as types from './actionTypes';
 import YouTubeApi from '../api/YouTubeApi';
 
 /**
