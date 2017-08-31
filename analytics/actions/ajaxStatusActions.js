@@ -12,6 +12,10 @@ export function gettingChannelInfo() {
     return {type: types.GETTING_CHANNEL_INFO};
 }
 
+export function searchingChannel() {
+    return {type: types.SEARCHING_CHANNEL};
+}
+
 export function gettingViews() {
     return {type: types.GETTING_VIEWS};
 }

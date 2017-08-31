@@ -2,10 +2,14 @@ import formatDateString from '../helpers/formatDateString';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
-import * as youtubeActions from '../../src/actions/youtubeActions';
+import * as youtubeActions from './youtubeActions';
 
 export function getChannelInfoSuccess(channelInfo) {
     return { type: types.GET_CHANNEL_INFO_SUCCESS, channelInfo };
+}
+
+export function getSearchResultsSuccess(result) {
+    return { type: types.GET_SEARCH_RESULTS_SUCCESS, result };
 }
 
 export function getChannelInfo() {
@@ -13,6 +17,17 @@ export function getChannelInfo() {
         dispatch(ajax.gettingChannelInfo());
         return youtubeActions.getChannelInfo().then(channelInfo => {
             dispatch(getChannelInfoSuccess(channelInfo));
+        }).catch(error => {
+            throw(error);
+        });
+    };
+}
+
+export function getSearchResults(query) {
+    return function(dispatch) {
+        dispatch(ajax.searchingChannel());
+        return youtubeActions.searchChannel(query).then(result => {
+            dispatch(getSearchResultsSuccess(result));
         }).catch(error => {
             throw(error);
         });

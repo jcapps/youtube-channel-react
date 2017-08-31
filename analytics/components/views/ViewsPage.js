@@ -6,21 +6,27 @@ import * as d3 from 'd3';
 import $ from 'jquery';
 import lineGraph from '../../graphs/lineGraph';
 import Periods from '../../globals/Periods';
+import * as channelActions from '../../actions/channelActions';
 import * as viewsActions from '../../actions/viewsActions';
 
 export class ViewsPage extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            selectType: Periods.TWENTY_EIGHT_DAY
+            selectType: Periods.TWENTY_EIGHT_DAY,
+            filters: '',
+            searchText: ''
         };
         this.changeSelectType = this.changeSelectType.bind(this);
         this.setDateRange = this.setDateRange.bind(this);
+        this.search = this.search.bind(this);
         this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
     }
 
     componentWillMount() {
-        this.props.actions.getViews();
+        const selectType = this.state.selectType;
+        const filters = this.state.filters;
+        this.props.viewsActions.getViews(selectType, null, filters);
     }
 
     componentDidMount() {
@@ -31,18 +37,28 @@ export class ViewsPage extends React.PureComponent {
     changeSelectType(e) {
         const selectType = e.target.value;
         this.setState({ selectType: selectType });
+
         if (selectType == Periods.CUSTOM) {
             $('#select-custom-range').removeClass('hidden');
         } else {
             $('#select-custom-range').addClass('hidden');
-            this.props.actions.getViews(selectType);
+            const filters = this.state.filters;
+            this.props.viewsActions.getViews(selectType, null, filters);
         }
     }
 
     setDateRange() {
         const startDate = $('#start-date').val();
         const endDate = $('#end-date').val();
-        this.props.actions.getViews(Periods.CUSTOM, {startDate, endDate});
+        const selectType = this.state.selectType;
+        const filters = this.state.filters;
+        this.props.viewsActions.getViews(selectType, {startDate, endDate}, filters);
+    }
+
+    search(e) {
+        const query = e.target.value;
+        this.setState({searchText: query});
+        this.props.channelActions.getSearchResults(query);
     }
 
     renderLineGraphD3(viewsInfo) {
@@ -58,6 +74,16 @@ export class ViewsPage extends React.PureComponent {
         return (
             <div id="views-page">
                 <h2>Views</h2>
+                <input
+                    id="search-filter"
+                    type="text"
+                    value={this.state.searchText}
+                    onChange={this.search} />
+                <div>
+                    {this.props.searchResults.map(result => {
+                        return <div key={result.etag}>{result.snippet.title}</div>;
+                    })}
+                </div>
                 <select className="views-select" value={this.state.selectType} onChange={this.changeSelectType}>
                     <option value={Periods.SEVEN_DAY}>Last 7 Days</option>
                     <option value={Periods.TWENTY_EIGHT_DAY}>Last 28 Days</option>
@@ -79,12 +105,15 @@ export class ViewsPage extends React.PureComponent {
 
 ViewsPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
+    searchResults: PropTypes.array,
     views: PropTypes.object.isRequired,
-    actions: PropTypes.object.isRequired
+    channelActions: PropTypes.object.isRequired,
+    viewsActions: PropTypes.object.isRequired
 };
 
 export function mapStateToProps(state) {
     return {
+        searchResults: state.searchResults,
         views: state.views,
         isLoading: state.ajaxCallsInProgress.views > 0
     };
@@ -92,14 +121,17 @@ export function mapStateToProps(state) {
 
 export function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(viewsActions, dispatch)
+        viewsActions: bindActionCreators(viewsActions, dispatch),
+        channelActions: bindActionCreators(channelActions, dispatch)
     };
 }
 
 export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
-            (!next.isLoading) || (prev.views !== next.views)
+            (!next.isLoading) || 
+            (prev.views !== next.views) || 
+            (prev.searchResults !== next.searchResults)
         );
     }
 };

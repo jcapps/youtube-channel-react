@@ -1,5 +1,6 @@
 export default {
     channelInfo: {},
+    searchResults: [],
     views: {},
     isAuthenticated: false,
     ajaxCallsInProgress: {
