@@ -6,6 +6,8 @@ const svgHeight = 400;
 const svgMargin = {top: 20, right: 25, bottom: 30, left: 50};
 const width = svgWidth - svgMargin.left - svgMargin.right; // Does not include y-axis
 const height = svgHeight - svgMargin.top - svgMargin.bottom; // Does not include x-axis
+const xAxisLabelPadding = 60; // 60 = ~width in px of a date label with reasonable padding
+const yAxisLabelPadding = 80; // reasonable minimum px separation between labels
 
 // Parse the Date time
 const parseTime = d3.timeParse('%Y-%m-%d');
@@ -45,13 +47,16 @@ const prepareData = (dataInfo, xyInfo) => {
 // Set the domains of the graph in x and y directions
 const setXYDomains = (data, xyInfo) => {
     const xExtent = d3.extent(data, d => { return d.get(xyInfo.xColumnName); });
-    const yMax = d3.max(data, d => { return d.get(xyInfo.yColumnName); });
+    let yMax = d3.max(data, d => { return d.get(xyInfo.yColumnName); });
+    if (yMax < 1) yMax = 1;
 
     const xDomain = xExtent[1].getTime() - xExtent[0].getTime();
     const xDomainMargin = xDomain * .02;
 
+    const maxYTicks = Math.min(yMax, Math.ceil(height / yAxisLabelPadding));
+
     xyInfo.x.domain([xExtent[0].getTime() - xDomainMargin, xExtent[1].getTime() + xDomainMargin]);
-    xyInfo.y.domain([0, yMax]).nice();
+    xyInfo.y.domain([0, yMax]).nice(maxYTicks);
 };
 
 // Create containing svg
@@ -85,16 +90,20 @@ const createTooltip = container => {
 
 // Draw Grid Lines
 const drawGridLines = y => {
+    const yDomain = y.domain();
+    const maxTicks = Math.min(yDomain[1], Math.ceil(height / yAxisLabelPadding));
+
     d3.select('#graphCanvas').append('g')
         .attr('class', 'grid-line')
         .call(d3.axisLeft(y)
+            .ticks(maxTicks)
             .tickSize(-width)
             .tickFormat(''));
 };
 
 // Draw X-Axis
 const drawXAxis = (x, data) => {
-    const maxTicks = Math.min(data.length, Math.floor(width / 60)); // 60 = ~the width in px of the tick label + reasonable padding
+    const maxTicks = Math.min(data.length, Math.floor(width / xAxisLabelPadding));
     const dayInterval = Math.ceil(data.length / maxTicks);
     const filterTicksToRender = d3.timeDay.filter(d => {
         return d3.timeDay.count(0, d) % dayInterval === 0;
@@ -110,9 +119,14 @@ const drawXAxis = (x, data) => {
 
 // Draw Y-Axis
 const drawYAxis = y => {
+    const yDomain = y.domain();
+    const maxTicks = Math.min(yDomain[1], Math.ceil(height / yAxisLabelPadding));
+    
     d3.select('#graphCanvas').append('g')
         .attr('class', 'yAxis')
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y)
+            .ticks(maxTicks)
+            .tickFormat(d3.format('d')));
 };
 
 // Draw the path of the line graph
