@@ -13,10 +13,10 @@ export function getChannelInfo() {
 }
 
 /**
- * Search channel for playlists/videos given a search query
+ * Search channel for playlists/videos given a search query and searchType
  */
-export function searchChannel(query, pageToken = "") {
-    return YouTubeApi.search(query, pageToken).then(result => {
+export function searchChannel(query, searchType, pageToken = "") {
+    return YouTubeApi.search(query, searchType, pageToken).then(result => {
         return result;
     }).catch(error => {
         throw(error);

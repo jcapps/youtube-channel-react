@@ -3,7 +3,6 @@ import toastr from 'toastr';
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const KEY = process.env.YOUTUBE_KEY;
-const CHANNEL_ID = process.env.CHANNEL_ID;
 
 const googleClientApiUrl = 'https://apis.google.com/js/api.js';
 const analyticsApiUrl = 'https://www.googleapis.com/youtube/analytics/v1/';
@@ -78,7 +77,7 @@ class YouTubeAnalyticsApi {
             'Authorization': 'Bearer ' + this.getAccessToken()
         };
         const reportParams = {
-            'ids': 'channel==' + CHANNEL_ID,
+            'ids': 'channel==MINE',
             'start-date': startDate,
             'end-date': endDate,
             'metrics': metrics,

@@ -1,7 +1,9 @@
+import {bindActionCreators} from 'redux';
 import formatDateString from '../helpers/formatDateString';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
+import * as loginActions from './loginActions';
 import * as youtubeActions from './youtubeActions';
 
 export function getChannelInfoSuccess(channelInfo) {
@@ -10,6 +12,10 @@ export function getChannelInfoSuccess(channelInfo) {
 
 export function getSearchResultsSuccess(result) {
     return { type: types.GET_SEARCH_RESULTS_SUCCESS, result };
+}
+
+export function getSearchResultsError() {
+    return { type: types.GET_SEARCH_RESULTS_ERROR };
 }
 
 export function getChannelInfo() {
@@ -23,13 +29,21 @@ export function getChannelInfo() {
     };
 }
 
-export function getSearchResults(query) {
+export function getSearchResults(query, searchType) {
     return function(dispatch) {
         dispatch(ajax.searchingChannel());
-        return youtubeActions.searchChannel(query).then(result => {
-            dispatch(getSearchResultsSuccess(result));
-        }).catch(error => {
-            throw(error);
+
+        const helperActions = bindActionCreators(loginActions, dispatch);
+        return helperActions.isLoggedIn().then(isLoggedIn => {
+            if (isLoggedIn) {
+                return youtubeActions.searchChannel(query, searchType).then(result => {
+                    dispatch(getSearchResultsSuccess(result));
+                }).catch(error => {
+                    throw(error);
+                });
+            } else {
+                dispatch(getSearchResultsError());
+            }
         });
     };
 }

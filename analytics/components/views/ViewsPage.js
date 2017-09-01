@@ -20,6 +20,7 @@ export class ViewsPage extends React.PureComponent {
         this.changeSelectType = this.changeSelectType.bind(this);
         this.setDateRange = this.setDateRange.bind(this);
         this.search = this.search.bind(this);
+        this.addFilter = this.addFilter.bind(this);
         this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
     }
 
@@ -58,7 +59,23 @@ export class ViewsPage extends React.PureComponent {
     search(e) {
         const query = e.target.value;
         this.setState({searchText: query});
-        this.props.channelActions.getSearchResults(query);
+        this.props.channelActions.getSearchResults(query, 'video');
+    }
+
+    addFilter(e) {
+        let element = e.target;
+        while (element.className.indexOf("search-result") < 0) {
+            element = element.parentNode;
+        }
+
+        const kind = element.name;
+        let filter = this.state.filters;
+        if (kind == 'youtube#video') filter = 'video==' + element.id;
+        if (kind == 'youtube#playlist') filter = 'isCurated==1;playlist==' + element.id;
+
+        const selectType = this.state.selectType;
+        this.setState({ filters: filter });
+        this.props.viewsActions.getViews(selectType, null, filter);
     }
 
     renderLineGraphD3(viewsInfo) {
@@ -81,7 +98,15 @@ export class ViewsPage extends React.PureComponent {
                     onChange={this.search} />
                 <div>
                     {this.props.searchResults.map(result => {
-                        return <div key={result.etag}>{result.snippet.title}</div>;
+                        const kind = result.id.kind;
+                        let id = result.etag;
+                        if (kind == 'youtube#video') id = result.id.videoId;
+                        if (kind == 'youtube#playlist') id = result.id.playlistId;
+                        return (
+                            <a key={id} name={kind} id={id} className="search-result" onClick={this.addFilter}>
+                                <div>{result.snippet.title}</div>
+                            </a>
+                        );
                     })}
                 </div>
                 <select className="views-select" value={this.state.selectType} onChange={this.changeSelectType}>

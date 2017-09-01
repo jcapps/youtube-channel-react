@@ -1,4 +1,5 @@
 import axios from 'axios';
+import YouTubeAnalyticsApi from './YouTubeAnalyticsApi';
 
 const KEY = process.env.YOUTUBE_KEY;
 const CHANNEL_ID = process.env.CHANNEL_ID;
@@ -22,19 +23,22 @@ class YouTubeApi {
         });
     }
 
-    static search(query, pageToken = "") {
+    static search(query, searchType, pageToken = "") {
+        const authHeader = {
+            'Authorization': 'Bearer ' + YouTubeAnalyticsApi.getAccessToken()
+        };
+
         const searchParams = {
-            key: KEY,
             channelId: CHANNEL_ID,
-            maxResults: '25',
+            order: 'viewCount',
             part: 'snippet',
             q: query,
-            type: 'playlist,video',
+            type: searchType,
             pageToken: pageToken
         };
 
         return new Promise((resolve, reject) => {
-            axios.get(searchUrl, {params: searchParams}).then(res => {
+            axios.get(searchUrl, {headers: authHeader, params: searchParams}).then(res => {
                 resolve(res.data);
             });
         });
