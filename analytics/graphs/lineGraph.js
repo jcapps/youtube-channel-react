@@ -95,7 +95,7 @@ const drawGridLines = y => {
 // Draw X-Axis
 const drawXAxis = (x, data) => {
     const maxTicks = Math.min(data.length, Math.floor(width / 60)); // 60 = ~the width in px of the tick label + reasonable padding
-    const dayInterval = Math.floor(data.length / maxTicks);
+    const dayInterval = Math.ceil(data.length / maxTicks);
     const filterTicksToRender = d3.timeDay.filter(d => {
         return d3.timeDay.count(0, d) % dayInterval === 0;
     });
