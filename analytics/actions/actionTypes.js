@@ -1,3 +1,6 @@
+/* CLEAR STORE TYPE */
+export const CLEAR_STORE = 'CLEAR_STORE';
+
 /* AJAX CALL TYPES */
 export const LOGGING_IN = 'LOGGING_IN';
 export const GETTING_IS_LOGGED_IN = 'GETTING_IS_LOGGED_IN';

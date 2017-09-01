@@ -8,6 +8,7 @@ import lineGraph from '../../graphs/lineGraph';
 import Periods from '../../globals/Periods';
 import * as channelActions from '../../actions/channelActions';
 import * as viewsActions from '../../actions/viewsActions';
+import clearStore from '../../actions/clearAction';
 
 export class ViewsPage extends React.PureComponent {
     constructor(props) {
@@ -69,13 +70,13 @@ export class ViewsPage extends React.PureComponent {
         }
 
         const kind = element.name;
-        let filter = this.state.filters;
-        if (kind == 'youtube#video') filter = 'video==' + element.id;
-        if (kind == 'youtube#playlist') filter = 'isCurated==1;playlist==' + element.id;
+        let newFilter = '';
+        if (kind == 'youtube#video') newFilter = 'video==' + element.id + ';';
+        if (kind == 'youtube#playlist') newFilter = 'isCurated==1;playlist==' + element.id + ';';
 
-        const selectType = this.state.selectType;
-        this.setState({ filters: filter });
-        this.props.viewsActions.getViews(selectType, null, filter);
+        const {selectType, filters} = this.state;
+        this.setState({ filters: newFilter });
+        this.props.viewsActions.getViews(selectType, null, newFilter);
     }
 
     renderLineGraphD3(viewsInfo) {
@@ -95,6 +96,7 @@ export class ViewsPage extends React.PureComponent {
                     id="search-filter"
                     type="text"
                     value={this.state.searchText}
+                    onBlur={this.props.clearStore}
                     onChange={this.search} />
                 <div>
                     {this.props.searchResults.map(result => {
@@ -133,7 +135,8 @@ ViewsPage.propTypes = {
     searchResults: PropTypes.array,
     views: PropTypes.object.isRequired,
     channelActions: PropTypes.object.isRequired,
-    viewsActions: PropTypes.object.isRequired
+    viewsActions: PropTypes.object.isRequired,
+    clearStore: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -147,7 +150,8 @@ export function mapStateToProps(state) {
 export function mapDispatchToProps(dispatch) {
     return {
         viewsActions: bindActionCreators(viewsActions, dispatch),
-        channelActions: bindActionCreators(channelActions, dispatch)
+        channelActions: bindActionCreators(channelActions, dispatch),
+        clearStore: bindActionCreators(clearStore, dispatch)
     };
 }
 
