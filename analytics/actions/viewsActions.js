@@ -1,6 +1,7 @@
 import {bindActionCreators} from 'redux';
 import Periods from '../globals/Periods';
 import formatDateString from '../helpers/formatDateString';
+import zeroMissingData from '../helpers/zeroMissingData';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
@@ -34,7 +35,8 @@ export function getViews(
         return helperActions.isLoggedIn().then(isLoggedIn => {
             if (isLoggedIn) {
                 return analyticsActions.getReport(startDate, endDate, 'views', dimensions, filters).then(report => {
-                    dispatch(getViewsSuccess(report));
+                    const reportData = zeroMissingData(report, startDate, endDate);
+                    dispatch(getViewsSuccess(reportData));
                 }).catch(error => {
                     dispatch(getViewsError());
                     throw(error);
