@@ -1,6 +1,8 @@
 export default {
     channelInfo: {},
-    searchResults: [],
+    searchChannelResults: [],
+    searchPlaylistResults: [],
+    searchVideoResults: [],
     views: {},
     isAuthenticated: false,
     ajaxCallsInProgress: {

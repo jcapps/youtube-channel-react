@@ -3,4 +3,27 @@
     input#end-date {
         margin: 5px;
     }
+
+    .result-thumbnail {
+        width: 250px;
+        text-align: left;
+
+        img, div {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        div { 
+            padding: 0 10px;
+            max-height: 22.5px;
+            max-width: 210px;
+        }
+
+        p {
+            margin: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
 }

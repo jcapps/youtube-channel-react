@@ -9,6 +9,7 @@ import Periods from '../../globals/Periods';
 import * as channelActions from '../../actions/channelActions';
 import * as viewsActions from '../../actions/viewsActions';
 import clearStore from '../../actions/clearAction';
+import FilterResult from './FilterResult';
 
 export class ViewsPage extends React.PureComponent {
     constructor(props) {
@@ -18,11 +19,12 @@ export class ViewsPage extends React.PureComponent {
             filters: '',
             searchText: ''
         };
+        this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
         this.changeSelectType = this.changeSelectType.bind(this);
         this.setDateRange = this.setDateRange.bind(this);
+        this.updateSearchText = this.updateSearchText.bind(this);
         this.search = this.search.bind(this);
         this.addFilter = this.addFilter.bind(this);
-        this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
     }
 
     componentWillMount() {
@@ -34,6 +36,13 @@ export class ViewsPage extends React.PureComponent {
     componentDidMount() {
         document.title = "Analytics: Views";
         window.scrollTo(0, 0);
+    }
+
+    renderLineGraphD3(viewsInfo) {
+        const container = d3.select('#views-graph');
+        if (!container._groups[0][0]) return;
+        container.html('');
+        lineGraph(container, viewsInfo, 'day', 'views');
     }
 
     changeSelectType(e) {
@@ -57,10 +66,16 @@ export class ViewsPage extends React.PureComponent {
         this.props.viewsActions.getViews(selectType, {startDate, endDate}, filters);
     }
 
-    search(e) {
+    updateSearchText(e) {
         const query = e.target.value;
         this.setState({searchText: query});
-        this.props.channelActions.getSearchResults(query, 'video');
+    }
+
+    search(e) {
+        e.preventDefault();
+        this.props.channelActions.getSearchResults(this.state.searchText, 'channel');
+        this.props.channelActions.getSearchResults(this.state.searchText, 'playlist');
+        this.props.channelActions.getSearchResults(this.state.searchText, 'video');
     }
 
     addFilter(e) {
@@ -68,22 +83,16 @@ export class ViewsPage extends React.PureComponent {
         while (element.className.indexOf("search-result") < 0) {
             element = element.parentNode;
         }
+        const searchResult = JSON.parse(element.children[0].value);
 
-        const kind = element.name;
+        const kind = searchResult.id.kind;
         let newFilter = '';
-        if (kind == 'youtube#video') newFilter = 'video==' + element.id + ';';
-        if (kind == 'youtube#playlist') newFilter = 'isCurated==1;playlist==' + element.id + ';';
+        if (kind == 'youtube#video') newFilter = 'video==' + searchResult.id.videoId + ';';
+        if (kind == 'youtube#playlist') newFilter = 'isCurated==1;playlist==' + searchResult.id.playlistId + ';';
 
         const {selectType, filters} = this.state;
         this.setState({ filters: newFilter });
         this.props.viewsActions.getViews(selectType, null, newFilter);
-    }
-
-    renderLineGraphD3(viewsInfo) {
-        const container = d3.select('#views-graph');
-        if (!container._groups[0][0]) return;
-        container.html('');
-        lineGraph(container, viewsInfo, 'day', 'views');
     }
 
     render() {
@@ -92,25 +101,7 @@ export class ViewsPage extends React.PureComponent {
         return (
             <div id="views-page">
                 <h2>Views</h2>
-                <input
-                    id="search-filter"
-                    type="text"
-                    value={this.state.searchText}
-                    onBlur={this.props.clearStore}
-                    onChange={this.search} />
-                <div>
-                    {this.props.searchResults.map(result => {
-                        const kind = result.id.kind;
-                        let id = result.etag;
-                        if (kind == 'youtube#video') id = result.id.videoId;
-                        if (kind == 'youtube#playlist') id = result.id.playlistId;
-                        return (
-                            <a key={id} name={kind} id={id} className="search-result" onClick={this.addFilter}>
-                                <div>{result.snippet.title}</div>
-                            </a>
-                        );
-                    })}
-                </div>
+                <div id="views-graph" />
                 <select className="views-select" value={this.state.selectType} onChange={this.changeSelectType}>
                     <option value={Periods.SEVEN_DAY}>Last 7 Days</option>
                     <option value={Periods.TWENTY_EIGHT_DAY}>Last 28 Days</option>
@@ -124,7 +115,51 @@ export class ViewsPage extends React.PureComponent {
                     <input id="end-date" type="date" />
                     <button onClick={this.setDateRange}>Go</button>
                 </div>
-                <div id="views-graph" />
+                <form onSubmit={this.search}>
+                    <input
+                        id="search-filter"
+                        type="text"
+                        value={this.state.searchText}
+                        onChange={this.updateSearchText} />
+                    <button type="submit">Search</button>
+                </form>
+                <div>
+                    <p>Channels</p>
+                    {this.props.searchChannelResults.map(result => {
+                        const kind = result.id.kind;
+                        const id = result.id.channelId;
+                        return (
+                            <a key={id} className="search-result" onClick={this.addFilter}>
+                                <input className="hidden" value={JSON.stringify(result)} readOnly="readOnly" />
+                                <FilterResult result={result}/>
+                            </a>
+                        );
+                    })}
+                    <p>Playlists</p>
+                    {this.props.searchPlaylistResults.map(result => {
+                        const kind = result.id.kind;
+                        const id = result.id.playlistId;
+                        return (
+                            <a key={id} className="search-result" onClick={this.addFilter}>
+                                <input className="hidden" value={JSON.stringify(result)} readOnly="readOnly" />
+                                <FilterResult result={result}/>
+                            </a>
+                        );
+                    })}
+                    <p>Videos</p>
+                    {this.props.searchVideoResults.map(result => {
+                        const kind = result.id.kind;
+                        const id = result.id.videoId;
+                        return (
+                            <a key={id} className="search-result" onClick={this.addFilter}>
+                                <input className="hidden" value={JSON.stringify(result)} readOnly="readOnly" />
+                                <FilterResult result={result}/>
+                            </a>
+                        );
+                    })}
+                </div>
+                <div>
+                </div>
             </div>
         );
     }
@@ -132,7 +167,9 @@ export class ViewsPage extends React.PureComponent {
 
 ViewsPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
-    searchResults: PropTypes.array,
+    searchChannelResults: PropTypes.array,
+    searchPlaylistResults: PropTypes.array,
+    searchVideoResults: PropTypes.array,
     views: PropTypes.object.isRequired,
     channelActions: PropTypes.object.isRequired,
     viewsActions: PropTypes.object.isRequired,
@@ -141,7 +178,9 @@ ViewsPage.propTypes = {
 
 export function mapStateToProps(state) {
     return {
-        searchResults: state.searchResults,
+        searchChannelResults: state.searchChannelResults,
+        searchPlaylistResults: state.searchPlaylistResults,
+        searchVideoResults: state.searchVideoResults,
         views: state.views,
         isLoading: state.ajaxCallsInProgress.views > 0
     };
@@ -160,7 +199,9 @@ export const connectOptions = {
         return !(
             (!next.isLoading) || 
             (prev.views !== next.views) || 
-            (prev.searchResults !== next.searchResults)
+            (prev.searchChannelResults !== next.searchChannelResults) || 
+            (prev.searchPlaylistResults !== next.searchPlaylistResults) || 
+            (prev.searchVideoResults !== next.searchVideoResults)
         );
     }
 };

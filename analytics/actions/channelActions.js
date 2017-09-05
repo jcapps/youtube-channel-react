@@ -10,8 +10,16 @@ export function getChannelInfoSuccess(channelInfo) {
     return { type: types.GET_CHANNEL_INFO_SUCCESS, channelInfo };
 }
 
-export function getSearchResultsSuccess(result) {
-    return { type: types.GET_SEARCH_RESULTS_SUCCESS, result };
+export function getSearchChannelResultsSuccess(result) {
+    return { type: types.GET_SEARCH_CHANNEL_RESULTS_SUCCESS, result };
+}
+
+export function getSearchPlaylistResultsSuccess(result) {
+    return { type: types.GET_SEARCH_PLAYLIST_RESULTS_SUCCESS, result };
+}
+
+export function getSearchVideoResultsSuccess(result) {
+    return { type: types.GET_SEARCH_VIDEO_RESULTS_SUCCESS, result };
 }
 
 export function getSearchResultsError() {
@@ -37,7 +45,20 @@ export function getSearchResults(query, searchType) {
         return helperActions.isLoggedIn().then(isLoggedIn => {
             if (isLoggedIn) {
                 return youtubeActions.searchChannel(query, searchType).then(result => {
-                    dispatch(getSearchResultsSuccess(result));
+                    switch (searchType) {
+                        case 'channel':
+                            dispatch(getSearchChannelResultsSuccess(result));
+                            return;
+                        case 'playlist':
+                            dispatch(getSearchPlaylistResultsSuccess(result));
+                            return;
+                        case 'video':
+                            dispatch(getSearchVideoResultsSuccess(result));
+                            return;
+                        default:
+                            dispatch(getSearchResultsError());
+                            return;
+                    }
                 }).catch(error => {
                     throw(error);
                 });
