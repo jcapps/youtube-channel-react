@@ -4,8 +4,12 @@
         margin: 5px;
     }
 
-    .result-thumbnail {
+    #filter-search-results {
+        margin: 0 auto;
         width: 250px;
+    }
+
+    .result-thumbnail {
         text-align: left;
 
         img, div {

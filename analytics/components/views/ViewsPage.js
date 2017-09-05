@@ -123,7 +123,7 @@ export class ViewsPage extends React.PureComponent {
                         onChange={this.updateSearchText} />
                     <button type="submit">Search</button>
                 </form>
-                <div>
+                <div id="filter-search-results">
                     <p>Channels</p>
                     {this.props.searchChannelResults.map(result => {
                         const kind = result.id.kind;
