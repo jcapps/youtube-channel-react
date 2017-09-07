@@ -183,6 +183,7 @@ const showAndSetTooltip = (d, xyInfo) => {
     const yValue = d.get(xyInfo.yColumnName).toLocaleString();
     const tooltip = d3.select('.tooltip')
         .html(formatTime(d.get(xyInfo.xColumnName)) + '<br/>' + yLabel + ': ' + yValue)
+        .style('white-space', 'nowrap')
         .style('display', ''); // Html must be created to calculate the size of the tooltip below
 
     // Gather positioning information
@@ -197,7 +198,7 @@ const showAndSetTooltip = (d, xyInfo) => {
     // Set vertical and horizontal translations relative to page
     const verticalTranslate = top + document.body.scrollTop + xyInfo.y(d.get(xyInfo.yColumnName)) - tooltipSize.height;
     let horizontalTranslate = left + document.body.scrollLeft + xyInfo.x(d.get(xyInfo.xColumnName)) + leftAxisWidth;
-    if (horizontalTranslate > left + leftAxisWidth + width - tooltipSize.width) {
+    if (horizontalTranslate > left + document.body.scrollLeft + leftAxisWidth + width - tooltipSize.width) {
         horizontalTranslate = horizontalTranslate - tooltipSize.width;
     }
 
