@@ -79,7 +79,6 @@ export class ViewsPage extends React.PureComponent {
         return (
             <div id="views-page">
                 <h2>Views</h2>
-                <div id="views-graph" />
                 <select className="views-select" value={this.state.selectType} onChange={this.changeSelectType}>
                     <option value={Periods.SEVEN_DAY}>Last 7 Days</option>
                     <option value={Periods.TWENTY_EIGHT_DAY}>Last 28 Days</option>
@@ -94,6 +93,7 @@ export class ViewsPage extends React.PureComponent {
                     <button onClick={this.setDateRange}>Go</button>
                 </div>
                 <ContentFilter addFilter={this.addFilter}/>
+                <div id="views-graph" />
             </div>
         );
     }
