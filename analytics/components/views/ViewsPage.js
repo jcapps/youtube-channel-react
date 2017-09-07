@@ -9,6 +9,7 @@ import Periods from '../../globals/Periods';
 import * as channelActions from '../../actions/channelActions';
 import * as viewsActions from '../../actions/viewsActions';
 import clearStore from '../../actions/clearAction';
+import DownshiftSectioned from '../common/DownshiftSectioned';
 import FilterResult from './FilterResult';
 
 export class ViewsPage extends React.PureComponent {
@@ -17,14 +18,20 @@ export class ViewsPage extends React.PureComponent {
         this.state = {
             selectType: Periods.TWENTY_EIGHT_DAY,
             filters: '',
-            searchText: ''
+            searchText: '',
+            isDropdownOpen: false,
+            resultsArray: []
         };
         this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
         this.changeSelectType = this.changeSelectType.bind(this);
         this.setDateRange = this.setDateRange.bind(this);
-        this.updateSearchText = this.updateSearchText.bind(this);
         this.search = this.search.bind(this);
+        this.onSearchFocus = this.onSearchFocus.bind(this);
+        this.onSearchBlur = this.onSearchBlur.bind(this);
         this.addFilter = this.addFilter.bind(this);
+        this.computeResultValue = this.computeResultValue.bind(this);
+        this.onDownshiftChange = this.onDownshiftChange.bind(this);
+        this.onDownshiftStateChange = this.onDownshiftStateChange.bind(this);
     }
 
     componentWillMount() {
@@ -36,6 +43,34 @@ export class ViewsPage extends React.PureComponent {
     componentDidMount() {
         document.title = "Analytics: Views";
         window.scrollTo(0, 0);
+
+        $(document).click(e => {
+            if (!$(e.target).closest('#filter-search-results').length) {
+                this.onSearchBlur();
+            }
+        })
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.searchChannelResults != nextProps.searchChannelResults || 
+            this.props.searchPlaylistResults != nextProps.searchPlaylistResults || 
+            this.props.searchVideoResults != nextProps.searchVideoResults) {
+                const resultsArray = [
+                    {
+                        title: 'Channels',
+                        results: nextProps.searchChannelResults
+                    },
+                    {
+                        title: 'Playlists',
+                        results: nextProps.searchPlaylistResults
+                    },
+                    {
+                        title: 'Videos',
+                        results: nextProps.searchVideoResults
+                    }
+                ];
+                this.setState({resultsArray: resultsArray});
+        }
     }
 
     renderLineGraphD3(viewsInfo) {
@@ -66,38 +101,62 @@ export class ViewsPage extends React.PureComponent {
         this.props.viewsActions.getViews(selectType, {startDate, endDate}, filters);
     }
 
-    updateSearchText(e) {
-        const query = e.target.value;
-        this.setState({searchText: query});
+    search(query) {
+        this.props.channelActions.getSearchResults(query, 'channel');
+        this.props.channelActions.getSearchResults(query, 'playlist');
+        this.props.channelActions.getSearchResults(query, 'video');
     }
 
-    search(e) {
-        e.preventDefault();
-        this.props.channelActions.getSearchResults(this.state.searchText, 'channel');
-        this.props.channelActions.getSearchResults(this.state.searchText, 'playlist');
-        this.props.channelActions.getSearchResults(this.state.searchText, 'video');
+    onSearchFocus() {
+        this.setState({
+            searchText: '',
+            isDropdownOpen: true
+        });
+        this.search('');
     }
 
-    addFilter(e) {
-        let element = e.target;
-        while (element.className.indexOf("search-result") < 0) {
-            element = element.parentNode;
-        }
-        const searchResult = JSON.parse(element.children[0].value);
+    // TODO: Get this function involved
+    onSearchBlur() {
+        this.setState({
+            isDropdownOpen: false,
+            resultsArray: []
+        });
+    }
 
+    addFilter(searchResult) {
         const kind = searchResult.id.kind;
         let newFilter = '';
         if (kind == 'youtube#video') newFilter = 'video==' + searchResult.id.videoId + ';';
         if (kind == 'youtube#playlist') newFilter = 'isCurated==1;playlist==' + searchResult.id.playlistId + ';';
 
         const {selectType, filters} = this.state;
-        this.setState({ filters: newFilter });
+        this.setState({
+            filters: newFilter,
+            isDropdownOpen: false,
+            resultsArray: []
+        });
         this.props.viewsActions.getViews(selectType, null, newFilter);
+    }
+
+    computeResultValue(result) {
+        return (result && result.snippet) ? result.snippet.title : '';
+    }
+
+    onDownshiftChange(selectedItem) {
+        this.addFilter(selectedItem);
+    }
+
+    onDownshiftStateChange(changes) {
+        if (changes.type == '__autocomplete_change_input__') {
+            this.setState({searchText: changes.inputValue});
+            this.search(changes.inputValue);
+        }
     }
 
     render() {
         if (this.props.isLoading) return <div/>;
         if (this.props.views.columnHeaders) this.renderLineGraphD3(this.props.views);
+
         return (
             <div id="views-page">
                 <h2>Views</h2>
@@ -115,16 +174,25 @@ export class ViewsPage extends React.PureComponent {
                     <input id="end-date" type="date" />
                     <button onClick={this.setDateRange}>Go</button>
                 </div>
-                <form onSubmit={this.search}>
+                {/* <form onSubmit={this.search}>
                     <input
                         id="search-filter"
                         type="text"
                         value={this.state.searchText}
                         onChange={this.updateSearchText} />
                     <button type="submit">Search</button>
-                </form>
+                </form> */}
                 <div id="filter-search-results">
-                    <p>Channels</p>
+                    <DownshiftSectioned
+                        items={this.state.resultsArray}
+                        itemToString={this.computeResultValue}
+                        Result={FilterResult}
+                        onFocus={this.onSearchFocus}
+                        isOpen={this.state.isDropdownOpen}
+                        onChange={this.onDownshiftChange}
+                        onStateChange={this.onDownshiftStateChange}
+                    />
+                    {/* <p>Channels</p>
                     {this.props.searchChannelResults.map(result => {
                         const kind = result.id.kind;
                         const id = result.id.channelId;
@@ -156,9 +224,7 @@ export class ViewsPage extends React.PureComponent {
                                 <FilterResult result={result}/>
                             </a>
                         );
-                    })}
-                </div>
-                <div>
+                    })} */}
                 </div>
             </div>
         );
