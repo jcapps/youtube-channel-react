@@ -18,12 +18,12 @@ const DownshiftSectioned = ({items, itemToString, Result, onFocus, isOpen, ...ot
                             placeholder: 'Search...'
                         })} />
                         {isOpen
-                            ? <div>
+                            ? <div className="dropdown">
                                 {items.reduce((itemsArray, section, sectionIndex) => {
                                     if (section.results.length > 0) {
                                         itemsArray.sections.push(
                                             <div key={sectionIndex}>
-                                                <div>{section.title}</div>
+                                                <div className="section-header">{section.title}</div>
                                                 {section.results.map((result, resultIndex) => {
                                                     const totalIndex = itemsArray.itemIndex++;
                                                     return (
@@ -32,12 +32,9 @@ const DownshiftSectioned = ({items, itemToString, Result, onFocus, isOpen, ...ot
                                                                 key: resultIndex,
                                                                 index: totalIndex,
                                                                 item: result,
-                                                                className: "search-result",
-                                                                style: {
-                                                                    backgroundColor:
-                                                                        highlightedIndex === totalIndex ? 'lightgray' : 'white',
-                                                                    fontWeight: selectedItem === result ? 'bold' : 'normal'
-                                                                }
+                                                                className: highlightedIndex === totalIndex
+                                                                    ? "search-result highlighted"
+                                                                    : "search-result"
                                                             })}
                                                         >
                                                             <Result result={result}/>

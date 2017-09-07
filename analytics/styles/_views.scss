@@ -4,33 +4,59 @@
         margin: 5px;
     }
 
-    #filter-search-results {
+    #content-filter {
         margin: 0 auto;
         width: 250px;
 
-        p {
-            margin: 0;
-        }
-    }
-
-    .result-thumbnail {
-        text-align: left;
-
-        img, div {
-            display: inline-block;
-            vertical-align: middle;
+        input {
+            width: 250px;
         }
 
-        div { 
-            padding: 0 10px;
-            max-height: 22.5px;
-            max-width: 210px;
+        .dropdown {
+            border: 2px solid $dropdown-border;
+            border-top: 0;
+
+            p {
+                margin: 0;
+            }
         }
 
-        p {
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+        .section-header {
+            color: $dropdown-section-header-color;
+            background-color: $dropdown-section-header-background;
+            font-weight: bold;
+        }
+
+        .search-result {
+            color: $dropdown-color;
+            background-color: $dropdown-background;
+        }
+
+        .highlighted {
+            color: $dropdown-color-highlighted;
+            background-color: $dropdown-background-highlighted;
+            cursor: pointer;
+        }
+
+        .result-thumbnail {
+            text-align: left;
+    
+            img, div {
+                display: inline-block;
+                vertical-align: middle;
+            }
+    
+            div { 
+                padding: 0 10px;
+                max-height: 22.5px;
+                max-width: 206px;
+            }
+    
+            p {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
         }
     }
 }
