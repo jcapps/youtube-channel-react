@@ -13,6 +13,20 @@ function isChannelActionSuccessType(type) {
     );
 }
 
+function isContentFilterActionStartingType(type) {
+    return (
+        type == types.SEARCHING_CHANNEL
+    );
+}
+
+function isContentFilterActionSuccessType(type) {
+    return (
+        type == types.GET_SEARCH_CHANNEL_RESULTS_SUCCESS || 
+        type == types.GET_SEARCH_PLAYLIST_RESULTS_SUCCESS || 
+        type == types.GET_SEARCH_VIDEO_RESULTS_SUCCESS
+    );
+}
+
 function isCheckingLoginActionStartingType(type) {
     return (
         type == types.GETTING_IS_LOGGED_IN
@@ -63,6 +77,12 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isChannelActionSuccessType(action.type)) {
         currentState.channel -= 1;
+    }
+    if (isContentFilterActionStartingType(action.type)) {
+        currentState.contentFilter += 1;
+    }
+    if (isContentFilterActionSuccessType(action.type)) {
+        currentState.contentFilter -= 1;
     }
     if (isCheckingLoginActionStartingType(action.type)) {
         currentState.isLoggedIn += 1;
