@@ -23,6 +23,7 @@ export class ViewsPage extends React.PureComponent {
         this.changeContentType = this.changeContentType.bind(this);
         this.changeTimePeriod = this.changeTimePeriod.bind(this);
         this.addFilter = this.addFilter.bind(this);
+        this.renderContentTypeFilter = this.renderContentTypeFilter.bind(this);
     }
 
     componentWillMount() {
@@ -56,8 +57,11 @@ export class ViewsPage extends React.PureComponent {
     }
 
     changeTimePeriod(timePeriod, startEndDates) {
-        if (timePeriod != this.state.timePeriod) this.setState({timePeriod: timePeriod});
         const filters = this.state.filters;
+        if (timePeriod != this.state.timePeriod) {
+            this.setState({timePeriod: timePeriod});
+            if (timePeriod == Periods.CUSTOM) return;
+        }
         this.props.actions.getViews(timePeriod, startEndDates, filters);
     }
 
@@ -72,27 +76,36 @@ export class ViewsPage extends React.PureComponent {
         this.props.actions.getViews(timePeriod, null, newFilter);
     }
 
-    render() {
-        if (this.props.isLoading) return <div/>;
-        if (this.props.views.columnHeaders) this.renderLineGraphD3(this.props.views);
+    renderContentTypeFilter() {
         const shouldHideContentTypeFilter = 
             this.state.filters.indexOf('video==') > -1 || 
             this.state.filters.indexOf('playlist==') > -1;
+        if (!shouldHideContentTypeFilter) {
+            return (
+                <ContentTypeFilter
+                    changeContentType={this.changeContentType}
+                    contentType={this.state.contentType}
+                />
+            );
+        }
+        return;
+    }
+
+    render() {
+        if (this.props.isLoading) return <div/>;
+        if (this.props.views.columnHeaders) this.renderLineGraphD3(this.props.views);
+
         return (
             <div id="views-page">
                 <h2>Views</h2>
-                {shouldHideContentTypeFilter
-                    ? <div />
-                    : <ContentTypeFilter
-                        changeContentType={this.changeContentType}
-                        contentType={this.state.contentType}
+                <div id="filters">
+                    <ContentFilter addFilter={this.addFilter}/>
+                    {this.renderContentTypeFilter()}
+                    <TimePeriodFilter
+                        changeTimePeriod={this.changeTimePeriod}
+                        timePeriod={this.state.timePeriod}
                     />
-                }
-                <TimePeriodFilter
-                    changeTimePeriod={this.changeTimePeriod}
-                    timePeriod={this.state.timePeriod}
-                />
-                <ContentFilter addFilter={this.addFilter}/>
+                </div>
                 <div id="views-graph" />
             </div>
         );

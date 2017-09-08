@@ -20,8 +20,8 @@ class TimePeriodFilter extends React.PureComponent {
             $('#select-custom-range').removeClass('hidden');
         } else {
             $('#select-custom-range').addClass('hidden');
-            this.props.changeTimePeriod(timePeriod, null);
         }
+        this.props.changeTimePeriod(timePeriod, null);
     }
 
     setDateRange() {

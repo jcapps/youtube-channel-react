@@ -4,8 +4,16 @@
         margin: 5px;
     }
 
-    #content-filter {
+    #filters {
         margin: 0 auto;
+
+        & > * {
+            display: inline-block;
+            margin: 0 5px;
+        }
+    }
+
+    #content-filter {
         width: 250px;
 
         input {
