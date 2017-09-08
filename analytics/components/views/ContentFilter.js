@@ -8,7 +8,7 @@ import clearStore from '../../actions/clearAction';
 import DownshiftSectioned from '../common/DownshiftSectioned';
 import FilterResult from './FilterResult';
 
-class ContentFilter extends React.Component {
+class ContentFilter extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
