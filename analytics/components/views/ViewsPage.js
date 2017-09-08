@@ -4,19 +4,23 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as d3 from 'd3';
 import lineGraph from '../../graphs/lineGraph';
+import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import * as viewsActions from '../../actions/viewsActions';
 import ContentFilter from './ContentFilter';
+import ContentTypeFilter from './ContentTypeFilter';
 import TimePeriodFilter from './TimePeriodFilter';
 
 export class ViewsPage extends React.PureComponent {
     constructor() {
         super();
         this.state = {
+            contentType: ContentTypes.VIDEOS,
             timePeriod: Periods.TWENTY_EIGHT_DAY,
             filters: ''
         };
         this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
+        this.changeContentType = this.changeContentType.bind(this);
         this.changeTimePeriod = this.changeTimePeriod.bind(this);
         this.addFilter = this.addFilter.bind(this);
     }
@@ -39,6 +43,18 @@ export class ViewsPage extends React.PureComponent {
         lineGraph(container, viewsInfo, 'day', 'views');
     }
 
+    changeContentType(contentType) {
+        const {timePeriod, filters} = this.state;
+        let newFilter = '';
+        if (contentType == ContentTypes.PLAYLISTS) newFilter = 'isCurated==1;';
+
+        this.setState({
+            contentType: contentType,
+            filters: newFilter
+        });
+        this.props.actions.getViews(timePeriod, null, newFilter);
+    }
+
     changeTimePeriod(timePeriod, startEndDates) {
         if (timePeriod != this.state.timePeriod) this.setState({timePeriod: timePeriod});
         const filters = this.state.filters;
@@ -52,17 +68,26 @@ export class ViewsPage extends React.PureComponent {
         if (kind == 'youtube#playlist') newFilter = 'isCurated==1;playlist==' + searchResult.id.playlistId + ';';
 
         const {timePeriod, filters} = this.state;
-        this.setState({filters: newFilter});
+        this.setState({filters: newFilter}); // TODO: Needs to handle previously set filters
         this.props.actions.getViews(timePeriod, null, newFilter);
     }
 
     render() {
         if (this.props.isLoading) return <div/>;
         if (this.props.views.columnHeaders) this.renderLineGraphD3(this.props.views);
-
+        const shouldHideContentTypeFilter = 
+            this.state.filters.indexOf('video==') > -1 || 
+            this.state.filters.indexOf('playlist==') > -1;
         return (
             <div id="views-page">
                 <h2>Views</h2>
+                {shouldHideContentTypeFilter
+                    ? <div />
+                    : <ContentTypeFilter
+                        changeContentType={this.changeContentType}
+                        contentType={this.state.contentType}
+                    />
+                }
                 <TimePeriodFilter
                     changeTimePeriod={this.changeTimePeriod}
                     timePeriod={this.state.timePeriod}
