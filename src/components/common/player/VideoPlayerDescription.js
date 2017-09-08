@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class VideoPlayerDescription extends React.Component {
+class VideoPlayerDescription extends React.PureComponent {
     constructor() {
         super();
         this.renderTitle = this.renderTitle.bind(this);
