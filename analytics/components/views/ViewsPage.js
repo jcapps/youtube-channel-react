@@ -10,8 +10,8 @@ import ContentFilter from './ContentFilter';
 import TimePeriodFilter from './TimePeriodFilter';
 
 export class ViewsPage extends React.PureComponent {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
             timePeriod: Periods.TWENTY_EIGHT_DAY,
             filters: ''

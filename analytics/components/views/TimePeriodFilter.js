@@ -4,8 +4,8 @@ import $ from 'jquery';
 import Periods from '../../globals/Periods';
 
 class TimePeriodFilter extends React.PureComponent {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
             timePeriod: Periods.TWENTY_EIGHT_DAY
         };
