@@ -81,7 +81,7 @@ class ContentFilter extends React.PureComponent {
     }
 
     computeResultValue(result) {
-        return (result && result.snippet) ? result.snippet.title : '';
+        return ''; // Don't want to display anything in the input box upon filter selection
     }
 
     onDownshiftChange(selectedItem) {
