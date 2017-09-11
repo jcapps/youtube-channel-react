@@ -6,6 +6,8 @@ import * as d3 from 'd3';
 import lineGraph from '../../graphs/lineGraph';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
+import filterArrayIncludes from '../../helpers/filterArrayIncludes';
+import formatFiltersString from '../../helpers/formatFiltersString';
 import * as viewsActions from '../../actions/viewsActions';
 import ContentFilter from './ContentFilter';
 import ContentTypeFilter from './ContentTypeFilter';
@@ -17,7 +19,7 @@ export class ViewsPage extends React.PureComponent {
         this.state = {
             contentType: ContentTypes.VIDEOS,
             timePeriod: Periods.TWENTY_EIGHT_DAY,
-            filters: ''
+            filters: []
         };
         this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
         this.changeContentType = this.changeContentType.bind(this);
@@ -28,7 +30,7 @@ export class ViewsPage extends React.PureComponent {
 
     componentWillMount() {
         const timePeriod = this.state.timePeriod;
-        const filters = this.state.filters;
+        const filters = formatFiltersString(this.state.filters);
         this.props.actions.getViews(timePeriod, null, filters);
     }
 
@@ -45,15 +47,21 @@ export class ViewsPage extends React.PureComponent {
     }
 
     changeContentType(contentType) {
-        const {timePeriod, filters} = this.state;
-        let newFilter = '';
-        if (contentType == ContentTypes.PLAYLISTS) newFilter = 'isCurated==1;';
+        let newFilter = null;
+        if (contentType == ContentTypes.PLAYLISTS)
+            newFilter = {key: 'isCurated', value: '1'};
 
+        let newFiltersArray = Object.assign([], this.state.filters);
+        if (newFilter && !filterArrayIncludes(this.state.filters, newFilter)) {
+            newFiltersArray.push(newFilter);
+        }
         this.setState({
             contentType: contentType,
-            filters: newFilter
+            filters: newFiltersArray
         });
-        this.props.actions.getViews(timePeriod, null, newFilter);
+
+        const timePeriod = this.state.timePeriod;
+        this.props.actions.getViews(timePeriod, null, formatFiltersString(newFiltersArray));
     }
 
     changeTimePeriod(timePeriod, startEndDates) {
@@ -62,33 +70,90 @@ export class ViewsPage extends React.PureComponent {
             this.setState({timePeriod: timePeriod});
             if (timePeriod == Periods.CUSTOM) return;
         }
-        this.props.actions.getViews(timePeriod, startEndDates, filters);
+        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(filters));
     }
 
     addFilter(searchResult) {
         const kind = searchResult.id.kind;
-        let newFilter = '';
-        if (kind == 'youtube#video') newFilter = 'video==' + searchResult.id.videoId + ';';
-        if (kind == 'youtube#playlist') newFilter = 'isCurated==1;playlist==' + searchResult.id.playlistId + ';';
 
-        const {timePeriod, filters} = this.state;
-        this.setState({filters: newFilter}); // TODO: Needs to handle previously set filters
-        this.props.actions.getViews(timePeriod, null, newFilter);
+        let newFiltersArray = Object.assign([], this.state.filters);
+        if (kind == 'youtube#channel') {
+            const newFilter = {key: 'channel', value: searchResult.id.channelId};
+            if (!filterArrayIncludes(this.state.filters, newFilter)) {
+                let containsChannelFilter = false;
+                for (let i = 0; i < newFiltersArray.length; i++) {
+                    if (newFiltersArray[i].key == 'channel') {
+                        containsChannelFilter = true;
+                        newFiltersArray[i].value.push(newFilter.value);
+                        break;
+                    }
+                }
+                if (!containsChannelFilter) {
+                    const newFilterEntry = {key: newFilter.key, value: [newFilter.value]};
+                    newFiltersArray.push(newFilterEntry);
+                }
+            }
+        }
+        if (kind == 'youtube#playlist') {
+            const newFilter1 = {key: 'isCurated', value: '1'};
+            const newFilter2 = {key: 'playlist', value: searchResult.id.playlistId};
+            const newFilters = [newFilter1, newFilter2];
+            newFilters.forEach((filter) => {
+                if (!filterArrayIncludes(this.state.filters, filter)) {
+                    if (filter.key == 'playlist') {
+                        let containsPlaylistFilter = false;
+                        for (let i = 0; i < newFiltersArray.length; i++) {
+                            if (newFiltersArray[i].key == 'playlist') {
+                                containsPlaylistFilter = true;
+                                newFiltersArray[i].value.push(filter.value);
+                                break;
+                            }
+                        }
+                        if (!containsPlaylistFilter) {
+                            const newFilterEntry = {key: filter.key, value: [filter.value]};
+                            newFiltersArray.push(newFilterEntry);
+                        }
+                    } else {
+                        newFiltersArray.push(filter);
+                    }
+                }
+            });
+        }
+        if (kind == 'youtube#video') {
+            const newFilter = {key: 'video', value: searchResult.id.videoId};
+            if (!filterArrayIncludes(this.state.filters, newFilter)) {
+                let containsVideoFilter = false;
+                for (let i = 0; i < newFiltersArray.length; i++) {
+                    if (newFiltersArray[i].key == 'video') {
+                        containsVideoFilter = true;
+                        newFiltersArray[i].value.push(newFilter.value);
+                        break;
+                    }
+                }
+                if (!containsVideoFilter) {
+                    const newFilterEntry = {key: newFilter.key, value: [newFilter.value]};
+                    newFiltersArray.push(newFilterEntry);
+                }
+            }
+        }
+        this.setState({filters: newFiltersArray});
+
+        const timePeriod = this.state.timePeriod;
+        this.props.actions.getViews(timePeriod, null, formatFiltersString(newFiltersArray));
     }
 
     renderContentTypeFilter() {
-        const shouldHideContentTypeFilter = 
-            this.state.filters.indexOf('video==') > -1 || 
-            this.state.filters.indexOf('playlist==') > -1;
-        if (!shouldHideContentTypeFilter) {
-            return (
-                <ContentTypeFilter
-                    changeContentType={this.changeContentType}
-                    contentType={this.state.contentType}
-                />
-            );
+        const filtersArray = this.state.filters;
+        for (let i = 0; i < filtersArray.length; i++) {
+            if (filtersArray[i].key == 'video' || filtersArray[i].key == 'playlist')
+                return;
         }
-        return;
+        return (
+            <ContentTypeFilter
+                changeContentType={this.changeContentType}
+                contentType={this.state.contentType}
+            />
+        );
     }
 
     render() {
