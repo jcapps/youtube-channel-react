@@ -19,6 +19,7 @@ export class ViewsPage extends React.PureComponent {
         this.state = {
             contentType: ContentTypes.ALL,
             timePeriod: Periods.TWENTY_EIGHT_DAY,
+            startEndDates: null,
             filters: [],
             addedFilters: []
         };
@@ -32,9 +33,9 @@ export class ViewsPage extends React.PureComponent {
     }
 
     componentWillMount() {
-        const timePeriod = this.state.timePeriod;
+        const {timePeriod, startEndDates} = this.state;
         const filters = formatFiltersString(this.state.filters);
-        this.props.actions.getViews(timePeriod, null, filters);
+        this.props.actions.getViews(timePeriod, startEndDates, filters);
     }
 
     componentDidMount() {
@@ -72,8 +73,8 @@ export class ViewsPage extends React.PureComponent {
             filters: newFiltersArray
         });
 
-        const timePeriod = this.state.timePeriod;
-        this.props.actions.getViews(timePeriod, null, formatFiltersString(newFiltersArray));
+        const {timePeriod, startEndDates} = this.state;
+        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
 
     changeTimePeriod(timePeriod, startEndDates) {
@@ -81,6 +82,8 @@ export class ViewsPage extends React.PureComponent {
         if (timePeriod != this.state.timePeriod) {
             this.setState({timePeriod: timePeriod});
             if (timePeriod == Periods.CUSTOM) return;
+        } else if (timePeriod == Periods.CUSTOM) {
+            this.setState({startEndDates: startEndDates});
         }
         this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(filters));
     }
@@ -162,8 +165,8 @@ export class ViewsPage extends React.PureComponent {
             addedFilters: newAddedFiltersArray
         });
 
-        const timePeriod = this.state.timePeriod;
-        this.props.actions.getViews(timePeriod, null, formatFiltersString(newFiltersArray));
+        const {timePeriod, startEndDates} = this.state;
+        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
 
     removeFilter(e) {
@@ -262,8 +265,8 @@ export class ViewsPage extends React.PureComponent {
             });
         }
 
-        const timePeriod = this.state.timePeriod;
-        this.props.actions.getViews(timePeriod, null, formatFiltersString(newFiltersArray));
+        const {timePeriod, startEndDates} = this.state;
+        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
 
     renderContentTypeFilter() {
