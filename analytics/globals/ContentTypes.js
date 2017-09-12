@@ -1,6 +1,8 @@
 const ContentTypes = {
-    VIDEOS: 'VIDEOS',
-    PLAYLISTS: 'PLAYLISTS'
+    ALL: 'ALL',
+    CHANNELS: 'CHANNELS',
+    PLAYLISTS: 'PLAYLISTS',
+    VIDEOS: 'VIDEOS'
 };
 
 export default ContentTypes;

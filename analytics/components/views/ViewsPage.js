@@ -17,7 +17,7 @@ export class ViewsPage extends React.PureComponent {
     constructor() {
         super();
         this.state = {
-            contentType: ContentTypes.VIDEOS,
+            contentType: ContentTypes.ALL,
             timePeriod: Periods.TWENTY_EIGHT_DAY,
             filters: [],
             addedFilters: []
@@ -50,13 +50,22 @@ export class ViewsPage extends React.PureComponent {
     }
 
     changeContentType(contentType) {
-        let newFilter = null;
-        if (contentType == ContentTypes.PLAYLISTS)
-            newFilter = {key: 'isCurated', value: '1'};
-
+        let playlistFilter = {key: 'isCurated', value: '1'};
         let newFiltersArray = Object.assign([], this.state.filters);
-        if (newFilter && !filterArrayIncludes(this.state.filters, newFilter)) {
-            newFiltersArray.push(newFilter);
+        if (contentType == ContentTypes.PLAYLISTS) {
+            if (!filterArrayIncludes(this.state.filters, playlistFilter)) {
+                newFiltersArray.push(playlistFilter);
+            }
+        } else {
+            contentType = ContentTypes.ALL;
+            if (filterArrayIncludes(this.state.filters, playlistFilter)) {
+                for (let i = 0; i < newFiltersArray.length; i++) {
+                    if (newFiltersArray[i].key == 'isCurated') {
+                        newFiltersArray.splice(i, 1);
+                        break;
+                    }
+                }
+            }
         }
         this.setState({
             contentType: contentType,
@@ -79,11 +88,13 @@ export class ViewsPage extends React.PureComponent {
     addFilter(searchResult) {
         const kind = searchResult.id.kind;
 
+        let newContentType = ContentTypes.ALL;
         let newFiltersArray = Object.assign([], this.state.filters);
         let newAddedFiltersArray = Object.assign([], this.state.addedFilters);
         newAddedFiltersArray.push(searchResult);
 
         if (kind == 'youtube#channel') {
+            newContentType = ContentTypes.CHANNELS;
             const newFilter = {key: 'channel', value: searchResult.id.channelId};
             if (!filterArrayIncludes(this.state.filters, newFilter)) {
                 let containsChannelFilter = false;
@@ -101,6 +112,7 @@ export class ViewsPage extends React.PureComponent {
             }
         }
         if (kind == 'youtube#playlist') {
+            newContentType = ContentTypes.PLAYLISTS;
             const newFilter1 = {key: 'isCurated', value: '1'};
             const newFilter2 = {key: 'playlist', value: searchResult.id.playlistId};
             const newFilters = [newFilter1, newFilter2];
@@ -126,6 +138,7 @@ export class ViewsPage extends React.PureComponent {
             });
         }
         if (kind == 'youtube#video') {
+            newContentType = ContentTypes.VIDEOS;
             const newFilter = {key: 'video', value: searchResult.id.videoId};
             if (!filterArrayIncludes(this.state.filters, newFilter)) {
                 let containsVideoFilter = false;
@@ -144,6 +157,7 @@ export class ViewsPage extends React.PureComponent {
         }
 
         this.setState({
+            contentType: newContentType,
             filters: newFiltersArray,
             addedFilters: newAddedFiltersArray
         });
@@ -160,6 +174,7 @@ export class ViewsPage extends React.PureComponent {
         const filterInfo = JSON.parse(element.children[0].value);
         const kind = filterInfo.id.kind;
 
+        let shouldClearContentTypeFilter = false;
         let newFiltersArray = Object.assign([], this.state.filters);
         let newAddedFiltersArray = Object.assign([], this.state.addedFilters);
 
@@ -176,8 +191,16 @@ export class ViewsPage extends React.PureComponent {
                     for (let j = 0; j < newFiltersArray[i].value.length; j++) {
                         if (newFiltersArray[i].value[j] == filterInfo.id.channelId) {
                             newFiltersArray[i].value.splice(j, 1);
-                            if (newFiltersArray[i].value.length == 0)
+                            if (newFiltersArray[i].value.length == 0) {
+                                shouldClearContentTypeFilter = true;
                                 newFiltersArray.splice(i, 1);
+                                for (let k = 0; k < newFiltersArray.length; k++) {
+                                    if (newFiltersArray[k].key == 'isCurated') { // In case used ContentTypeFilter to filter playlists
+                                        newFiltersArray.splice(k, 1);
+                                        break;
+                                    }
+                                }
+                            }
                             break;
                         }
                     }
@@ -192,6 +215,7 @@ export class ViewsPage extends React.PureComponent {
                         if (newFiltersArray[i].value[j] == filterInfo.id.playlistId) {
                             newFiltersArray[i].value.splice(j, 1);
                             if (newFiltersArray[i].value.length == 0) {
+                                shouldClearContentTypeFilter = true;
                                 newFiltersArray.splice(i, 1);
                                 for (let k = 0; k < newFiltersArray.length; k++) {
                                     if (newFiltersArray[k].key == 'isCurated') {
@@ -213,8 +237,10 @@ export class ViewsPage extends React.PureComponent {
                     for (let j = 0; j < newFiltersArray[i].value.length; j++) {
                         if (newFiltersArray[i].value[j] == filterInfo.id.videoId) {
                             newFiltersArray[i].value.splice(j, 1);
-                            if (newFiltersArray[i].value.length == 0)
+                            if (newFiltersArray[i].value.length == 0) {
+                                shouldClearContentTypeFilter = true;
                                 newFiltersArray.splice(i, 1);
+                            }
                             break;
                         }
                     }
@@ -223,10 +249,18 @@ export class ViewsPage extends React.PureComponent {
             }
         }
         
-        this.setState({
-            filters: newFiltersArray,
-            addedFilters: newAddedFiltersArray
-        });
+        if (shouldClearContentTypeFilter) {
+            this.setState({
+                contentType: ContentTypes.ALL,
+                filters: newFiltersArray,
+                addedFilters: newAddedFiltersArray
+            });
+        } else {
+            this.setState({
+                filters: newFiltersArray,
+                addedFilters: newAddedFiltersArray
+            });
+        }
 
         const timePeriod = this.state.timePeriod;
         this.props.actions.getViews(timePeriod, null, formatFiltersString(newFiltersArray));
@@ -269,7 +303,10 @@ export class ViewsPage extends React.PureComponent {
             <div id="views-page">
                 <h2>Views</h2>
                 <div id="filters">
-                    <ContentFilter addFilter={this.addFilter}/>
+                    <ContentFilter
+                        addFilter={this.addFilter}
+                        contentType={this.state.contentType}
+                    />
                     {this.renderContentTypeFilter()}
                     <TimePeriodFilter
                         changeTimePeriod={this.changeTimePeriod}

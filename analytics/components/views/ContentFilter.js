@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
+import ContentTypes from '../../globals/ContentTypes';
 import * as channelActions from '../../actions/channelActions';
 import clearStore from '../../actions/clearAction';
 import DownshiftSectioned from '../common/DownshiftSectioned';
@@ -64,6 +65,7 @@ class ContentFilter extends React.PureComponent {
 
     onSearchFocus() {
         this.setState({isDropdownOpen: true});
+        this.props.clearStore();
         this.search('');
     }
 
@@ -75,9 +77,13 @@ class ContentFilter extends React.PureComponent {
     }
 
     search(query) {
-        this.props.actions.getSearchResults(query, 'channel');
-        this.props.actions.getSearchResults(query, 'playlist');
-        this.props.actions.getSearchResults(query, 'video');
+        const contentType = this.props.contentType;
+        if (contentType == ContentTypes.CHANNELS || contentType == ContentTypes.ALL)
+            this.props.actions.getSearchResults(query, 'channel');
+        if (contentType == ContentTypes.PLAYLISTS || contentType == ContentTypes.ALL)
+            this.props.actions.getSearchResults(query, 'playlist');
+        if (contentType == ContentTypes.VIDEOS || contentType == ContentTypes.ALL)
+            this.props.actions.getSearchResults(query, 'video');
     }
 
     computeResultValue(result) {
@@ -114,9 +120,10 @@ class ContentFilter extends React.PureComponent {
 ContentFilter.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     addFilter: PropTypes.func.isRequired,
-    searchChannelResults: PropTypes.array,
-    searchPlaylistResults: PropTypes.array,
-    searchVideoResults: PropTypes.array,
+    contentType: PropTypes.string.isRequired,
+    searchChannelResults: PropTypes.array.isRequired,
+    searchPlaylistResults: PropTypes.array.isRequired,
+    searchVideoResults: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired,
     clearStore: PropTypes.func.isRequired
 };
