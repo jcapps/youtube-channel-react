@@ -31,12 +31,16 @@ class TimePeriodFilter extends React.PureComponent {
     }
 
     render() {
+        const now = new Date();
+        const thisYear = now.getFullYear();
         return (
             <div id="time-period-filter">
                 <select className="views-select" value={this.props.timePeriod} onChange={this.changeTimePeriod}>
                     <option value={Periods.SEVEN_DAY}>Last 7 Days</option>
                     <option value={Periods.TWENTY_EIGHT_DAY}>Last 28 Days</option>
                     <option value={Periods.THIRTY_DAY}>Last 30 Days</option>
+                    <option value={Periods.THIS_YEAR}>This year ({thisYear})</option>
+                    <option value={Periods.LAST_YEAR}>Last year ({thisYear - 1})</option>
                     <option value={Periods.YEAR}>Last 365 Days</option>
                     <option value={Periods.LIFETIME}>Lifetime</option>
                     <option value={Periods.CUSTOM}>Custom range...</option>

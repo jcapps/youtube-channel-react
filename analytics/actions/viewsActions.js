@@ -51,8 +51,10 @@ export function getViews(
 function getStartEndDates(period, channelBirthdate) {
     const DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
     const today = new Date();
+    const todayString = formatDateString(today);
     const yesterday = new Date(today.getTime() - DAY_IN_MILLISECONDS);
     const yesterdayString = formatDateString(yesterday);
+    const thisYear = yesterday.getFullYear();
 
     switch(period) {
         case Periods.SEVEN_DAY:
@@ -69,6 +71,16 @@ function getStartEndDates(period, channelBirthdate) {
             return {
                 startDate: formatDateString(new Date(yesterday.getTime() - DAY_IN_MILLISECONDS * 30)),
                 endDate: yesterdayString
+            };
+        case Periods.THIS_YEAR:
+            return {
+                startDate: formatDateString(new Date(thisYear, 0, 1)),
+                endDate: todayString
+            };
+        case Periods.LAST_YEAR:
+            return {
+                startDate: formatDateString(new Date(thisYear - 1, 0, 1)),
+                endDate: formatDateString(new Date(thisYear - 1, 11, 31))
             };
         case Periods.YEAR:
             return {
