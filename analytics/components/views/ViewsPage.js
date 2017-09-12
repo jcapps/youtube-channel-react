@@ -267,10 +267,15 @@ export class ViewsPage extends React.PureComponent {
     }
 
     renderContentTypeFilter() {
+        const contentType = this.state.contentType;
         const filtersArray = this.state.filters;
-        for (let i = 0; i < filtersArray.length; i++) {
-            if (filtersArray[i].key == 'video' || filtersArray[i].key == 'playlist')
+        if (contentType != ContentTypes.ALL) {
+            if (contentType == ContentTypes.CHANNELS)
                 return;
+            for (let i = 0; i < filtersArray.length; i++) {
+                if (filtersArray[i].key == 'video' || filtersArray[i].key == 'playlist')
+                    return;
+            }
         }
         return (
             <ContentTypeFilter
