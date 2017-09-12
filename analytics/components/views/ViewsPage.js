@@ -6,6 +6,8 @@ import * as d3 from 'd3';
 import lineGraph from '../../graphs/lineGraph';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
+import addGraphFilter from '../../helpers/addGraphFilter';
+import removeGraphFilter from '../../helpers/removeGraphFilter';
 import filterArrayIncludes from '../../helpers/filterArrayIncludes';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as viewsActions from '../../actions/viewsActions';
@@ -92,75 +94,8 @@ export class ViewsPage extends React.PureComponent {
     }
 
     addFilter(searchResult) {
-        const kind = searchResult.id.kind;
-
-        let newContentType = ContentTypes.ALL;
-        let newFiltersArray = Object.assign([], this.state.filters);
-        let newAddedFiltersArray = Object.assign([], this.state.addedFilters);
-        newAddedFiltersArray.push(searchResult);
-
-        if (kind == 'youtube#channel') {
-            newContentType = ContentTypes.CHANNELS;
-            const newFilter = {key: 'channel', value: searchResult.id.channelId};
-            if (!filterArrayIncludes(this.state.filters, newFilter)) {
-                let containsChannelFilter = false;
-                for (let i = 0; i < newFiltersArray.length; i++) {
-                    if (newFiltersArray[i].key == 'channel') {
-                        containsChannelFilter = true;
-                        newFiltersArray[i].value.push(newFilter.value);
-                        break;
-                    }
-                }
-                if (!containsChannelFilter) {
-                    const newFilterEntry = {key: newFilter.key, value: [newFilter.value]};
-                    newFiltersArray.push(newFilterEntry);
-                }
-            }
-        }
-        if (kind == 'youtube#playlist') {
-            newContentType = ContentTypes.PLAYLISTS;
-            const newFilter1 = {key: 'isCurated', value: '1'};
-            const newFilter2 = {key: 'playlist', value: searchResult.id.playlistId};
-            const newFilters = [newFilter1, newFilter2];
-            newFilters.forEach((filter) => {
-                if (!filterArrayIncludes(this.state.filters, filter)) {
-                    if (filter.key == 'playlist') {
-                        let containsPlaylistFilter = false;
-                        for (let i = 0; i < newFiltersArray.length; i++) {
-                            if (newFiltersArray[i].key == 'playlist') {
-                                containsPlaylistFilter = true;
-                                newFiltersArray[i].value.push(filter.value);
-                                break;
-                            }
-                        }
-                        if (!containsPlaylistFilter) {
-                            const newFilterEntry = {key: filter.key, value: [filter.value]};
-                            newFiltersArray.push(newFilterEntry);
-                        }
-                    } else {
-                        newFiltersArray.push(filter);
-                    }
-                }
-            });
-        }
-        if (kind == 'youtube#video') {
-            newContentType = ContentTypes.VIDEOS;
-            const newFilter = {key: 'video', value: searchResult.id.videoId};
-            if (!filterArrayIncludes(this.state.filters, newFilter)) {
-                let containsVideoFilter = false;
-                for (let i = 0; i < newFiltersArray.length; i++) {
-                    if (newFiltersArray[i].key == 'video') {
-                        containsVideoFilter = true;
-                        newFiltersArray[i].value.push(newFilter.value);
-                        break;
-                    }
-                }
-                if (!containsVideoFilter) {
-                    const newFilterEntry = {key: newFilter.key, value: [newFilter.value]};
-                    newFiltersArray.push(newFilterEntry);
-                }
-            }
-        }
+        const {newFiltersArray, newAddedFiltersArray, newContentType}
+            = addGraphFilter(searchResult, this.state.filters, this.state.addedFilters);
 
         this.setState({
             contentType: newContentType,
@@ -178,94 +113,16 @@ export class ViewsPage extends React.PureComponent {
             element = element.parentNode;
         }
         const filterInfo = JSON.parse(element.children[0].value);
-        const kind = filterInfo.id.kind;
 
-        let shouldClearContentTypeFilter = false;
-        let newFiltersArray = Object.assign([], this.state.filters);
-        let newAddedFiltersArray = Object.assign([], this.state.addedFilters);
-
-        for (let i = 0; i < newAddedFiltersArray.length; i++) {
-            if (newAddedFiltersArray[i].etag == filterInfo.etag) {
-                newAddedFiltersArray.splice(i, 1);
-                break;
-            }
-        }
-
-        if (kind == 'youtube#channel') {
-            for (let i = 0; i < newFiltersArray.length; i++) {
-                if (newFiltersArray[i].key == 'channel') {
-                    for (let j = 0; j < newFiltersArray[i].value.length; j++) {
-                        if (newFiltersArray[i].value[j] == filterInfo.id.channelId) {
-                            newFiltersArray[i].value.splice(j, 1);
-                            if (newFiltersArray[i].value.length == 0) {
-                                shouldClearContentTypeFilter = true;
-                                newFiltersArray.splice(i, 1);
-                                for (let k = 0; k < newFiltersArray.length; k++) {
-                                    if (newFiltersArray[k].key == 'isCurated') { // In case used ContentTypeFilter to filter playlists
-                                        newFiltersArray.splice(k, 1);
-                                        break;
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        if (kind == 'youtube#playlist') {
-            for (let i = 0; i < newFiltersArray.length; i++) {
-                if (newFiltersArray[i].key == 'playlist') {
-                    for (let j = 0; j < newFiltersArray[i].value.length; j++) {
-                        if (newFiltersArray[i].value[j] == filterInfo.id.playlistId) {
-                            newFiltersArray[i].value.splice(j, 1);
-                            if (newFiltersArray[i].value.length == 0) {
-                                shouldClearContentTypeFilter = true;
-                                newFiltersArray.splice(i, 1);
-                                for (let k = 0; k < newFiltersArray.length; k++) {
-                                    if (newFiltersArray[k].key == 'isCurated') {
-                                        newFiltersArray.splice(k, 1);
-                                        break;
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        if (kind == 'youtube#video') {
-            for (let i = 0; i < newFiltersArray.length; i++) {
-                if (newFiltersArray[i].key == 'video') {
-                    for (let j = 0; j < newFiltersArray[i].value.length; j++) {
-                        if (newFiltersArray[i].value[j] == filterInfo.id.videoId) {
-                            newFiltersArray[i].value.splice(j, 1);
-                            if (newFiltersArray[i].value.length == 0) {
-                                shouldClearContentTypeFilter = true;
-                                newFiltersArray.splice(i, 1);
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
+        const {newFiltersArray, newAddedFiltersArray, shouldClearContentTypeFilter}
+            = removeGraphFilter(filterInfo, this.state.filters, this.state.addedFilters);
         
+        this.setState({
+            filters: newFiltersArray,
+            addedFilters: newAddedFiltersArray
+        });
         if (shouldClearContentTypeFilter) {
-            this.setState({
-                contentType: ContentTypes.ALL,
-                filters: newFiltersArray,
-                addedFilters: newAddedFiltersArray
-            });
-        } else {
-            this.setState({
-                filters: newFiltersArray,
-                addedFilters: newAddedFiltersArray
-            });
+            this.setState({contentType: ContentTypes.ALL});
         }
 
         const {timePeriod, startEndDates} = this.state;
