@@ -3,7 +3,7 @@ import computeVoronoi from '../helpers/computeVoronoi';
 
 const svgWidth = 960;
 const svgHeight = 400;
-const svgMargin = {top: 20, right: 25, bottom: 30, left: 50};
+const svgMargin = {top: 20, right: 25, bottom: 40, left: 50};
 const width = svgWidth - svgMargin.left - svgMargin.right; // Does not include y-axis
 const height = svgHeight - svgMargin.top - svgMargin.bottom; // Does not include x-axis
 const xAxisLabelPadding = 60; // 60 = ~width in px of a date label with reasonable padding
@@ -252,6 +252,16 @@ const prepareVoronoiCanvas = (voronoiDiagram, xyInfo) => {
         });
 };
 
+// Create footnote for graph
+const createGraphFootnote = () => {
+    return d3.select('svg#lineGraph').append('text')
+        .attr('id', 'graphFootnote')
+        .attr('transform', 'translate(' + svgMargin.left + ',' + (svgHeight - 5) + ')')
+        .text('* Data from the past 48 hours may not yet be available.')
+        .style('font-size', '10px')
+        .style('font-style', 'italic');
+}
+
 // Create a line graph
 const lineGraph = (container, dataInfo, xColumnName, yColumnName) => {
     const {x, y} = createXYScales();
@@ -277,6 +287,8 @@ const lineGraph = (container, dataInfo, xColumnName, yColumnName) => {
 
     const voronoiDiagram = computeVoronoi(width, height, data, xyInfo);
     prepareVoronoiCanvas(voronoiDiagram, xyInfo);
+    
+    createGraphFootnote();
 };
 
 export default lineGraph;
