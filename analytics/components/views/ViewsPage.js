@@ -80,7 +80,10 @@ export class ViewsPage extends React.PureComponent {
     changeTimePeriod(timePeriod, startEndDates) {
         const filters = this.state.filters;
         if (timePeriod != this.state.timePeriod) {
-            this.setState({timePeriod: timePeriod});
+            this.setState({
+                timePeriod: timePeriod,
+                startEndDates: startEndDates
+            });
             if (timePeriod == Periods.CUSTOM) return;
         } else if (timePeriod == Periods.CUSTOM) {
             this.setState({startEndDates: startEndDates});
