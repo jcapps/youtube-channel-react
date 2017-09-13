@@ -19,3 +19,7 @@ export function searchingChannel() {
 export function gettingViews() {
     return {type: types.GETTING_VIEWS};
 }
+
+export function gettingTotalViews() {
+    return {type: types.GETTING_TOTAL_VIEWS};
+}

@@ -219,6 +219,7 @@ export class ViewsPage extends React.PureComponent {
                     {this.renderAddedFilters()}
                     {this.renderClearAllFilters()}
                 </div>
+                <h4>Total Views: {this.props.totalViews.toLocaleString()}</h4>
                 <div id="views-graph" />
             </div>
         );
@@ -228,12 +229,14 @@ export class ViewsPage extends React.PureComponent {
 ViewsPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     views: PropTypes.object.isRequired,
+    totalViews: PropTypes.number.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 export function mapStateToProps(state) {
     return {
         views: state.views,
+        totalViews: state.totalViews,
         isLoading: state.ajaxCallsInProgress.views > 0
     };
 }
@@ -248,7 +251,8 @@ export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading) || 
-            (prev.views !== next.views)
+            (prev.views !== next.views) || 
+            (prev.totalViews != next.totalViews)
         );
     }
 };

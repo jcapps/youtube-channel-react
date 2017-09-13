@@ -53,19 +53,22 @@ function isLoginActionSuccessType(type) {
 
 function isViewsActionStartingType(type) {
     return (
-        type == types.GETTING_VIEWS
+        type == types.GETTING_VIEWS || 
+        type == types.GETTING_TOTAL_VIEWS
     );
 }
 
 function isViewsActionSuccessType(type) {
     return (
-        type == types.GET_VIEWS_SUCCESS
+        type == types.GET_VIEWS_SUCCESS || 
+        type == types.GET_TOTAL_VIEWS_SUCCESS
     );
 }
 
 function isViewsActionErrorType(type) {
     return (
-        type == types.GET_VIEWS_ERROR
+        type == types.GET_VIEWS_ERROR || 
+        type == types.GET_TOTAL_VIEWS_ERROR
     );
 }
 

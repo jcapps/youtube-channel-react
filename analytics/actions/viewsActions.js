@@ -15,6 +15,14 @@ export function getViewsError() {
     return { type: types.GET_VIEWS_ERROR };
 }
 
+export function getTotalViewsSuccess(report) {
+    return { type: types.GET_TOTAL_VIEWS_SUCCESS, report };
+}
+
+export function getTotalViewsError() {
+    return { type: types.GET_TOTAL_VIEWS_ERROR };
+}
+
 export function getViews(
     period = Periods.TWENTY_EIGHT_DAY,
     dateRange = null,
@@ -37,6 +45,7 @@ export function getViews(
                 return analyticsActions.getReport(startDate, endDate, 'views', dimensions, filters).then(report => {
                     const reportData = zeroMissingData(report, startDate, endDate);
                     dispatch(getViewsSuccess(reportData));
+                    getTotalViews(dispatch, dateRange, filters);
                 }).catch(error => {
                     dispatch(getViewsError());
                     throw(error);
@@ -46,6 +55,17 @@ export function getViews(
             }
         });
     };
+}
+
+function getTotalViews(dispatch, dateRange, filters = '') {
+    const {startDate, endDate} = dateRange;
+    dispatch(ajax.gettingTotalViews());
+    return analyticsActions.getReport(startDate, endDate, 'views', null, filters).then(report => {
+        dispatch(getTotalViewsSuccess(report));
+    }).catch(error => {
+        dispatch(getTotalViewsError());
+        throw(error);
+    });
 }
 
 function getStartEndDates(period, channelBirthdate) {
