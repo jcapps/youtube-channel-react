@@ -3,9 +3,7 @@ import filterArrayIncludes from './filterArrayIncludes';
 
 const addGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
     let newFiltersArray = Object.assign([], filtersArray);
-    let newAddedFiltersArray = Object.assign([], addedFiltersArray);
-
-    newAddedFiltersArray.push(filterInfo);
+    let newAddedFiltersArray = Object.assign([], addedFiltersArray);  
 
     let filterKey = '';
     let itemId = '';
@@ -42,6 +40,7 @@ const addGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
                 const newFilterEntry = {key: newFilter.key, value: [newFilter.value]};
                 newFiltersArray.push(newFilterEntry);
             }
+            newAddedFiltersArray.push(filterInfo);
         }
     }
     if (kind == 'youtube#playlist') {
