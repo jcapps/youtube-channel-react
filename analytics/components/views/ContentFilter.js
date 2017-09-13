@@ -56,10 +56,7 @@ class ContentFilter extends React.PureComponent {
     }
 
     addContentFilter(searchResult) {
-        this.setState({
-            isDropdownOpen: false,
-            resultsArray: []
-        });
+        this.setState({resultsArray: []});
         this.props.addFilter(searchResult);
     }
 

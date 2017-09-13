@@ -17,7 +17,7 @@ const DownshiftSectioned = ({items, itemToString, Result, onFocus, isOpen, ...ot
                             onFocus: onFocus,
                             placeholder: 'Search...'
                         })} />
-                        {isOpen
+                        {isOpen && items.length > 0
                             ? <div className="dropdown">
                                 {items.reduce((itemsArray, section, sectionIndex) => {
                                     if (section.results.length > 0) {
