@@ -7,6 +7,7 @@ $sidebar-width: 200px;
     width: $sidebar-width;
     font-weight: bold;
     background-color: $sidebar-primary;
+    z-index: 9;
 
     nav {
         ul {
