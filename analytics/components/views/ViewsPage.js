@@ -29,9 +29,11 @@ export class ViewsPage extends React.PureComponent {
         this.changeContentType = this.changeContentType.bind(this);
         this.changeTimePeriod = this.changeTimePeriod.bind(this);
         this.addFilter = this.addFilter.bind(this);
+        this.removeFilter = this.removeFilter.bind(this);
+        this.clearFilters = this.clearFilters.bind(this);
         this.renderContentTypeFilter = this.renderContentTypeFilter.bind(this);
         this.renderAddedFilters = this.renderAddedFilters.bind(this);
-        this.removeFilter = this.removeFilter.bind(this);
+        this.renderClearAllFilters = this.renderClearAllFilters.bind(this);
     }
 
     componentWillMount() {
@@ -129,6 +131,31 @@ export class ViewsPage extends React.PureComponent {
         this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
 
+    clearFilters() {
+        let addedFiltersArray = Object.assign([], this.state.addedFilters);
+        let filtersArray = [];
+        let shouldResetContentTypeFilter = false;
+
+        while (addedFiltersArray.length > 0) {
+            const {newFiltersArray, newAddedFiltersArray, shouldClearContentTypeFilter}
+                = removeGraphFilter(addedFiltersArray[0], this.state.filters, addedFiltersArray);
+            addedFiltersArray = newAddedFiltersArray;
+            filtersArray = newFiltersArray;
+            shouldResetContentTypeFilter = shouldClearContentTypeFilter;
+        }
+
+        this.setState({
+            filters: filtersArray,
+            addedFilters: addedFiltersArray
+        });
+        if (shouldResetContentTypeFilter) {
+            this.setState({contentType: ContentTypes.ALL});
+        }
+        
+        const {timePeriod, startEndDates} = this.state;
+        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(filtersArray));
+    }
+
     renderContentTypeFilter() {
         const contentType = this.state.contentType;
         const filtersArray = this.state.filters;
@@ -163,6 +190,13 @@ export class ViewsPage extends React.PureComponent {
         });
     }
 
+    renderClearAllFilters() {
+        if (this.state.addedFilters.length > 0) {
+            return <button onClick={this.clearFilters}>Clear All Filters</button>;
+        }
+        return;
+    }
+
     render() {
         if (this.props.isLoading) return <div/>;
         if (this.props.views.columnHeaders) this.renderLineGraphD3(this.props.views);
@@ -183,6 +217,7 @@ export class ViewsPage extends React.PureComponent {
                 </div>
                 <div id="added-filters">
                     {this.renderAddedFilters()}
+                    {this.renderClearAllFilters()}
                 </div>
                 <div id="views-graph" />
             </div>
