@@ -1,5 +1,6 @@
 $white: white;
-$lightgray: #C1C1C1;
+$lightgray: lightgray;
+$slategray: #C1C1C1;
 $gray: gray;
 $darkgray: darkgray;
 $black: #1a1a1a;
@@ -14,7 +15,7 @@ $sidebar-contrast: $white;
 
 /* Line Graph colors */
 $line: $steelblue;
-$grid-line: $lightgray;
+$grid-line: $slategray;
 $highlight: $red;
 
 /* Tooltip colors */
@@ -37,3 +38,9 @@ $filter-color: $white;
 $filter-background: $black;
 $filter-delete: $lightgray;
 $filter-delete-hover: $red;
+
+$clear-filters-color: $red;
+$clear-filters-background: $lightgray;
+$clear-filters-color-hover: $white;
+$clear-filters-background-hover: $red;
+$clear-filters-background-active: darken($red, 10%);

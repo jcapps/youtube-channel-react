@@ -192,7 +192,7 @@ export class ViewsPage extends React.PureComponent {
 
     renderClearAllFilters() {
         if (this.state.addedFilters.length > 0) {
-            return <button onClick={this.clearFilters}>Clear All Filters</button>;
+            return <button id="clear-all-filters" onClick={this.clearFilters}>Clear All Filters</button>;
         }
         return;
     }
