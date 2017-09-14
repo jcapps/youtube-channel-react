@@ -237,8 +237,13 @@ export class ViewsPage extends React.PureComponent {
             const totalStatsColumns = totalStats.columnHeaders.map(item => {
                 return item.name;
             });
-            totalViews = totalStats.rows[0][totalStatsColumns.indexOf('views')];
-            totalEstimatedMinutesWatched = totalStats.rows[0][totalStatsColumns.indexOf('estimatedMinutesWatched')];
+            if (totalViews.rows) {
+                totalViews = totalStats.rows[0][totalStatsColumns.indexOf('views')];
+                totalEstimatedMinutesWatched = totalStats.rows[0][totalStatsColumns.indexOf('estimatedMinutesWatched')];
+            } else {
+                totalViews = 0;
+                totalEstimatedMinutesWatched = 0;
+            }
         }
 
         return (
