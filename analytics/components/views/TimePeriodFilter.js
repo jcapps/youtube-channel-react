@@ -6,20 +6,31 @@ import Periods from '../../globals/Periods';
 class TimePeriodFilter extends React.PureComponent {
     constructor() {
         super();
-        this.state = {
-            timePeriod: Periods.TWENTY_EIGHT_DAY
-        };
         this.changeTimePeriod = this.changeTimePeriod.bind(this);
         this.setDateRange = this.setDateRange.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.props.timePeriod == Periods.CUSTOM) {
+            this.showCustomRange();
+        }
+    }
+
+    showCustomRange() {
+        $('#select-custom-range').removeClass('hidden');
+    }
+
+    hideCustomRange() {
+        $('#select-custom-range').addClass('hidden');
     }
     
     changeTimePeriod(e) {
         const timePeriod = e.target.value;
 
         if (timePeriod == Periods.CUSTOM) {
-            $('#select-custom-range').removeClass('hidden');
+            this.showCustomRange();
         } else {
-            $('#select-custom-range').addClass('hidden');
+            this.hideCustomRange();
         }
         this.props.changeTimePeriod(timePeriod, null);
     }
