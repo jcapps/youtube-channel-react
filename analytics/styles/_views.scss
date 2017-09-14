@@ -139,4 +139,10 @@
             }
         }
     }
+
+    .loading-spinner {
+        position: fixed;
+        top: calc(50% - 25px + 50px); // 25px = half height of spinner, 50px = half height of header
+        left: calc(50% - 25px + 100px); // 25px = half width of spinner, 100px = half width of sidebar
+    }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import $ from 'jquery';
 import * as d3 from 'd3';
 import lineGraph from '../../graphs/lineGraph';
 import ContentTypes from '../../globals/ContentTypes';
@@ -47,6 +48,15 @@ export class ViewsPage extends React.PureComponent {
         window.scrollTo(0, 0);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.isLoading != nextProps.isLoading ||
+            this.props.views !== nextProps.views ||
+            this.props.totalStats !== nextProps.totalStats) {
+                return true;
+        }
+        return false;
+    }
+
     componentDidUpdate() {
         if (!this.props.isLoading && this.props.views.columnHeaders)
             this.renderLineGraphD3(this.props.views);
@@ -56,6 +66,15 @@ export class ViewsPage extends React.PureComponent {
         const container = d3.select('#views-graph');
         container.html('');
         lineGraph(container, viewsInfo, 'day', 'views');
+        this.hideLoadingSpinner();
+    }
+
+    showLoadingSpinner() {
+        $('#views-page .loading-spinner').removeClass('hidden');
+    }
+
+    hideLoadingSpinner() {
+        $('#views-page .loading-spinner').addClass('hidden');
     }
 
     changeContentType(contentType) {
@@ -81,6 +100,7 @@ export class ViewsPage extends React.PureComponent {
             filters: newFiltersArray
         });
 
+        this.showLoadingSpinner();
         const {timePeriod, startEndDates} = this.state;
         this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
@@ -96,6 +116,8 @@ export class ViewsPage extends React.PureComponent {
         } else if (timePeriod == Periods.CUSTOM) {
             this.setState({startEndDates: startEndDates});
         }
+
+        this.showLoadingSpinner();
         this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(filters));
     }
 
@@ -109,6 +131,7 @@ export class ViewsPage extends React.PureComponent {
             addedFilters: newAddedFiltersArray
         });
 
+        this.showLoadingSpinner();
         const {timePeriod, startEndDates} = this.state;
         this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
@@ -131,6 +154,7 @@ export class ViewsPage extends React.PureComponent {
             this.setState({contentType: ContentTypes.ALL});
         }
 
+        this.showLoadingSpinner();
         const {timePeriod, startEndDates} = this.state;
         this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
@@ -156,6 +180,7 @@ export class ViewsPage extends React.PureComponent {
             this.setState({contentType: ContentTypes.ALL});
         }
         
+        this.showLoadingSpinner();
         const {timePeriod, startEndDates} = this.state;
         this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(filtersArray));
     }
@@ -204,6 +229,7 @@ export class ViewsPage extends React.PureComponent {
     render() {
         if (this.props.isLoading) return <div/>;
 
+        const loadingSpinner = require('../../images/loading.gif');
         let totalViews = 0;
         let totalEstimatedMinutesWatched = 0;
         const totalStats = this.props.totalStats;
@@ -236,6 +262,7 @@ export class ViewsPage extends React.PureComponent {
                 <h4>Total Views: {totalViews.toLocaleString()}</h4>
                 <h4>Total Estimated Minutes Watched: {totalEstimatedMinutesWatched.toLocaleString()}</h4>
                 <div id="views-graph" />
+                <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
         );
     }

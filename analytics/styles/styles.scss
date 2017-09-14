@@ -11,6 +11,11 @@
         border: 2px solid $gray;
     }
 
+    .loading-spinner {
+        height: 50px;
+        width: 50px;
+    }
+
     #analytics-content {
         display: flex;
         margin: 0 auto;
