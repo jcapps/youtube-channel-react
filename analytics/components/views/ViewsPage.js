@@ -47,9 +47,13 @@ export class ViewsPage extends React.PureComponent {
         window.scrollTo(0, 0);
     }
 
+    componentDidUpdate() {
+        if (!this.props.isLoading && this.props.views.columnHeaders)
+            this.renderLineGraphD3(this.props.views);
+    }
+
     renderLineGraphD3(viewsInfo) {
         const container = d3.select('#views-graph');
-        if (!container._groups[0][0]) return;
         container.html('');
         lineGraph(container, viewsInfo, 'day', 'views');
     }
@@ -199,7 +203,17 @@ export class ViewsPage extends React.PureComponent {
 
     render() {
         if (this.props.isLoading) return <div/>;
-        if (this.props.views.columnHeaders) this.renderLineGraphD3(this.props.views);
+
+        let totalViews = 0;
+        let totalEstimatedMinutesWatched = 0;
+        const totalStats = this.props.totalStats;
+        if (totalStats.columnHeaders) {
+            const totalStatsColumns = totalStats.columnHeaders.map(item => {
+                return item.name;
+            });
+            totalViews = totalStats.rows[0][totalStatsColumns.indexOf('views')];
+            totalEstimatedMinutesWatched = totalStats.rows[0][totalStatsColumns.indexOf('estimatedMinutesWatched')];
+        }
 
         return (
             <div id="views-page">
@@ -219,7 +233,8 @@ export class ViewsPage extends React.PureComponent {
                     {this.renderAddedFilters()}
                     {this.renderClearAllFilters()}
                 </div>
-                <h4>Total Views: {this.props.totalViews.toLocaleString()}</h4>
+                <h4>Total Views: {totalViews.toLocaleString()}</h4>
+                <h4>Total Estimated Minutes Watched: {totalEstimatedMinutesWatched.toLocaleString()}</h4>
                 <div id="views-graph" />
             </div>
         );
@@ -229,14 +244,14 @@ export class ViewsPage extends React.PureComponent {
 ViewsPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     views: PropTypes.object.isRequired,
-    totalViews: PropTypes.number.isRequired,
+    totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 export function mapStateToProps(state) {
     return {
         views: state.views,
-        totalViews: state.totalViews,
+        totalStats: state.totalStats,
         isLoading: state.ajaxCallsInProgress.views > 0
     };
 }
@@ -252,7 +267,7 @@ export const connectOptions = {
         return !(
             (!next.isLoading) || 
             (prev.views !== next.views) || 
-            (prev.totalViews != next.totalViews)
+            (prev.totalStats !== next.totalStats)
         );
     }
 };

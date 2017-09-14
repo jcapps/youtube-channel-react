@@ -3,7 +3,7 @@ export default {
     searchChannelResults: [],
     searchPlaylistResults: [],
     searchVideoResults: [],
-    totalViews: 0,
+    totalStats: {},
     views: {},
     isAuthenticated: false,
     ajaxCallsInProgress: {

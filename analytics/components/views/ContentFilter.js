@@ -33,6 +33,10 @@ class ContentFilter extends React.PureComponent {
         });
     }
 
+    componentWillUnmount() {
+        $(document).off('click');
+    }
+
     componentWillReceiveProps(nextProps) {
         if (this.props.searchChannelResults != nextProps.searchChannelResults || 
             this.props.searchPlaylistResults != nextProps.searchPlaylistResults || 

@@ -5,7 +5,7 @@ import channelInfo from './channelInfoReducer';
 import searchChannelResults from './searchChannelResultsReducer';
 import searchPlaylistResults from './searchPlaylistResultsReducer';
 import searchVideoResults from './searchVideoResultsReducer';
-import totalViews from './totalViewsReducer';
+import totalStats from './totalStatsReducer';
 import views from './viewsReducer';
 
 const rootReducer = combineReducers({
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
     searchChannelResults,
     searchPlaylistResults,
     searchVideoResults,
-    totalViews,
+    totalStats,
     views
 });
 
