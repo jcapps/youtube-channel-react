@@ -30,8 +30,9 @@ class YouTubeAnalyticsApi {
                         GoogleAuth.signIn().then(() => {
                             const isLoggedIn = GoogleAuth.isSignedIn.get();
                             if (isLoggedIn) {
-                                localStorage.setItem('access_token', GoogleAuth.$K.Q7.access_token);
-                                localStorage.setItem('expires_at', GoogleAuth.$K.Q7.expires_at)
+                                const tokenInfo = GoogleAuth.j8.$K.Q7;
+                                localStorage.setItem('access_token', tokenInfo.access_token);
+                                localStorage.setItem('expires_at', tokenInfo.expires_at)
                                 toastr.success('Signed in!');
                             } else {
                                 toastr.error('Unable to sign in.');
