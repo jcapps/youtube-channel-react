@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
-import * as d3 from 'd3';
-import lineGraph from '../../graphs/lineGraph';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import addGraphFilter from '../../helpers/addGraphFilter';
@@ -16,6 +14,7 @@ import * as watchTimeActions from '../../actions/watchTimeActions';
 import ContentFilter from '../common/filtering/ContentFilter';
 import ContentTypeFilter from '../common/filtering/ContentTypeFilter';
 import TimePeriodFilter from '../common/filtering/TimePeriodFilter';
+import LineGraph from '../common/graphs/LineGraph';
 
 export class WatchTimePage extends React.PureComponent {
     constructor() {
@@ -27,7 +26,6 @@ export class WatchTimePage extends React.PureComponent {
             filters: [],
             addedFilters: []
         };
-        this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
         this.changeContentType = this.changeContentType.bind(this);
         this.changeTimePeriod = this.changeTimePeriod.bind(this);
         this.addFilter = this.addFilter.bind(this);
@@ -36,6 +34,7 @@ export class WatchTimePage extends React.PureComponent {
         this.renderContentTypeFilter = this.renderContentTypeFilter.bind(this);
         this.renderAddedFilters = this.renderAddedFilters.bind(this);
         this.renderClearAllFilters = this.renderClearAllFilters.bind(this);
+        this.renderLineGraph = this.renderLineGraph.bind(this);
     }
 
     componentWillMount() {
@@ -59,19 +58,6 @@ export class WatchTimePage extends React.PureComponent {
             return true;
         }
         return false;
-    }
-
-    componentDidUpdate() {
-        if (!this.props.isLoading && this.props.watchTime.columnHeaders)
-            this.renderLineGraphD3(this.props.watchTime);
-    }
-
-    renderLineGraphD3(viewsAndAverageDurationInfo) {
-        const watchTimeInfo = computeWatchTimes(viewsAndAverageDurationInfo);
-        const container = d3.select('#watch-time-graph');
-        container.html('');
-        lineGraph(container, watchTimeInfo, 'day', 'watchTime');
-        this.hideLoadingSpinner();
     }
 
     showLoadingSpinner() {
@@ -231,6 +217,20 @@ export class WatchTimePage extends React.PureComponent {
         return;
     }
 
+    renderLineGraph() {
+        if (!this.props.watchTime.columnHeaders) return <div/>;
+
+        const watchTimeInfo = computeWatchTimes(this.props.watchTime);
+        return (
+            <LineGraph
+                dataInfo={watchTimeInfo}
+                xColumnName="day"
+                yColumnName="watchTime"
+                onRenderFinish={this.hideLoadingSpinner}
+            />
+        );
+    }
+
     render() {
         if (this.props.isLoading) return <div/>;
 
@@ -250,7 +250,7 @@ export class WatchTimePage extends React.PureComponent {
                 totalEstimatedMinutesWatched = 0;
             }
         }
-
+        
         return (
             <div id="watch-time-page">
                 <h2>Watch Time</h2>
@@ -271,7 +271,7 @@ export class WatchTimePage extends React.PureComponent {
                 </div>
                 <h4>Total Views: {totalViews.toLocaleString()}</h4>
                 <h4>Total Estimated Minutes Watched: {totalEstimatedMinutesWatched.toLocaleString()}</h4>
-                <div id="watch-time-graph" />
+                {this.renderLineGraph()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
         );

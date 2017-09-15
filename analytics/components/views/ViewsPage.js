@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
-import * as d3 from 'd3';
-import lineGraph from '../../graphs/lineGraph';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import addGraphFilter from '../../helpers/addGraphFilter';
@@ -15,6 +13,7 @@ import * as viewsActions from '../../actions/viewsActions';
 import ContentFilter from '../common/filtering/ContentFilter';
 import ContentTypeFilter from '../common/filtering/ContentTypeFilter';
 import TimePeriodFilter from '../common/filtering/TimePeriodFilter';
+import LineGraph from '../common/graphs/LineGraph';
 
 export class ViewsPage extends React.PureComponent {
     constructor() {
@@ -26,7 +25,6 @@ export class ViewsPage extends React.PureComponent {
             filters: [],
             addedFilters: []
         };
-        this.renderLineGraphD3 = this.renderLineGraphD3.bind(this);
         this.changeContentType = this.changeContentType.bind(this);
         this.changeTimePeriod = this.changeTimePeriod.bind(this);
         this.addFilter = this.addFilter.bind(this);
@@ -35,6 +33,7 @@ export class ViewsPage extends React.PureComponent {
         this.renderContentTypeFilter = this.renderContentTypeFilter.bind(this);
         this.renderAddedFilters = this.renderAddedFilters.bind(this);
         this.renderClearAllFilters = this.renderClearAllFilters.bind(this);
+        this.renderLineGraph = this.renderLineGraph.bind(this);
     }
 
     componentWillMount() {
@@ -58,18 +57,6 @@ export class ViewsPage extends React.PureComponent {
             return true;
         }
         return false;
-    }
-
-    componentDidUpdate() {
-        if (!this.props.isLoading && this.props.views.columnHeaders)
-            this.renderLineGraphD3(this.props.views);
-    }
-
-    renderLineGraphD3(viewsInfo) {
-        const container = d3.select('#views-graph');
-        container.html('');
-        lineGraph(container, viewsInfo, 'day', 'views');
-        this.hideLoadingSpinner();
     }
 
     showLoadingSpinner() {
@@ -229,6 +216,19 @@ export class ViewsPage extends React.PureComponent {
         return;
     }
 
+    renderLineGraph() {
+        if (!this.props.views.columnHeaders) return <div/>;
+
+        return (
+            <LineGraph
+                dataInfo={this.props.views}
+                xColumnName="day"
+                yColumnName="views"
+                onRenderFinish={this.hideLoadingSpinner}
+            />
+        );
+    }
+
     render() {
         if (this.props.isLoading) return <div/>;
 
@@ -269,7 +269,7 @@ export class ViewsPage extends React.PureComponent {
                 </div>
                 <h4>Total Views: {totalViews.toLocaleString()}</h4>
                 <h4>Total Estimated Minutes Watched: {totalEstimatedMinutesWatched.toLocaleString()}</h4>
-                <div id="views-graph" />
+                {this.renderLineGraph()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
         );
