@@ -72,6 +72,27 @@ function isViewsActionErrorType(type) {
     );
 }
 
+function isWatchTimeActionStartingType(type) {
+    return (
+        type == types.GETTING_WATCH_TIME || 
+        type == types.GETTING_TOTAL_STATS
+    );
+}
+
+function isWatchTimeActionSuccessType(type) {
+    return (
+        type == types.GET_WATCH_TIME_SUCCESS || 
+        type == types.GET_TOTAL_STATS_SUCCESS
+    );
+}
+
+function isWatchTimeActionErrorType(type) {
+    return (
+        type == types.GET_WATCH_TIME_ERROR || 
+        type == types.GET_TOTAL_STATS_ERROR
+    );
+}
+
 export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgress, action) {
     let currentState = Object.assign({}, state);
 
@@ -107,6 +128,15 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isViewsActionErrorType(action.type)) {
         currentState.views -= 1;
+    }
+    if (isWatchTimeActionStartingType(action.type)) {
+        currentState.watchTime += 1;
+    }
+    if (isWatchTimeActionSuccessType(action.type)) {
+        currentState.watchTime -= 1;
+    }
+    if (isWatchTimeActionErrorType(action.type)) {
+        currentState.watchTime -= 1;
     }
 
     return currentState;

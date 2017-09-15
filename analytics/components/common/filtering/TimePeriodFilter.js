@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
-import Periods from '../../globals/Periods';
+import Periods from '../../../globals/Periods';
 
 class TimePeriodFilter extends React.PureComponent {
     constructor() {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as loginActions from '../actions/loginActions';
-import SideBar from './common/SideBar';
+import SideBar from './common/navigation/SideBar';
 import Routes from './Routes';
 
 class App extends React.PureComponent {

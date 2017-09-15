@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ContentTypes from '../../globals/ContentTypes';
+import ContentTypes from '../../../globals/ContentTypes';
 
 class ContentTypeFilter extends React.PureComponent {
     constructor() {

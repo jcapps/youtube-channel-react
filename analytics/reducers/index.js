@@ -7,6 +7,7 @@ import searchPlaylistResults from './searchPlaylistResultsReducer';
 import searchVideoResults from './searchVideoResultsReducer';
 import totalStats from './totalStatsReducer';
 import views from './viewsReducer';
+import watchTime from './watchTimeReducer';
 
 const rootReducer = combineReducers({
     ajaxCallsInProgress,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     searchPlaylistResults,
     searchVideoResults,
     totalStats,
-    views
+    views,
+    watchTime
 });
 
 export default rootReducer;

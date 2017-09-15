@@ -177,11 +177,41 @@ const showAndSetHighlightedDataPoint = (d, xyInfo) => {
         .style('display', '');
 };
 
+// Calculate time from minutes
+const displayTimeNicely = totalTimeInMinutes => {
+    let value = '';
+    if (totalTimeInMinutes < 60) return value;
+
+    const days = Math.floor(totalTimeInMinutes / (60 * 24));
+    const hours = Math.floor((totalTimeInMinutes - (days * 24 * 60)) / 60);
+    const minutes = totalTimeInMinutes - (days * 24 * 60) - (hours * 60);
+
+    if (days > 0 && days != 1) value += days + ' days ';
+    if (days == 1) value += days + ' day ';
+    if (hours > 0 && hours != 1) value += hours + ' hours ';
+    if (hours == 1) value += hours + ' hour ';
+    if (minutes > 0 && minutes != 1) value += minutes + ' minutes ';
+    if (minutes == 1) value += minutes + ' minute ';
+    return value.trim();
+};
+
 // Show tooltip with correct info, and set position over correct point
 const showAndSetTooltip = (d, xyInfo) => {
     // Update tooltip with correct info to display
-    const yLabel = xyInfo.yColumnName.charAt(0).toUpperCase() + xyInfo.yColumnName.slice(1);
-    const yValue = d.get(xyInfo.yColumnName).toLocaleString();
+    let yLabel = xyInfo.yColumnName;
+    if (xyInfo.yColumnName == 'estimatedMinutesWatched') {
+        yLabel = 'Watch time (minutes)'
+    } else {
+        let yLabel = yLabel.replace(/([A-Z])/g, ' $1').trim(); // Add spaces before capital letters
+        yLabel = yLabel.charAt(0).toUpperCase() + yLabel.slice(1); // Capitalize first letter
+    }
+
+    let yValue = d.get(xyInfo.yColumnName).toLocaleString();
+    if (xyInfo.yColumnName == 'estimatedMinutesWatched') {
+        const displayTime = displayTimeNicely(d.get(xyInfo.yColumnName));
+        if (displayTime.length > 0) yValue += ' (' + displayTime + ')';
+    }
+
     const tooltip = d3.select('.tooltip')
         .html(formatTime(d.get(xyInfo.xColumnName)) + '<br/>' + yLabel + ': ' + yValue)
         .style('white-space', 'nowrap')

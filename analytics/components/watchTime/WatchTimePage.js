@@ -11,12 +11,12 @@ import addGraphFilter from '../../helpers/addGraphFilter';
 import removeGraphFilter from '../../helpers/removeGraphFilter';
 import filterArrayIncludes from '../../helpers/filterArrayIncludes';
 import formatFiltersString from '../../helpers/formatFiltersString';
-import * as viewsActions from '../../actions/viewsActions';
+import * as watchTimeActions from '../../actions/watchTimeActions';
 import ContentFilter from '../common/filtering/ContentFilter';
 import ContentTypeFilter from '../common/filtering/ContentTypeFilter';
 import TimePeriodFilter from '../common/filtering/TimePeriodFilter';
 
-export class ViewsPage extends React.PureComponent {
+export class WatchTimePage extends React.PureComponent {
     constructor() {
         super();
         this.state = {
@@ -40,18 +40,18 @@ export class ViewsPage extends React.PureComponent {
     componentWillMount() {
         const {timePeriod, startEndDates} = this.state;
         const filters = formatFiltersString(this.state.filters);
-        this.props.actions.getViews(timePeriod, startEndDates, filters);
+        this.props.actions.getWatchTime(timePeriod, startEndDates, filters);
     }
 
     componentDidMount() {
-        document.title = "Analytics: Views";
+        document.title = "Analytics: Watch Time";
         window.scrollTo(0, 0);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         if (
             this.props.isLoading != nextProps.isLoading ||
-            this.props.views !== nextProps.views ||
+            this.props.watchTime !== nextProps.watchTime ||
             this.props.totalStats !== nextProps.totalStats ||
             (this.state.timePeriod !== nextState.timePeriod && nextState.timePeriod == Periods.CUSTOM)
         ) {
@@ -61,23 +61,23 @@ export class ViewsPage extends React.PureComponent {
     }
 
     componentDidUpdate() {
-        if (!this.props.isLoading && this.props.views.columnHeaders)
-            this.renderLineGraphD3(this.props.views);
+        if (!this.props.isLoading && this.props.watchTime.columnHeaders)
+            this.renderLineGraphD3(this.props.watchTime);
     }
 
-    renderLineGraphD3(viewsInfo) {
-        const container = d3.select('#views-graph');
+    renderLineGraphD3(watchTimeInfo) {
+        const container = d3.select('#watch-time-graph');
         container.html('');
-        lineGraph(container, viewsInfo, 'day', 'views');
+        lineGraph(container, watchTimeInfo, 'day', 'estimatedMinutesWatched');
         this.hideLoadingSpinner();
     }
 
     showLoadingSpinner() {
-        $('#views-page .loading-spinner').removeClass('hidden');
+        $('#watch-time-page .loading-spinner').removeClass('hidden');
     }
 
     hideLoadingSpinner() {
-        $('#views-page .loading-spinner').addClass('hidden');
+        $('#watch-time-page .loading-spinner').addClass('hidden');
     }
 
     changeContentType(contentType) {
@@ -105,7 +105,7 @@ export class ViewsPage extends React.PureComponent {
 
         this.showLoadingSpinner();
         const {timePeriod, startEndDates} = this.state;
-        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
+        this.props.actions.getWatchTime(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
 
     changeTimePeriod(timePeriod, startEndDates) {
@@ -121,7 +121,7 @@ export class ViewsPage extends React.PureComponent {
         }
 
         this.showLoadingSpinner();
-        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(filters));
+        this.props.actions.getWatchTime(timePeriod, startEndDates, formatFiltersString(filters));
     }
 
     addFilter(searchResult) {
@@ -136,7 +136,7 @@ export class ViewsPage extends React.PureComponent {
 
         this.showLoadingSpinner();
         const {timePeriod, startEndDates} = this.state;
-        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
+        this.props.actions.getWatchTime(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
 
     removeFilter(e) {
@@ -159,7 +159,7 @@ export class ViewsPage extends React.PureComponent {
 
         this.showLoadingSpinner();
         const {timePeriod, startEndDates} = this.state;
-        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
+        this.props.actions.getWatchTime(timePeriod, startEndDates, formatFiltersString(newFiltersArray));
     }
 
     clearFilters() {
@@ -185,7 +185,7 @@ export class ViewsPage extends React.PureComponent {
         
         this.showLoadingSpinner();
         const {timePeriod, startEndDates} = this.state;
-        this.props.actions.getViews(timePeriod, startEndDates, formatFiltersString(filtersArray));
+        this.props.actions.getWatchTime(timePeriod, startEndDates, formatFiltersString(filtersArray));
     }
 
     renderContentTypeFilter() {
@@ -250,8 +250,8 @@ export class ViewsPage extends React.PureComponent {
         }
 
         return (
-            <div id="views-page">
-                <h2>Views</h2>
+            <div id="watch-time-page">
+                <h2>Estimated Minutes Watched</h2>
                 <div id="filters">
                     <ContentFilter
                         addFilter={this.addFilter}
@@ -269,31 +269,31 @@ export class ViewsPage extends React.PureComponent {
                 </div>
                 <h4>Total Views: {totalViews.toLocaleString()}</h4>
                 <h4>Total Estimated Minutes Watched: {totalEstimatedMinutesWatched.toLocaleString()}</h4>
-                <div id="views-graph" />
+                <div id="watch-time-graph" />
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
         );
     }
 }
 
-ViewsPage.propTypes = {
+WatchTimePage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
-    views: PropTypes.object.isRequired,
+    watchTime: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 export function mapStateToProps(state) {
     return {
-        views: state.views,
+        watchTime: state.watchTime,
         totalStats: state.totalStats,
-        isLoading: state.ajaxCallsInProgress.views > 0
+        isLoading: state.ajaxCallsInProgress.watchTime > 0
     };
 }
 
 export function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(viewsActions, dispatch)
+        actions: bindActionCreators(watchTimeActions, dispatch)
     };
 }
 
@@ -301,10 +301,10 @@ export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading) || 
-            (prev.views !== next.views) || 
+            (prev.watchTime !== next.watchTime) || 
             (prev.totalStats !== next.totalStats)
         );
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(ViewsPage);
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(WatchTimePage);

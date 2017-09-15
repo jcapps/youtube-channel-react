@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
-import ContentTypes from '../../globals/ContentTypes';
-import * as channelActions from '../../actions/channelActions';
-import clearStore from '../../actions/clearAction';
-import DownshiftSectioned from '../common/DownshiftSectioned';
+import ContentTypes from '../../../globals/ContentTypes';
+import * as channelActions from '../../../actions/channelActions';
+import clearStore from '../../../actions/clearAction';
+import DownshiftSectioned from './DownshiftSectioned';
 import FilterResult from './FilterResult';
 
 class ContentFilter extends React.PureComponent {

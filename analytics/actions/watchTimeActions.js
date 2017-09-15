@@ -1,5 +1,6 @@
 import {bindActionCreators} from 'redux';
 import Periods from '../globals/Periods';
+import formatDateString from '../helpers/formatDateString';
 import getDateRange from '../helpers/getDateRange';
 import zeroMissingData from '../helpers/zeroMissingData';
 import * as types from './actionTypes';
@@ -8,15 +9,15 @@ import * as analyticsActions from './analyticsActions';
 import * as loginActions from './loginActions';
 import * as statsActions from './statsActions';
 
-export function getViewsSuccess(report) {
-    return { type: types.GET_VIEWS_SUCCESS, report };
+export function getWatchTimeSuccess(report) {
+    return { type: types.GET_WATCH_TIME_SUCCESS, report };
 }
 
-export function getViewsError() {
-    return { type: types.GET_VIEWS_ERROR };
+export function getWatchTimeError() {
+    return { type: types.GET_WATCH_ERROR };
 }
 
-export function getViews(
+export function getWatchTime(
     period = Periods.TWENTY_EIGHT_DAY,
     dateRange = null,
     filters = '',
@@ -30,8 +31,8 @@ export function getViews(
             dateRange = getDateRange(period, channelBirthdate);
         }
         const {startDate, endDate} = dateRange;
-        const metrics = 'views';
-        dispatch(ajax.gettingViews());
+        const metrics = 'estimatedMinutesWatched';
+        dispatch(ajax.gettingWatchTime());
 
         const helperLoginActions = bindActionCreators(loginActions, dispatch);
         const helperStatsActions = bindActionCreators(statsActions, dispatch);
@@ -41,14 +42,14 @@ export function getViews(
                 return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
                     const reportData = zeroMissingData(report, startDate, endDate);
                     return helperStatsActions.getTotalStats(dateRange, filters).then(() => {
-                        dispatch(getViewsSuccess(reportData));
+                        dispatch(getWatchTimeSuccess(reportData));
                     });
                 }).catch(error => {
-                    dispatch(getViewsError());
+                    dispatch(getWatchTimeError());
                     throw(error);
                 });
             } else {
-                dispatch(getViewsError());
+                dispatch(getWatchTimeError());
             }
         });
     };

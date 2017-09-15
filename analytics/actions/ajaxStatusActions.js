@@ -20,6 +20,10 @@ export function gettingViews() {
     return {type: types.GETTING_VIEWS};
 }
 
+export function gettingWatchTime() {
+    return {type: types.GETTING_WATCH_TIME};
+}
+
 export function gettingTotalStats() {
     return {type: types.GETTING_TOTAL_STATS};
 }
