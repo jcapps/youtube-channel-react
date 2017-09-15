@@ -31,7 +31,7 @@ export function getWatchTime(
             dateRange = getDateRange(period, channelBirthdate);
         }
         const {startDate, endDate} = dateRange;
-        const metrics = 'estimatedMinutesWatched';
+        const metrics = 'views,averageViewDuration';
         dispatch(ajax.gettingWatchTime());
 
         const helperLoginActions = bindActionCreators(loginActions, dispatch);

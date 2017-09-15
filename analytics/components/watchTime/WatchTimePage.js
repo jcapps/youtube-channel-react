@@ -9,6 +9,7 @@ import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import addGraphFilter from '../../helpers/addGraphFilter';
 import removeGraphFilter from '../../helpers/removeGraphFilter';
+import computeWatchTimes from '../../helpers/computeWatchTimes';
 import filterArrayIncludes from '../../helpers/filterArrayIncludes';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as watchTimeActions from '../../actions/watchTimeActions';
@@ -65,10 +66,11 @@ export class WatchTimePage extends React.PureComponent {
             this.renderLineGraphD3(this.props.watchTime);
     }
 
-    renderLineGraphD3(watchTimeInfo) {
+    renderLineGraphD3(viewsAndAverageDurationInfo) {
+        const watchTimeInfo = computeWatchTimes(viewsAndAverageDurationInfo);
         const container = d3.select('#watch-time-graph');
         container.html('');
-        lineGraph(container, watchTimeInfo, 'day', 'estimatedMinutesWatched');
+        lineGraph(container, watchTimeInfo, 'day', 'watchTime');
         this.hideLoadingSpinner();
     }
 
@@ -251,7 +253,7 @@ export class WatchTimePage extends React.PureComponent {
 
         return (
             <div id="watch-time-page">
-                <h2>Estimated Minutes Watched</h2>
+                <h2>Watch Time</h2>
                 <div id="filters">
                     <ContentFilter
                         addFilter={this.addFilter}

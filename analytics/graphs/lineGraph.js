@@ -180,11 +180,11 @@ const showAndSetHighlightedDataPoint = (d, xyInfo) => {
 // Calculate time from minutes
 const displayTimeNicely = totalTimeInMinutes => {
     let value = '';
-    if (totalTimeInMinutes < 60) return value;
 
     const days = Math.floor(totalTimeInMinutes / (60 * 24));
     const hours = Math.floor((totalTimeInMinutes - (days * 24 * 60)) / 60);
-    const minutes = totalTimeInMinutes - (days * 24 * 60) - (hours * 60);
+    const minutes = Math.floor(totalTimeInMinutes - (days * 24 * 60) - (hours * 60));
+    const seconds = Math.round((totalTimeInMinutes - (days * 24 * 60) - (hours * 60) - minutes) * 60);
 
     if (days > 0 && days != 1) value += days + ' days ';
     if (days == 1) value += days + ' day ';
@@ -192,6 +192,8 @@ const displayTimeNicely = totalTimeInMinutes => {
     if (hours == 1) value += hours + ' hour ';
     if (minutes > 0 && minutes != 1) value += minutes + ' minutes ';
     if (minutes == 1) value += minutes + ' minute ';
+    if (seconds > 0 && seconds != 1) value += seconds + ' seconds ';
+    if (seconds == 1) value += seconds + ' second ';
     return value.trim();
 };
 
@@ -199,21 +201,24 @@ const displayTimeNicely = totalTimeInMinutes => {
 const showAndSetTooltip = (d, xyInfo) => {
     // Update tooltip with correct info to display
     let yLabel = xyInfo.yColumnName;
-    if (xyInfo.yColumnName == 'estimatedMinutesWatched') {
-        yLabel = 'Watch time (minutes)'
-    } else {
-        let yLabel = yLabel.replace(/([A-Z])/g, ' $1').trim(); // Add spaces before capital letters
-        yLabel = yLabel.charAt(0).toUpperCase() + yLabel.slice(1); // Capitalize first letter
-    }
+    yLabel = yLabel.replace(/([A-Z])/g, ' $1').trim(); // Add spaces before capital letters
+    yLabel = yLabel.charAt(0).toUpperCase() + yLabel.slice(1); // Capitalize first letter
 
     let yValue = d.get(xyInfo.yColumnName).toLocaleString();
-    if (xyInfo.yColumnName == 'estimatedMinutesWatched') {
+
+    if (xyInfo.yColumnName == 'watchTime') {
+        yLabel += ' (minutes)';
+        yValue = Math.round(d.get(xyInfo.yColumnName)).toLocaleString();
         const displayTime = displayTimeNicely(d.get(xyInfo.yColumnName));
         if (displayTime.length > 0) yValue += ' (' + displayTime + ')';
     }
 
+    let tooltipHtml = formatTime(d.get(xyInfo.xColumnName)) + '<br/>' + yLabel + ': ' + yValue;
+    if (yLabel.length + yValue.length > 25)
+        tooltipHtml = formatTime(d.get(xyInfo.xColumnName)) + '<br/>' + yLabel + ':<br/>' + yValue;
+    
     const tooltip = d3.select('.tooltip')
-        .html(formatTime(d.get(xyInfo.xColumnName)) + '<br/>' + yLabel + ': ' + yValue)
+        .html(tooltipHtml)
         .style('white-space', 'nowrap')
         .style('display', ''); // Html must be created to calculate the size of the tooltip below
 
