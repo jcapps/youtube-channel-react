@@ -20,7 +20,7 @@ const zeroMissingData = (report, start, end) => {
         for (let i = 0; i < numDays; i++) {
             compareDate += DAY_IN_MILLISECONDS;
             let compareDateString = formatDateString(new Date(compareDate));
-            let newDataPoint = [0, 0];
+            let newDataPoint = new Array(columns.length).fill(0);
             newDataPoint[dateColumn] = compareDateString;
             dataInfo.rows[i] = newDataPoint;
         }
@@ -32,7 +32,7 @@ const zeroMissingData = (report, start, end) => {
             let compareDateString = formatDateString(new Date(compareDate));
 
             while (rowDate != compareDateString && compareDate < endDate) {
-                let newDataPoint = [0, 0];
+                let newDataPoint = new Array(columns.length).fill(0);
                 newDataPoint[dateColumn] = compareDateString;
                 const newIndex = data.indexOf(dataInfo.rows[i]);
                 data.splice(newIndex, 0, newDataPoint);
@@ -47,7 +47,7 @@ const zeroMissingData = (report, start, end) => {
         let compareDateString = formatDateString(new Date(compareDate));
         let endDateString = formatDateString(new Date(endDate));
         while (compareDateString != endDateString && compareDate < endDate) {
-            let newDataPoint = [0, 0];
+            let newDataPoint = new Array(columns.length).fill(0);
             newDataPoint[dateColumn] = compareDateString;
             dataInfo.rows.push(newDataPoint);
             compareDate += DAY_IN_MILLISECONDS;
