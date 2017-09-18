@@ -30,9 +30,10 @@ class YouTubeAnalyticsApi {
                         GoogleAuth.signIn().then(() => {
                             const isLoggedIn = GoogleAuth.isSignedIn.get();
                             if (isLoggedIn) {
-                                const tokenInfo = GoogleAuth.j8.$K.Q7;
-                                localStorage.setItem('access_token', tokenInfo.access_token);
-                                localStorage.setItem('expires_at', tokenInfo.expires_at)
+                                const accessToken = this.searchObjectByKey(GoogleAuth.currentUser, 'access_token');
+                                const expiresAt = this.searchObjectByKey(GoogleAuth.currentUser, 'expires_at');
+                                localStorage.setItem('access_token', accessToken);
+                                localStorage.setItem('expires_at', expiresAt);
                                 toastr.success('Signed in!');
                             } else {
                                 toastr.error('Unable to sign in.');
@@ -46,6 +47,20 @@ class YouTubeAnalyticsApi {
             };
             document.getElementsByTagName('head')[0].appendChild(gapiScript);
         });
+    }
+
+    static searchObjectByKey(object, key) {
+        let result = null;
+        for (let prop in object) {
+            if (prop == key) {
+                return object[prop];
+            }
+            if (object[prop] instanceof Object) {
+                result = this.searchObjectByKey(object[prop], key);
+                if (result) break;
+            }
+        }
+        return result
     }
 
     static getAccessToken() {
