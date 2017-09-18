@@ -2,25 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Link} from 'react-router-dom';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as watchTimeActions from '../../actions/watchTimeActions';
+import {clearWatchTime} from '../../actions/clearAction';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraph from '../common/graphs/LineGraph';
 
 export class WatchTimePage extends React.PureComponent {
-    constructor() {
-        super();
-        this.state = {
-            contentType: ContentTypes.ALL,
-            timePeriod: Periods.TWENTY_EIGHT_DAY,
-            dateRange: null,
-            filters: [],
-            addedFilters: []
-        };
+    constructor(props) {
+        super(props);
+        if (props.location.state) {
+            this.state = props.location.state;
+        } else {
+            this.state = {
+                contentType: ContentTypes.ALL,
+                timePeriod: Periods.TWENTY_EIGHT_DAY,
+                dateRange: null,
+                filters: [],
+                addedFilters: []
+            };
+        }
         this.getData = this.getData.bind(this);
         this.renderLineGraph = this.renderLineGraph.bind(this);
     }
@@ -32,6 +38,10 @@ export class WatchTimePage extends React.PureComponent {
     componentDidMount() {
         document.title = "Analytics: Watch Time";
         window.scrollTo(0, 0);
+    }
+
+    componentWillUnmount() {
+        this.props.clearWatchTime();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -104,6 +114,7 @@ export class WatchTimePage extends React.PureComponent {
                 />
                 <h4>Total Views: {totalViews.toLocaleString()}</h4>
                 <h4>Total Estimated Minutes Watched: {totalEstimatedMinutesWatched.toLocaleString()}</h4>
+                <Link to={{pathname: "/analytics/views", state: this.state}}><div>Switch to Views</div></Link>
                 {this.renderLineGraph()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
@@ -115,7 +126,9 @@ WatchTimePage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     watchTime: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
-    actions: PropTypes.object.isRequired
+    actions: PropTypes.object.isRequired,
+    clearWatchTime: PropTypes.func.isRequired,
+    state: PropTypes.object
 };
 
 export function mapStateToProps(state) {
@@ -128,7 +141,8 @@ export function mapStateToProps(state) {
 
 export function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(watchTimeActions, dispatch)
+        actions: bindActionCreators(watchTimeActions, dispatch),
+        clearWatchTime: bindActionCreators(clearWatchTime, dispatch)
     };
 }
 

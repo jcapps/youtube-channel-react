@@ -5,6 +5,8 @@ export default function viewsReducer(state = initialState.views, action) {
     switch(action.type) {
         case types.GET_VIEWS_SUCCESS:
             return action.report;
+        case types.CLEAR_VIEWS:
+            return {};
         default:
             return state;
     }

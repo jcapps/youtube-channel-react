@@ -1,5 +1,7 @@
 /* CLEAR STORE TYPE */
-export const CLEAR_STORE = 'CLEAR_STORE';
+export const CLEAR_SEARCH_RESULTS = 'CLEAR_SEARCH_RESULTS';
+export const CLEAR_VIEWS = 'CLEAR_VIEWS';
+export const CLEAR_WATCH_TIME = 'CLEAR_WATCH_TIME';
 
 /* AJAX CALL TYPES */
 export const LOGGING_IN = 'LOGGING_IN';

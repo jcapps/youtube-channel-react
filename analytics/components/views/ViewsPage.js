@@ -2,24 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Link} from 'react-router-dom';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as viewsActions from '../../actions/viewsActions';
+import {clearViews} from '../../actions/clearAction';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraph from '../common/graphs/LineGraph';
 
 export class ViewsPage extends React.PureComponent {
-    constructor() {
-        super();
-        this.state = {
-            contentType: ContentTypes.ALL,
-            timePeriod: Periods.TWENTY_EIGHT_DAY,
-            dateRange: null,
-            filters: [],
-            addedFilters: []
-        };
+    constructor(props) {
+        super(props);
+        if (props.location.state) {
+            this.state = props.location.state;
+        } else {
+            this.state = {
+                contentType: ContentTypes.ALL,
+                timePeriod: Periods.TWENTY_EIGHT_DAY,
+                dateRange: null,
+                filters: [],
+                addedFilters: []
+            };
+        }
         this.getData = this.getData.bind(this);
         this.renderLineGraph = this.renderLineGraph.bind(this);
     }
@@ -31,6 +37,10 @@ export class ViewsPage extends React.PureComponent {
     componentDidMount() {
         document.title = "Analytics: Views";
         window.scrollTo(0, 0);
+    }
+
+    componentWillUnmount() {
+        this.props.clearViews();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -102,6 +112,7 @@ export class ViewsPage extends React.PureComponent {
                 />
                 <h4>Total Views: {totalViews.toLocaleString()}</h4>
                 <h4>Total Estimated Minutes Watched: {totalEstimatedMinutesWatched.toLocaleString()}</h4>
+                <Link to={{pathname: "/analytics/watchTime", state: this.state}}><div>Switch to Watch Time</div></Link>
                 {this.renderLineGraph()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
@@ -113,7 +124,9 @@ ViewsPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     views: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
-    actions: PropTypes.object.isRequired
+    actions: PropTypes.object.isRequired,
+    clearViews: PropTypes.func.isRequired,
+    state: PropTypes.object
 };
 
 export function mapStateToProps(state) {
@@ -126,7 +139,8 @@ export function mapStateToProps(state) {
 
 export function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(viewsActions, dispatch)
+        actions: bindActionCreators(viewsActions, dispatch),
+        clearViews: bindActionCreators(clearViews, dispatch)
     };
 }
 

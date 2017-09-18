@@ -5,7 +5,7 @@ export default function searchVideoResultsReducer(state = initialState.searchVid
     switch(action.type) {
         case types.GET_SEARCH_VIDEO_RESULTS_SUCCESS:
             return action.result.items;
-        case types.CLEAR_STORE:
+        case types.CLEAR_SEARCH_RESULTS:
             return [];
         default:
             return state;

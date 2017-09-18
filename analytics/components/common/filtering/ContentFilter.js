@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../../globals/ContentTypes';
 import * as channelActions from '../../../actions/channelActions';
-import clearStore from '../../../actions/clearAction';
+import {clearSearchResults} from '../../../actions/clearAction';
 import DownshiftSectioned from './DownshiftSectioned';
 import FilterResult from './FilterResult';
 
@@ -66,7 +66,7 @@ class ContentFilter extends React.PureComponent {
 
     onSearchFocus() {
         this.setState({isDropdownOpen: true});
-        this.props.clearStore();
+        this.props.clearSearchResults();
         this.search('');
     }
 
@@ -126,7 +126,7 @@ ContentFilter.propTypes = {
     searchPlaylistResults: PropTypes.array.isRequired,
     searchVideoResults: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired,
-    clearStore: PropTypes.func.isRequired
+    clearSearchResults: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -141,7 +141,7 @@ export function mapStateToProps(state) {
 export function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(channelActions, dispatch),
-        clearStore: bindActionCreators(clearStore, dispatch)
+        clearSearchResults: bindActionCreators(clearSearchResults, dispatch)
     };
 }
 
