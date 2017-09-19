@@ -2,7 +2,7 @@ $white: white;
 $lightgray: lightgray;
 $slategray: #C1C1C1;
 $gray: gray;
-$darkgray: darkgray;
+$darkslategray: darken($slategray, 10%);
 $black: #1a1a1a;
 $red: red;
 $anchor-purple: mediumpurple;
@@ -17,6 +17,7 @@ $sidebar-contrast: $white;
 /* Line Graph colors */
 $line: $steelblue;
 $grid-line: $slategray;
+$grid-baseline: $darkslategray;
 $highlight: $red;
 
 /* Tooltip colors */

@@ -48,6 +48,9 @@ const prepareData = (dataInfo, xyInfo) => {
 // Set the domains of the graph in x and y directions
 const setXYDomains = (data, xyInfo) => {
     const xExtent = d3.extent(data, d => { return d.get(xyInfo.xColumnName); });
+
+    let yMin = d3.min(data, d => { return d.get(xyInfo.yColumnName); });
+    if (yMin > 0) yMin = 0;
     let yMax = d3.max(data, d => { return d.get(xyInfo.yColumnName); });
     if (yMax < 1) yMax = 1;
 
@@ -57,7 +60,7 @@ const setXYDomains = (data, xyInfo) => {
     const maxYTicks = Math.min(yMax, Math.ceil(height / yAxisLabelPadding));
 
     xyInfo.x.domain([xExtent[0].getTime() - xDomainMargin, xExtent[1].getTime() + xDomainMargin]);
-    xyInfo.y.domain([0, yMax]).nice(maxYTicks);
+    xyInfo.y.domain([yMin, yMax]).nice(maxYTicks);
 };
 
 // Create containing svg
@@ -99,7 +102,15 @@ const drawGridLines = y => {
         .call(d3.axisLeft(y)
             .ticks(maxTicks)
             .tickSize(-width)
-            .tickFormat(''));
+            .tickFormat(''))
+        .select('path').remove();
+    d3.select('#graphCanvas').append('g')
+        .attr('class', 'grid-baseline')
+        .call(d3.axisLeft(y)
+            .tickValues([0])
+            .tickSize(-width)
+            .tickFormat(''))
+        .select('path').remove();
 };
 
 // Draw X-Axis

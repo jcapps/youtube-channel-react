@@ -20,3 +20,8 @@ circle.highlight-datum-outline {
 .grid-line line {
     stroke: $grid-line;
 }
+
+.grid-baseline line {
+    stroke: $grid-baseline;
+    stroke-width: 1.5;
+}
