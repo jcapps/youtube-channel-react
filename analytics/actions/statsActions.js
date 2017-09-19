@@ -15,7 +15,7 @@ export function getTotalStatsError() {
 export function getTotalStats(dateRange, filters = '') {
     return function(dispatch) {
         const {startDate, endDate} = dateRange;
-        const metrics = 'views,estimatedMinutesWatched';
+        const metrics = 'views,estimatedMinutesWatched,likes,dislikes';
 
         dispatch(ajax.gettingTotalStats());
         const helperActions = bindActionCreators(loginActions, dispatch);

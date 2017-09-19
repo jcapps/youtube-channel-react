@@ -2,6 +2,8 @@ import {combineReducers} from 'redux';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 import isAuthenticated from './isAuthenticatedReducer';
 import channelInfo from './channelInfoReducer';
+import dislikes from './dislikesReducer';
+import likes from './likesReducer';
 import searchChannelResults from './searchChannelResultsReducer';
 import searchPlaylistResults from './searchPlaylistResultsReducer';
 import searchVideoResults from './searchVideoResultsReducer';
@@ -13,6 +15,8 @@ const rootReducer = combineReducers({
     ajaxCallsInProgress,
     isAuthenticated,
     channelInfo,
+    dislikes,
+    likes,
     searchChannelResults,
     searchPlaylistResults,
     searchVideoResults,

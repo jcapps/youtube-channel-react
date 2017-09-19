@@ -39,6 +39,48 @@ function isCheckingLoginActionSuccessType(type) {
     );
 }
 
+function isDislikesActionStartingType(type) {
+    return (
+        type == types.GETTING_DISLIKES || 
+        type == types.GETTING_TOTAL_STATS
+    );
+}
+
+function isDislikesActionSuccessType(type) {
+    return (
+        type == types.GET_DISLIKES_SUCCESS || 
+        type == types.GET_TOTAL_STATS_SUCCESS
+    );
+}
+
+function isDislikesActionErrorType(type) {
+    return (
+        type == types.GET_DISLIKES_ERROR || 
+        type == types.GET_TOTAL_STATS_ERROR
+    );
+}
+
+function isLikesActionStartingType(type) {
+    return (
+        type == types.GETTING_LIKES || 
+        type == types.GETTING_TOTAL_STATS
+    );
+}
+
+function isLikesActionSuccessType(type) {
+    return (
+        type == types.GET_LIKES_SUCCESS || 
+        type == types.GET_TOTAL_STATS_SUCCESS
+    );
+}
+
+function isLikesActionErrorType(type) {
+    return (
+        type == types.GET_LIKES_ERROR || 
+        type == types.GET_TOTAL_STATS_ERROR
+    );
+}
+
 function isLoginActionStartingType(type) {
     return (
         type == types.LOGGING_IN
@@ -113,6 +155,24 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isCheckingLoginActionSuccessType(action.type)) {
         currentState.isLoggedIn -= 1;
+    }
+    if (isDislikesActionStartingType(action.type)) {
+        currentState.dislikes += 1;
+    }
+    if (isDislikesActionSuccessType(action.type)) {
+        currentState.dislikes -= 1;
+    }
+    if (isDislikesActionErrorType(action.type)) {
+        currentState.dislikes -= 1;
+    }
+    if (isLikesActionStartingType(action.type)) {
+        currentState.likes += 1;
+    }
+    if (isLikesActionSuccessType(action.type)) {
+        currentState.likes -= 1;
+    }
+    if (isLikesActionErrorType(action.type)) {
+        currentState.likes -= 1;
     }
     if (isLoginActionStartingType(action.type)) {
         currentState.login += 1;

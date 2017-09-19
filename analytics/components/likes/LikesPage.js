@@ -6,13 +6,13 @@ import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import formatFiltersString from '../../helpers/formatFiltersString';
-import * as viewsActions from '../../actions/viewsActions';
-import {clearViews} from '../../actions/clearAction';
+import * as likesActions from '../../actions/likesActions';
+import {clearLikes} from '../../actions/clearAction';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraph from '../common/graphs/LineGraph';
-import ViewsMetricsSection from './ViewsMetricsSection';
+import LikesMetricsSection from './LikesMetricsSection';
 
-export class ViewsPage extends React.PureComponent {
+export class LikesPage extends React.PureComponent {
     constructor(props) {
         super(props);
         if (props.location.state) {
@@ -35,18 +35,18 @@ export class ViewsPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Views";
+        document.title = "Analytics: Likes";
         window.scrollTo(0, 0);
     }
 
     componentWillUnmount() {
-        this.props.clearViews();
+        this.props.clearLikes();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         if (
             this.props.isLoading != nextProps.isLoading ||
-            this.props.views !== nextProps.views ||
+            this.props.likes !== nextProps.likes ||
             this.props.totalStats !== nextProps.totalStats ||
             (this.state.timePeriod !== nextState.timePeriod && nextState.timePeriod == Periods.CUSTOM)
         ) {
@@ -56,28 +56,28 @@ export class ViewsPage extends React.PureComponent {
     }
 
     showLoadingSpinner() {
-        $('#views-page .loading-spinner').removeClass('hidden');
+        $('#likes-page .loading-spinner').removeClass('hidden');
     }
 
     hideLoadingSpinner() {
-        $('#views-page .loading-spinner').addClass('hidden');
+        $('#likes-page .loading-spinner').addClass('hidden');
     }
 
     getData(state) {
         this.setState({...state});
 
         this.showLoadingSpinner();
-        this.props.actions.getViews(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+        this.props.actions.getLikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
     }
 
     renderLineGraph() {
-        if (!this.props.views.columnHeaders) return <div/>;
+        if (!this.props.likes.columnHeaders) return <div/>;
 
         return (
             <LineGraph
-                dataInfo={this.props.views}
+                dataInfo={this.props.likes}
                 xColumnName="day"
-                yColumnName="views"
+                yColumnName="likes"
                 onRenderFinish={this.hideLoadingSpinner}
             />
         );
@@ -88,13 +88,13 @@ export class ViewsPage extends React.PureComponent {
 
         const loadingSpinner = require('../../images/loading.gif');
         return (
-            <div id="views-page">
-                <h2>Views</h2>
+            <div id="likes-page">
+                <h2>Likes</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}
                 />
-                <ViewsMetricsSection
+                <LikesMetricsSection
                     totalStats={this.props.totalStats}
                     filterState={this.state}
                 />
@@ -105,27 +105,27 @@ export class ViewsPage extends React.PureComponent {
     }
 }
 
-ViewsPage.propTypes = {
+LikesPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
-    views: PropTypes.object.isRequired,
+    likes: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
-    clearViews: PropTypes.func.isRequired,
+    clearLikes: PropTypes.func.isRequired,
     state: PropTypes.object
 };
 
 export function mapStateToProps(state) {
     return {
-        views: state.views,
+        likes: state.likes,
         totalStats: state.totalStats,
-        isLoading: state.ajaxCallsInProgress.views > 0
+        isLoading: state.ajaxCallsInProgress.likes > 0
     };
 }
 
 export function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(viewsActions, dispatch),
-        clearViews: bindActionCreators(clearViews, dispatch)
+        actions: bindActionCreators(likesActions, dispatch),
+        clearLikes: bindActionCreators(clearLikes, dispatch)
     };
 }
 
@@ -133,10 +133,10 @@ export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading) || 
-            (prev.views !== next.views) || 
+            (prev.likes !== next.likes) || 
             (prev.totalStats !== next.totalStats)
         );
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(ViewsPage);
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(LikesPage);

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 
-const MetricsSection = ({totalStats, filterState}) => {
+const ViewsMetricsSection = ({totalStats, filterState}) => {
     let totalViews = 0;
     let totalEstimatedMinutesWatched = 0;
     if (totalStats.columnHeaders) {
@@ -19,7 +19,7 @@ const MetricsSection = ({totalStats, filterState}) => {
     }
 
     return (
-        <div id="metrics-section">
+        <div className="metrics-section">
             <ul>
                 <li>
                     <Link to={{pathname: "/analytics/views", state: filterState}}>
@@ -32,7 +32,7 @@ const MetricsSection = ({totalStats, filterState}) => {
                 <li>
                     <Link to={{pathname: "/analytics/watchTime", state: filterState}}>
                         <div className="metric-tab">
-                            <div className="metric-tab-title">WATCH TIME</div>
+                            <div className="metric-tab-title">WATCH TIME (MINUTES)</div>
                             <div className="metric-tab-value">{totalEstimatedMinutesWatched.toLocaleString()}</div>
                         </div>
                     </Link>
@@ -42,9 +42,9 @@ const MetricsSection = ({totalStats, filterState}) => {
     );
 };
 
-MetricsSection.propTypes = {
+ViewsMetricsSection.propTypes = {
     filterState: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired
 };
 
-export default MetricsSection;
+export default ViewsMetricsSection;

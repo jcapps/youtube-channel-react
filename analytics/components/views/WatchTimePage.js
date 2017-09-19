@@ -10,8 +10,8 @@ import formatFiltersString from '../../helpers/formatFiltersString';
 import * as watchTimeActions from '../../actions/watchTimeActions';
 import {clearWatchTime} from '../../actions/clearAction';
 import FiltersSection from '../common/filtering/FiltersSection';
-import MetricsSection from '../common/filtering/MetricsSection';
 import LineGraph from '../common/graphs/LineGraph';
+import ViewsMetricsSection from './ViewsMetricsSection';
 
 export class WatchTimePage extends React.PureComponent {
     constructor(props) {
@@ -96,7 +96,10 @@ export class WatchTimePage extends React.PureComponent {
                     state={this.state}
                     onChangeFilters={this.getData}
                 />
-                <MetricsSection totalStats={this.props.totalStats} filterState={this.state}/>
+                <ViewsMetricsSection
+                    totalStats={this.props.totalStats}
+                    filterState={this.state}
+                />
                 {this.renderLineGraph()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>

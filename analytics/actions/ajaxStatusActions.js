@@ -16,6 +16,14 @@ export function searchingChannel() {
     return {type: types.SEARCHING_CHANNEL};
 }
 
+export function gettingDislikes() {
+    return {type: types.GETTING_DISLIKES};
+}
+
+export function gettingLikes() {
+    return {type: types.GETTING_LIKES};
+}
+
 export function gettingViews() {
     return {type: types.GETTING_VIEWS};
 }
