@@ -1,10 +1,10 @@
 @import 'colors';
+@import 'filters';
 @import 'home';
 @import 'linegraph';
+@import 'metrics';
 @import 'sidebar';
 @import 'tooltip';
-@import 'views';
-@import 'watchTime';
 
 #analytics-app {
     input {
@@ -13,8 +13,11 @@
     }
 
     .loading-spinner {
+        position: fixed;
         height: 50px;
         width: 50px;
+        top: calc(50% - 25px + 50px); // 25px = half height of spinner, 50px = half height of header
+        left: calc(50% - 25px + 100px); // 25px = half width of spinner, 100px = half width of sidebar
     }
 
     #analytics-content {

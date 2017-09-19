@@ -5,6 +5,7 @@ $gray: gray;
 $darkgray: darkgray;
 $black: #1a1a1a;
 $red: red;
+$anchor-purple: mediumpurple;
 $purple-gray: rgb(65, 58, 78);
 $steelblue: steelblue;
 $lightsteelblue: lightsteelblue;
@@ -44,3 +45,9 @@ $clear-filters-background: $lightgray;
 $clear-filters-color-hover: $white;
 $clear-filters-background-hover: $red;
 $clear-filters-background-active: darken($red, 10%);
+
+/* Metric Section colors */
+$metric-border: $gray;
+$metric-color: $black;
+$metric-color-hover: $anchor-purple;
+$metric-background-hover: $white;

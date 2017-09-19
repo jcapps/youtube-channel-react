@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Link} from 'react-router-dom';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
@@ -10,6 +9,7 @@ import formatFiltersString from '../../helpers/formatFiltersString';
 import * as viewsActions from '../../actions/viewsActions';
 import {clearViews} from '../../actions/clearAction';
 import FiltersSection from '../common/filtering/FiltersSection';
+import MetricsSection from '../common/filtering/MetricsSection';
 import LineGraph from '../common/graphs/LineGraph';
 
 export class ViewsPage extends React.PureComponent {
@@ -87,22 +87,6 @@ export class ViewsPage extends React.PureComponent {
         if (this.props.isLoading) return <div/>;
 
         const loadingSpinner = require('../../images/loading.gif');
-        let totalViews = 0;
-        let totalEstimatedMinutesWatched = 0;
-        const totalStats = this.props.totalStats;
-        if (totalStats.columnHeaders) {
-            const totalStatsColumns = totalStats.columnHeaders.map(item => {
-                return item.name;
-            });
-            if (totalStats.rows) {
-                totalViews = totalStats.rows[0][totalStatsColumns.indexOf('views')];
-                totalEstimatedMinutesWatched = totalStats.rows[0][totalStatsColumns.indexOf('estimatedMinutesWatched')];
-            } else {
-                totalViews = 0;
-                totalEstimatedMinutesWatched = 0;
-            }
-        }
-
         return (
             <div id="views-page">
                 <h2>Views</h2>
@@ -110,9 +94,7 @@ export class ViewsPage extends React.PureComponent {
                     state={this.state}
                     onChangeFilters={this.getData}
                 />
-                <h4>Total Views: {totalViews.toLocaleString()}</h4>
-                <h4>Total Estimated Minutes Watched: {totalEstimatedMinutesWatched.toLocaleString()}</h4>
-                <Link to={{pathname: "/analytics/watchTime", state: this.state}}><div>Switch to Watch Time</div></Link>
+                <MetricsSection totalStats={this.props.totalStats} filterState={this.state}/>
                 {this.renderLineGraph()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>

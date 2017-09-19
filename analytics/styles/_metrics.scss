@@ -1,0 +1,40 @@
+#metrics-section {
+    ul {
+        margin: 0;
+        padding: 0;
+
+        li {
+            display: inline-block;
+            border: 2px solid $metric-border;
+            border-left: 0;
+            
+            &:first-child {
+                border-left: 2px solid $metric-border;
+            }
+        }
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    div.metric-tab {
+        width: 120px;
+        height: 56px;
+        padding: 4px;
+        color: $metric-color;
+
+        &:hover {
+            color: $metric-color-hover;
+            background-color: $metric-background-hover;
+        }
+
+        .metric-tab-title {
+            font-size: 12px;
+        }
+
+        .metric-tab-value {
+            font-size: 22px;
+        }
+    }
+}
