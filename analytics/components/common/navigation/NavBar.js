@@ -9,7 +9,6 @@ export class NavBar extends React.PureComponent {
                     <ul>
                         <li><Link to="/analytics"><div>Home</div></Link></li>
                         <li><Link to="/analytics/views"><div>Views</div></Link></li>
-                        <li><Link to="/analytics/watchTime"><div>Watch Time</div></Link></li>
                     </ul>
                 </nav>
             </div>
