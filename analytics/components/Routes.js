@@ -2,7 +2,7 @@ import React from 'react';
 import {Switch, Route} from 'react-router';
 import AnalyticsHomePage from './home/AnalyticsHomePage';
 import ViewsPage from './views/ViewsPage';
-import WatchTimePage from './watchTime/WatchTimePage';
+import WatchTimePage from './views/WatchTimePage';
 
 const Routes = () => {
     return (
