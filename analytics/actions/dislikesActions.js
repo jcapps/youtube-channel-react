@@ -40,7 +40,7 @@ export function getDislikes(
             if (isLoggedIn) {
                 return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
                     const reportData = zeroMissingData(report, startDate, endDate);
-                    return helperStatsActions.getTotalStats(dateRange, filters).then(() => {
+                    return helperStatsActions.getTotalStats(dateRange, 'likes,dislikes', filters).then(() => {
                         dispatch(getDislikesSuccess(reportData));
                     });
                 }).catch(error => {

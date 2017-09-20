@@ -24,6 +24,12 @@ class FiltersSection extends React.Component {
         this.renderClearAllFilters = this.renderClearAllFilters.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.state !== nextProps.state) {
+            this.setState({...nextProps.state});
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if (
             this.state.filters !== nextState.filters ||

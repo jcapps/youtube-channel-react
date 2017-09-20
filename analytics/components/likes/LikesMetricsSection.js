@@ -10,8 +10,10 @@ const LikesMetricsSection = ({totalStats, filterState}) => {
             return item.name;
         });
         if (totalStats.rows) {
-            totalLikes = totalStats.rows[0][totalStatsColumns.indexOf('likes')];
-            totalDislikes = totalStats.rows[0][totalStatsColumns.indexOf('dislikes')];
+            if (totalStatsColumns.indexOf('likes') >= 0)
+                totalLikes = totalStats.rows[0][totalStatsColumns.indexOf('likes')];
+            if (totalStatsColumns.indexOf('dislikes') >= 0)
+                totalDislikes = totalStats.rows[0][totalStatsColumns.indexOf('dislikes')];
         } else {
             totalLikes = 0;
             totalDislikes = 0;

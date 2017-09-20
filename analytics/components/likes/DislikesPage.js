@@ -26,6 +26,8 @@ export class DislikesPage extends React.PureComponent {
                 addedFilters: []
             };
         }
+        this.state.playlistAttempted = this.state.contentType == ContentTypes.PLAYLISTS;
+
         this.getData = this.getData.bind(this);
         this.renderLineGraph = this.renderLineGraph.bind(this);
     }
@@ -37,6 +39,8 @@ export class DislikesPage extends React.PureComponent {
     componentDidMount() {
         document.title = "Analytics: Dislikes";
         window.scrollTo(0, 0);
+
+        if (this.state.playlistAttempted) this.hideLoadingSpinner();
     }
 
     componentWillUnmount() {
@@ -48,6 +52,7 @@ export class DislikesPage extends React.PureComponent {
             this.props.isLoading != nextProps.isLoading ||
             this.props.likes !== nextProps.likes ||
             this.props.totalStats !== nextProps.totalStats ||
+            this.state.playlistAttempted != nextState.playlistAttempted ||
             (this.state.timePeriod !== nextState.timePeriod && nextState.timePeriod == Periods.CUSTOM)
         ) {
             return true;
@@ -65,12 +70,19 @@ export class DislikesPage extends React.PureComponent {
 
     getData(state) {
         this.setState({...state});
+        if (state.contentType == ContentTypes.PLAYLISTS) {
+            this.setState({playlistAttempted: true});
+            return;
+        } else {
+            this.setState({playlistAttempted: false});
+        }
 
         this.showLoadingSpinner();
         this.props.actions.getDislikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
     }
 
     renderLineGraph() {
+        if (this.state.playlistAttempted) return <div>Sorry, you can't filter by playlist.</div>;
         if (!this.props.dislikes.columnHeaders) return <div/>;
 
         return (

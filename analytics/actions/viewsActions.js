@@ -40,7 +40,7 @@ export function getViews(
             if (isLoggedIn) {
                 return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
                     const reportData = zeroMissingData(report, startDate, endDate);
-                    return helperStatsActions.getTotalStats(dateRange, filters).then(() => {
+                    return helperStatsActions.getTotalStats(dateRange, 'views,estimatedMinutesWatched', filters).then(() => {
                         dispatch(getViewsSuccess(reportData));
                     });
                 }).catch(error => {

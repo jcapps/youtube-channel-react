@@ -10,8 +10,10 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
             return item.name;
         });
         if (totalStats.rows) {
-            totalViews = totalStats.rows[0][totalStatsColumns.indexOf('views')];
-            totalEstimatedMinutesWatched = totalStats.rows[0][totalStatsColumns.indexOf('estimatedMinutesWatched')];
+            if (totalStatsColumns.indexOf('views') >= 0)
+                totalViews = totalStats.rows[0][totalStatsColumns.indexOf('views')];
+            if (totalStatsColumns.indexOf('estimatedMinutesWatched') >= 0)
+                totalEstimatedMinutesWatched = totalStats.rows[0][totalStatsColumns.indexOf('estimatedMinutesWatched')];
         } else {
             totalViews = 0;
             totalEstimatedMinutesWatched = 0;
