@@ -5,6 +5,8 @@ $gray: gray;
 $darkslategray: darken($slategray, 10%);
 $black: #1a1a1a;
 $red: red;
+$error-red: #990B23;
+$error-lightred: #FF94AA;
 $anchor-purple: mediumpurple;
 $purple-gray: rgb(65, 58, 78);
 $steelblue: steelblue;
@@ -52,3 +54,8 @@ $metric-border: $gray;
 $metric-color: $black;
 $metric-color-hover: $anchor-purple;
 $metric-background-hover: $white;
+
+/* Error colors */
+$error-color: $error-red;
+$error-background: $error-lightred;
+$error-border: $error-red;

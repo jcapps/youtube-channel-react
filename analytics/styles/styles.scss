@@ -20,6 +20,14 @@
         left: calc(50% - 25px + 100px); // 25px = half width of spinner, 100px = half width of sidebar
     }
 
+    div.error-message {
+        padding: 5px;
+        color: $error-color;
+        background-color: $error-background;
+        border: 2px solid $error-border;
+        font-weight: bold;
+    }
+
     #analytics-content {
         display: flex;
         margin: 0 auto;
