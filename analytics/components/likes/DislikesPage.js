@@ -83,7 +83,7 @@ export class DislikesPage extends React.PureComponent {
 
     renderLineGraph() {
         if (this.state.playlistAttempted)
-            return <div className="error-message">Sorry, you can't filter by playlist.</div>;
+            return <div className="error-message">The dislikes metric does not allow filtering by playlist.</div>;
         if (!this.props.dislikes.columnHeaders) return <div/>;
 
         return (
