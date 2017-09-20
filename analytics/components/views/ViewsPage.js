@@ -44,12 +44,7 @@ export class ViewsPage extends React.PureComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (
-            this.props.isLoading != nextProps.isLoading ||
-            this.props.views !== nextProps.views ||
-            this.props.totalStats !== nextProps.totalStats ||
-            (this.state.timePeriod !== nextState.timePeriod && nextState.timePeriod == Periods.CUSTOM)
-        ) {
+        if (this.props !== nextProps || this.state !== nextState) {
             return true;
         }
         return false;

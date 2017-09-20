@@ -48,13 +48,7 @@ export class DislikesPage extends React.PureComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (
-            this.props.isLoading != nextProps.isLoading ||
-            this.props.likes !== nextProps.likes ||
-            this.props.totalStats !== nextProps.totalStats ||
-            this.state.playlistAttempted != nextState.playlistAttempted ||
-            (this.state.timePeriod !== nextState.timePeriod && nextState.timePeriod == Periods.CUSTOM)
-        ) {
+        if (this.props !== nextProps || this.state !== nextState) {
             return true;
         }
         return false;

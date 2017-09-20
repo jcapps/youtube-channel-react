@@ -45,12 +45,7 @@ export class WatchTimePage extends React.PureComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (
-            this.props.isLoading != nextProps.isLoading ||
-            this.props.watchTime !== nextProps.watchTime ||
-            this.props.totalStats !== nextProps.totalStats ||
-            (this.state.timePeriod !== nextState.timePeriod && nextState.timePeriod == Periods.CUSTOM)
-        ) {
+        if (this.props !== nextProps || this.state !== nextState) {
             return true;
         }
         return false;

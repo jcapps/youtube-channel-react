@@ -31,11 +31,7 @@ class FiltersSection extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (
-            this.state.filters !== nextState.filters ||
-            this.state.addedFilters !== nextState.addedFilters ||
-            (this.state.timePeriod !== nextState.timePeriod && nextState.timePeriod == Periods.CUSTOM)
-        ) {
+        if (this.state !== nextState) {
             return true;
         }
         return false;
