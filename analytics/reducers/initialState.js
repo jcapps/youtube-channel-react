@@ -1,5 +1,6 @@
 export default {
     channelInfo: {},
+    comments: {},
     dislikes: {},
     likes: {},
     searchChannelResults: [],
@@ -11,6 +12,7 @@ export default {
     isAuthenticated: false,
     ajaxCallsInProgress: {
         channel: 0,
+        comments: 0,
         contentFilter: 0,
         dislikes: 0,
         isLoggedIn: 0,

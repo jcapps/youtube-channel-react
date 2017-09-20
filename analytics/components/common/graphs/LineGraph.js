@@ -5,12 +5,22 @@ import drawLineGraph from '../../../graphs/lineGraph';
 
 class LineGraph extends React.PureComponent {
     componentDidMount() {
+        this.drawLineGraph(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.dataInfo !== nextProps.dataInfo) {
+            this.drawLineGraph(nextProps);
+        }
+    }
+
+    drawLineGraph(props) {
         const {
             dataInfo,
             xColumnName,
             yColumnName,
             onRenderFinish
-        } = this.props;
+        } = props;
 
         const container = d3.select('#line-graph-container');
         container.html('');

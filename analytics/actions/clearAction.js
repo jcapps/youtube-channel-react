@@ -4,6 +4,10 @@ export function clearSearchResults() {
     return { type: types.CLEAR_SEARCH_RESULTS };
 }
 
+export function clearComments() {
+    return { type: types.CLEAR_COMMENTS };
+}
+
 export function clearDislikes() {
     return { type: types.CLEAR_DISLIKES };
 }
