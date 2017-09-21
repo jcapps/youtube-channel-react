@@ -7,7 +7,7 @@ import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as likesActions from '../../actions/likesActions';
-import {clearLikes} from '../../actions/clearAction';
+import {clearLikes} from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraph from '../common/graphs/LineGraph';
 import LikesMetricsSection from './LikesMetricsSection';

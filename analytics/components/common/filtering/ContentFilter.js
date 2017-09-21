@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../../globals/ContentTypes';
 import * as channelActions from '../../../actions/channelActions';
-import {clearSearchResults} from '../../../actions/clearAction';
+import {clearSearchResults} from '../../../actions/clearActions';
 import DownshiftSectioned from './DownshiftSectioned';
 import FilterResult from './FilterResult';
 

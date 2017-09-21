@@ -8,7 +8,7 @@ import Periods from '../../globals/Periods';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as watchTimeActions from '../../actions/watchTimeActions';
-import {clearWatchTime} from '../../actions/clearAction';
+import {clearWatchTime} from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraph from '../common/graphs/LineGraph';
 import ViewsMetricsSection from './ViewsMetricsSection';
