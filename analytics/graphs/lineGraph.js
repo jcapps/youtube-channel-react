@@ -1,14 +1,15 @@
 import * as d3 from 'd3';
 import computeVoronoi from '../helpers/computeVoronoi';
 
-const svgWidth = 960;
-const svgHeight = 400;
-const svgMargin = {top: 10, right: 10, bottom: 50, left: 50};
+let graphSize;
+let svgWidth;
+let svgHeight;
+let svgMargin;
+let width;
+let height;
+let xAxisLabelPadding;
+let yAxisLabelPadding;
 const footnoteMargin = 15;
-const width = svgWidth - svgMargin.left - svgMargin.right; // Does not include y-axis
-const height = svgHeight - svgMargin.top - svgMargin.bottom; // Does not include x-axis
-const xAxisLabelPadding = 60; // 60 = ~width in px of a date label with reasonable padding
-const yAxisLabelPadding = 80; // reasonable minimum px separation between labels
 
 // Parse the Date time
 const parseTime = d3.timeParse('%Y-%m-%d');
@@ -20,6 +21,33 @@ const formatTime = d3.timeFormat('%x');
 const getD3ElementPosition = element => {
     return element.node().getBoundingClientRect();
 };
+
+// Configure graph size, margin, and padding
+const setSizeConstants = () => {
+    if (graphSize == 'large') {
+        svgWidth = 960;
+        svgHeight = 400;
+        svgMargin = {top: 10, right: 10, bottom: 50, left: 50};
+        xAxisLabelPadding = 60; // 60 = ~width in px of a date label with reasonable padding
+        yAxisLabelPadding = 80; // reasonable minimum px separation between labels
+    }
+    if (graphSize == 'medium') {
+        svgWidth = 260;
+        svgHeight = 100;
+        svgMargin = {top: 10, right: 10, bottom: 10, left: 10};
+        xAxisLabelPadding = 0;
+        yAxisLabelPadding = 0;
+    }
+    if (graphSize == 'small') {
+        svgWidth = 120;
+        svgHeight = 60;
+        svgMargin = {top: 10, right: 10, bottom: 10, left: 10};
+        xAxisLabelPadding = 0;
+        yAxisLabelPadding = 0;
+    }
+    width = svgWidth - svgMargin.left - svgMargin.right; // Does not include y-axis
+    height = svgHeight - svgMargin.top - svgMargin.bottom; // Does not include x-axis
+}
 
 // Create the scales in x and y directions
 // Returns functions that scale the data
@@ -104,6 +132,10 @@ const drawGridLines = y => {
             .tickSize(-width)
             .tickFormat(''))
         .select('path').remove();
+};
+
+// Draw Baseline
+const drawBaseline = y => {
     d3.select('#graphCanvas').append('g')
         .attr('class', 'grid-baseline')
         .call(d3.axisLeft(y)
@@ -254,6 +286,40 @@ const showAndSetTooltip = (d, xyInfo) => {
         .style('top', verticalTranslate + 'px');
 };
 
+// Show condensed tooltip with correct info, and set position over correct point
+const showAndSetSmallerTooltip = (d, xyInfo) => {
+    // Update tooltip with correct info to display
+    let yValue = d.get(xyInfo.yColumnName).toLocaleString();
+
+    if (xyInfo.yColumnName == 'watchTime') {
+        const displayTime = displayTimeNicely(d.get(xyInfo.yColumnName));
+        if (displayTime.length > 0) yValue = displayTime;
+    }
+    
+    const tooltip = d3.select('.tooltip')
+        .html(yValue)
+        .style('white-space', 'nowrap')
+        .style('display', ''); // Html must be created to calculate the size of the tooltip below
+
+    // Gather positioning information
+    const graphCanvas = d3.select('#graphCanvas');
+    const gClientRect = getD3ElementPosition(graphCanvas);
+    const top = gClientRect.top - 5; // 5 = Additional upward padding
+    const left = gClientRect.left;
+    const tooltipSize = getD3ElementPosition(tooltip);
+
+    // Set vertical and horizontal translations relative to page
+    const verticalTranslate = top + document.body.scrollTop + xyInfo.y(d.get(xyInfo.yColumnName)) - tooltipSize.height;
+    let horizontalTranslate = left + document.body.scrollLeft + xyInfo.x(d.get(xyInfo.xColumnName));
+    if (horizontalTranslate > left + document.body.scrollLeft + width - tooltipSize.width) {
+        horizontalTranslate = horizontalTranslate - tooltipSize.width;
+    }
+
+    // Set translations to tooltip
+    tooltip.style('left', horizontalTranslate + 'px')
+        .style('top', verticalTranslate + 'px');
+};
+
 // Hide highlighted data point
 const hideHighlightedDataPoint = () => {
     d3.select('.highlight-datum')
@@ -275,7 +341,8 @@ const highlight = (d, xyInfo) => {
         hideTooltip();
     } else {
         showAndSetHighlightedDataPoint(d, xyInfo);
-        showAndSetTooltip(d, xyInfo);
+        if (graphSize == 'large') showAndSetTooltip(d, xyInfo);
+        if (graphSize == 'medium') showAndSetSmallerTooltip(d, xyInfo);
     }
 };
 
@@ -299,6 +366,32 @@ const prepareVoronoiCanvas = (voronoiDiagram, xyInfo) => {
         });
 };
 
+const prepareXValueHover = (data, xyInfo) => {
+    const graphCanvas = d3.select('#graphCanvas');
+
+    const bisector = d3.bisector(d => { return d.get(xyInfo.xColumnName); }).left;
+    
+    const hoverHandler = () => {
+        const mx = xyInfo.x.invert(d3.mouse(graphCanvas.node())[0]);
+        const dataIndex = bisector(data, mx, 1, data.length - 1);
+        const leftDataPoint = data[dataIndex - 1];
+        const rightDataPoint = data[dataIndex];
+        const nearestDataPoint = (mx - leftDataPoint.get(xyInfo.xColumnName)) > (rightDataPoint.get(xyInfo.xColumnName) - mx)
+            ? rightDataPoint
+            : leftDataPoint;
+        highlight(nearestDataPoint, xyInfo);
+    };
+
+    graphCanvas.append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .style('opacity', 0)
+        .on('mousemove', hoverHandler)
+        .on('mouseleave', () => {
+            highlight(null, xyInfo);
+        });
+};
+
 // Create footnote for graph
 const createGraphFootnote = () => {
     return d3.select('svg#lineGraph').append('text')
@@ -310,7 +403,10 @@ const createGraphFootnote = () => {
 }
 
 // Create a line graph
-const lineGraph = (container, dataInfo, xColumnName, yColumnName) => {
+const lineGraph = (container, dataInfo, xColumnName, yColumnName, size = 'large') => {
+    graphSize = size;
+    setSizeConstants();
+
     const {x, y} = createXYScales();
     const xyInfo = {x, y, xColumnName, yColumnName};
 
@@ -319,10 +415,17 @@ const lineGraph = (container, dataInfo, xColumnName, yColumnName) => {
 
     createSvg(container);
     createGraphCanvas();
-    drawGridLines(y);
-    drawXAxis(x, data);
-    drawYAxis(y);
-    createTooltip(container);
+
+    if (size == 'large') {
+        drawGridLines(y);
+        drawXAxis(x, data);
+        drawYAxis(y);
+    }
+    drawBaseline(y);
+
+    if (size == 'large' || size == 'medium') {
+        createTooltip(container);
+    }
 
     const drawLineFn = drawLineBetweenPoints(xyInfo);
     drawLinePath(data, drawLineFn);
@@ -330,12 +433,20 @@ const lineGraph = (container, dataInfo, xColumnName, yColumnName) => {
     if (data.length < (width / 10)) { // if data points are closer than 10px apart, don't render points
         drawDataPoints(data, xyInfo);
     }
-    drawHighlightedDataPoint();
 
-    const voronoiDiagram = computeVoronoi(width, height, data, xyInfo);
-    prepareVoronoiCanvas(voronoiDiagram, xyInfo);
+    if (size == 'medium') {
+        drawHighlightedDataPoint();
+        prepareXValueHover(data, xyInfo);
+    }
     
-    createGraphFootnote();
+    if (size == 'large') {
+        drawHighlightedDataPoint();
+
+        const voronoiDiagram = computeVoronoi(width, height, data, xyInfo);
+        prepareVoronoiCanvas(voronoiDiagram, xyInfo);
+
+        createGraphFootnote();
+    }
 };
 
 export default lineGraph;

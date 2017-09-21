@@ -19,13 +19,14 @@ class LineGraph extends React.PureComponent {
             dataInfo,
             xColumnName,
             yColumnName,
+            size,
             onRenderFinish
         } = props;
 
         const container = d3.select('#line-graph-container');
         container.html('');
 
-        drawLineGraph(container, dataInfo, xColumnName, yColumnName);
+        drawLineGraph(container, dataInfo, xColumnName, yColumnName, size);
         onRenderFinish();
     }
 
@@ -34,11 +35,16 @@ class LineGraph extends React.PureComponent {
     }
 }
 
+LineGraph.defaultProps = {
+    size: 'large'
+};
+
 LineGraph.propTypes = {
     dataInfo: PropTypes.object.isRequired,
     xColumnName: PropTypes.string.isRequired,
     yColumnName: PropTypes.string.isRequired,
-    onRenderFinish: PropTypes.func.isRequired
+    onRenderFinish: PropTypes.func.isRequired,
+    size: PropTypes.string
 };
 
 export default LineGraph;
