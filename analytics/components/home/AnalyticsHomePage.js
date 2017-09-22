@@ -8,6 +8,7 @@ import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import formatFiltersString from '../../helpers/formatFiltersString';
+import getTotalStats from '../../helpers/getTotalStats';
 import * as commentsActions from '../../actions/commentsActions';
 import * as likesActions from '../../actions/likesActions';
 import * as viewsActions from '../../actions/viewsActions';
@@ -126,18 +127,7 @@ export class AnalyticsHomePage extends React.PureComponent {
     renderComments() {
         if (this.state.contentType == ContentTypes.PLAYLISTS) return;
         const loadingSpinner = require('../../images/loading.gif');
-        
-        let totalComments = 0;
-        const totalStats = this.props.totalStats;
-        if (totalStats.columnHeaders) {
-            const totalStatsColumns = totalStats.columnHeaders.map(item => {
-                return item.name;
-            });
-            if (totalStats.rows) {
-                if (totalStatsColumns.indexOf('comments') >= 0)
-                totalComments = totalStats.rows[0][totalStatsColumns.indexOf('comments')];
-            }
-        }
+        const totalComments = getTotalStats(this.props.totalStats, 'comments');
 
         return (
             <Link to={{pathname: "/analytics/comments", state: this.state}}>
@@ -154,19 +144,8 @@ export class AnalyticsHomePage extends React.PureComponent {
     renderLikes() {
         if (this.state.contentType == ContentTypes.PLAYLISTS) return;
         const loadingSpinner = require('../../images/loading.gif');
+        const totalLikes = getTotalStats(this.props.totalStats, 'likes');
         
-        let totalLikes = 0;
-        const totalStats = this.props.totalStats;
-        if (totalStats.columnHeaders) {
-            const totalStatsColumns = totalStats.columnHeaders.map(item => {
-                return item.name;
-            });
-            if (totalStats.rows) {
-                if (totalStatsColumns.indexOf('likes') >= 0)
-                totalLikes = totalStats.rows[0][totalStatsColumns.indexOf('likes')];
-            }
-        }
-
         return (
             <Link to={{pathname: "/analytics/likes", state: this.state}}>
                 <div id="likes-overview-section">
@@ -181,19 +160,8 @@ export class AnalyticsHomePage extends React.PureComponent {
 
     renderViews() {
         const loadingSpinner = require('../../images/loading.gif');
+        const totalViews = getTotalStats(this.props.totalStats, 'views');
         
-        let totalViews = 0;
-        const totalStats = this.props.totalStats;
-        if (totalStats.columnHeaders) {
-            const totalStatsColumns = totalStats.columnHeaders.map(item => {
-                return item.name;
-            });
-            if (totalStats.rows) {
-                if (totalStatsColumns.indexOf('views') >= 0)
-                totalViews = totalStats.rows[0][totalStatsColumns.indexOf('views')];
-            }
-        }
-
         return (
             <Link to={{pathname: "/analytics/views", state: this.state}}>
                 <div id="views-overview-section">
@@ -208,24 +176,13 @@ export class AnalyticsHomePage extends React.PureComponent {
 
     renderWatchTime() {
         const loadingSpinner = require('../../images/loading.gif');
-
-        let totalEstimatedMinutesWatched = 0;
-        const totalStats = this.props.totalStats;
-        if (totalStats.columnHeaders) {
-            const totalStatsColumns = totalStats.columnHeaders.map(item => {
-                return item.name;
-            });
-            if (totalStats.rows) {
-                if (totalStatsColumns.indexOf('estimatedMinutesWatched') >= 0)
-                    totalEstimatedMinutesWatched = totalStats.rows[0][totalStatsColumns.indexOf('estimatedMinutesWatched')];
-            }
-        }
+        const totalWatchTime = getTotalStats(this.props.totalStats, 'estimatedMinutesWatched');
 
         return (
             <Link to={{pathname: "/analytics/watchTime", state: this.state}}>
                 <div id="watchTime-overview-section">
                     <div className="metric-title">WATCH TIME (MINUTES)</div>
-                    <div className="metric-value">{totalEstimatedMinutesWatched.toLocaleString()}</div>
+                    <div className="metric-value">{totalWatchTime.toLocaleString()}</div>
                     {this.renderLineGraph(this.props.watchTime, 'watchTime', 'medium')}
                     <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
                 </div>

@@ -1,21 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import getTotalStats from '../../helpers/getTotalStats';
 
 const ViewsMetricsSection = ({totalStats, filterState}) => {
-    let totalViews = 0;
-    let totalEstimatedMinutesWatched = 0;
-    if (totalStats.columnHeaders) {
-        const totalStatsColumns = totalStats.columnHeaders.map(item => {
-            return item.name;
-        });
-        if (totalStats.rows) {
-            if (totalStatsColumns.indexOf('views') >= 0)
-                totalViews = totalStats.rows[0][totalStatsColumns.indexOf('views')];
-            if (totalStatsColumns.indexOf('estimatedMinutesWatched') >= 0)
-                totalEstimatedMinutesWatched = totalStats.rows[0][totalStatsColumns.indexOf('estimatedMinutesWatched')];
-        }
-    }
+    const totalViews = getTotalStats(totalStats, 'views');
+    const totalWatchTime = getTotalStats(totalStats, 'estimatedMinutesWatched');
 
     return (
         <div className="metrics-section">
@@ -32,7 +22,7 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
                     <Link to={{pathname: "/analytics/watchTime", state: filterState}}>
                         <div className="metric-tab">
                             <div className="metric-title">WATCH TIME (MINUTES)</div>
-                            <div className="metric-value">{totalEstimatedMinutesWatched.toLocaleString()}</div>
+                            <div className="metric-value">{totalWatchTime.toLocaleString()}</div>
                         </div>
                     </Link>
                 </li>

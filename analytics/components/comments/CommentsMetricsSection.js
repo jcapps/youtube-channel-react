@@ -1,18 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import getTotalStats from '../../helpers/getTotalStats';
 
 const CommentsMetricsSection = ({totalStats, filterState}) => {
-    let totalComments = 0;
-    if (totalStats.columnHeaders) {
-        const totalStatsColumns = totalStats.columnHeaders.map(item => {
-            return item.name;
-        });
-        if (totalStats.rows) {
-            if (totalStatsColumns.indexOf('comments') >= 0)
-                totalComments = totalStats.rows[0][totalStatsColumns.indexOf('comments')];
-        }
-    }
+    const totalComments = getTotalStats(totalStats, 'comments');
 
     return (
         <div className="metrics-section">

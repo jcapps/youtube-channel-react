@@ -1,21 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import getTotalStats from '../../helpers/getTotalStats';
 
 const LikesMetricsSection = ({totalStats, filterState}) => {
-    let totalLikes = 0;
-    let totalDislikes = 0;
-    if (totalStats.columnHeaders) {
-        const totalStatsColumns = totalStats.columnHeaders.map(item => {
-            return item.name;
-        });
-        if (totalStats.rows) {
-            if (totalStatsColumns.indexOf('likes') >= 0)
-                totalLikes = totalStats.rows[0][totalStatsColumns.indexOf('likes')];
-            if (totalStatsColumns.indexOf('dislikes') >= 0)
-                totalDislikes = totalStats.rows[0][totalStatsColumns.indexOf('dislikes')];
-        }
-    }
+    const totalLikes = getTotalStats(totalStats, 'likes');
+    const totalDislikes = getTotalStats(totalStats, 'dislikes');
 
     return (
         <div className="metrics-section">
