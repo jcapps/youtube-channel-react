@@ -2,13 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Link} from 'react-router-dom';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
-import computeWatchTimes from '../../helpers/computeWatchTimes';
 import formatFiltersString from '../../helpers/formatFiltersString';
-import getTotalStats from '../../helpers/getTotalStats';
 import * as commentsActions from '../../actions/commentsActions';
 import * as likesActions from '../../actions/likesActions';
 import * as viewsActions from '../../actions/viewsActions';
@@ -16,7 +13,7 @@ import * as watchTimeActions from '../../actions/watchTimeActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraph from '../common/graphs/LineGraph';
+import OverviewSection from './OverviewSection';
 
 export class AnalyticsHomePage extends React.PureComponent {
     constructor() {
@@ -31,11 +28,6 @@ export class AnalyticsHomePage extends React.PureComponent {
         this.state.isLoading = true;
 
         this.getData = this.getData.bind(this);
-        this.renderComments = this.renderComments.bind(this);
-        this.renderLikes = this.renderLikes.bind(this);
-        this.renderViews = this.renderViews.bind(this);
-        this.renderWatchTime = this.renderWatchTime.bind(this);
-        this.renderLineGraph = this.renderLineGraph.bind(this);
     }
 
     componentWillMount() {
@@ -103,93 +95,6 @@ export class AnalyticsHomePage extends React.PureComponent {
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, formatFiltersString(state.filters));
     }
 
-    renderLineGraph(propsDataInfo, dataType, size) {
-        const parentId = `${dataType}-overview-section`;
-        let dataInfo = Object.assign({}, propsDataInfo);
-
-        if (!dataInfo.columnHeaders) return;
-        if (dataType == 'watchTime') {
-            dataInfo = computeWatchTimes(propsDataInfo);
-        }
-
-        return (
-            <LineGraph
-                dataInfo={dataInfo}
-                xColumnName="day"
-                yColumnName={dataType}
-                size={size}
-                onRenderFinish={() => this.hideLoadingSpinner(dataType)}
-                isLoading={this.state.isLoading}
-            />
-        );
-    }
-
-    renderComments() {
-        if (this.state.contentType == ContentTypes.PLAYLISTS) return;
-        const loadingSpinner = require('../../images/loading.gif');
-        const totalComments = getTotalStats(this.props.totalStats, 'comments');
-
-        return (
-            <Link to={{pathname: "/analytics/comments", state: this.state}}>
-                <div id="comments-overview-section">
-                    <div className="metric-title">COMMENTS</div>
-                    <div className="metric-value">{totalComments.toLocaleString()}</div>
-                    {this.renderLineGraph(this.props.comments, 'comments', 'medium')}
-                    <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
-                </div>
-            </Link>
-        );
-    }
-
-    renderLikes() {
-        if (this.state.contentType == ContentTypes.PLAYLISTS) return;
-        const loadingSpinner = require('../../images/loading.gif');
-        const totalLikes = getTotalStats(this.props.totalStats, 'likes');
-        
-        return (
-            <Link to={{pathname: "/analytics/likes", state: this.state}}>
-                <div id="likes-overview-section">
-                    <div className="metric-title">LIKES</div>
-                    <div className="metric-value">{totalLikes.toLocaleString()}</div>
-                    {this.renderLineGraph(this.props.likes, 'likes', 'medium')}
-                    <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
-                </div>
-            </Link>
-        );
-    }
-
-    renderViews() {
-        const loadingSpinner = require('../../images/loading.gif');
-        const totalViews = getTotalStats(this.props.totalStats, 'views');
-        
-        return (
-            <Link to={{pathname: "/analytics/views", state: this.state}}>
-                <div id="views-overview-section">
-                    <div className="metric-title">VIEWS</div>
-                    <div className="metric-value">{totalViews.toLocaleString()}</div>
-                    {this.renderLineGraph(this.props.views, 'views', 'medium')}
-                    <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
-                </div>
-            </Link>
-        );
-    }
-
-    renderWatchTime() {
-        const loadingSpinner = require('../../images/loading.gif');
-        const totalWatchTime = getTotalStats(this.props.totalStats, 'estimatedMinutesWatched');
-
-        return (
-            <Link to={{pathname: "/analytics/watchTime", state: this.state}}>
-                <div id="watchTime-overview-section">
-                    <div className="metric-title">WATCH TIME (MINUTES)</div>
-                    <div className="metric-value">{totalWatchTime.toLocaleString()}</div>
-                    {this.renderLineGraph(this.props.watchTime, 'watchTime', 'medium')}
-                    <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
-                </div>
-            </Link>
-        );
-    }
-
     render() {
         if (this.props.isLoading) return <div/>;
         return (
@@ -200,10 +105,34 @@ export class AnalyticsHomePage extends React.PureComponent {
                     onChangeFilters={this.getData}
                 />
                 <div id="overview-sections">
-                    {this.renderViews()}
-                    {this.renderWatchTime()}
-                    {this.renderLikes()}
-                    {this.renderComments()}
+                    <OverviewSection
+                        data={this.props.views}
+                        dataType='views'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('views')}
+                    />
+                    <OverviewSection
+                        data={this.props.watchTime}
+                        dataType='watchTime'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('watchTime')}
+                    />
+                    <OverviewSection
+                        data={this.props.likes}
+                        dataType='likes'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('likes')}
+                    />
+                    <OverviewSection
+                        data={this.props.comments}
+                        dataType='comments'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('comments')}
+                    />
                 </div>
             </div>
         );
