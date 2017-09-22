@@ -30,13 +30,13 @@ div.metrics-section {
             color: $metric-color-hover;
             background-color: $metric-background-hover;
         }
-
-        .metric-title {
-            font-size: 12px;
-        }
-
-        .metric-value {
-            font-size: 22px;
-        }
     }
+}
+
+.metric-title {
+    font-size: 12px;
+}
+
+.metric-value {
+    font-size: 22px;
 }
