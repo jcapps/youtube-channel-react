@@ -14,9 +14,6 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
                 totalViews = totalStats.rows[0][totalStatsColumns.indexOf('views')];
             if (totalStatsColumns.indexOf('estimatedMinutesWatched') >= 0)
                 totalEstimatedMinutesWatched = totalStats.rows[0][totalStatsColumns.indexOf('estimatedMinutesWatched')];
-        } else {
-            totalViews = 0;
-            totalEstimatedMinutesWatched = 0;
         }
     }
 

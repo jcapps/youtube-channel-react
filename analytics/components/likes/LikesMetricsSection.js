@@ -14,9 +14,6 @@ const LikesMetricsSection = ({totalStats, filterState}) => {
                 totalLikes = totalStats.rows[0][totalStatsColumns.indexOf('likes')];
             if (totalStatsColumns.indexOf('dislikes') >= 0)
                 totalDislikes = totalStats.rows[0][totalStatsColumns.indexOf('dislikes')];
-        } else {
-            totalLikes = 0;
-            totalDislikes = 0;
         }
     }
 

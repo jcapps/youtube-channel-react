@@ -11,8 +11,6 @@ const CommentsMetricsSection = ({totalStats, filterState}) => {
         if (totalStats.rows) {
             if (totalStatsColumns.indexOf('comments') >= 0)
                 totalComments = totalStats.rows[0][totalStatsColumns.indexOf('comments')];
-        } else {
-            totalComments = 0;
         }
     }
 
