@@ -9,7 +9,7 @@ class LineGraph extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.dataInfo !== nextProps.dataInfo) {
+        if (!nextProps.isLoading) {
             this.drawLineGraph(nextProps);
         }
     }
@@ -23,7 +23,7 @@ class LineGraph extends React.PureComponent {
             onRenderFinish
         } = props;
 
-        const container = d3.select('#line-graph-container');
+        const container = d3.select(`.${yColumnName}-line-graph-container`);
         container.html('');
 
         drawLineGraph(container, dataInfo, xColumnName, yColumnName, size);
@@ -31,7 +31,8 @@ class LineGraph extends React.PureComponent {
     }
 
     render() {
-        return <div id="line-graph-container" />;
+        const classString = `${this.props.yColumnName}-line-graph-container`;
+        return <div className={classString} />;
     }
 }
 
@@ -40,6 +41,7 @@ LineGraph.defaultProps = {
 };
 
 LineGraph.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     dataInfo: PropTypes.object.isRequired,
     xColumnName: PropTypes.string.isRequired,
     yColumnName: PropTypes.string.isRequired,

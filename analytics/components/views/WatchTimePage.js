@@ -24,7 +24,8 @@ export class WatchTimePage extends React.PureComponent {
                 timePeriod: Periods.TWENTY_EIGHT_DAY,
                 dateRange: null,
                 filters: [],
-                addedFilters: []
+                addedFilters: [],
+                isLoading: true
             };
         }
         this.getData = this.getData.bind(this);
@@ -44,8 +45,15 @@ export class WatchTimePage extends React.PureComponent {
         this.props.clearWatchTime();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (JSON.stringify(this.props) != JSON.stringify(nextProps)) {
+            this.setState({isLoading: false});
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props !== nextProps || this.state !== nextState) {
+        if (JSON.stringify(this.props) != JSON.stringify(nextProps) || 
+            JSON.stringify(this.state) != JSON.stringify(nextState)) {
             return true;
         }
         return false;
@@ -61,6 +69,7 @@ export class WatchTimePage extends React.PureComponent {
 
     getData(state) {
         this.setState({...state});
+        this.setState({isLoading: true});
 
         this.showLoadingSpinner();
         this.props.actions.getWatchTime(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
@@ -76,6 +85,7 @@ export class WatchTimePage extends React.PureComponent {
                 xColumnName="day"
                 yColumnName="watchTime"
                 onRenderFinish={this.hideLoadingSpinner}
+                isLoading={this.state.isLoading}
             />
         );
     }

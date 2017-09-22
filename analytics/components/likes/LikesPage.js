@@ -23,7 +23,8 @@ export class LikesPage extends React.PureComponent {
                 timePeriod: Periods.TWENTY_EIGHT_DAY,
                 dateRange: null,
                 filters: [],
-                addedFilters: []
+                addedFilters: [],
+                isLoading: true
             };
         }
         this.state.playlistAttempted = this.state.contentType == ContentTypes.PLAYLISTS;
@@ -47,8 +48,15 @@ export class LikesPage extends React.PureComponent {
         this.props.clearLikes();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (JSON.stringify(this.props) != JSON.stringify(nextProps)) {
+            this.setState({isLoading: false});
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props !== nextProps || this.state !== nextState) {
+        if (JSON.stringify(this.props) != JSON.stringify(nextProps) || 
+            JSON.stringify(this.state) != JSON.stringify(nextState)) {
             return true;
         }
         return false;
@@ -71,6 +79,7 @@ export class LikesPage extends React.PureComponent {
             this.setState({playlistAttempted: false});
         }
 
+        this.setState({isLoading: true});
         this.showLoadingSpinner();
         this.props.actions.getLikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
     }
@@ -86,6 +95,7 @@ export class LikesPage extends React.PureComponent {
                 xColumnName="day"
                 yColumnName="likes"
                 onRenderFinish={this.hideLoadingSpinner}
+                isLoading={this.state.isLoading}
             />
         );
     }
