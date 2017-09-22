@@ -22,8 +22,8 @@ const CommentsMetricsSection = ({totalStats, filterState}) => {
                 <li>
                     <Link to={{pathname: "/analytics/comments", state: filterState}}>
                         <div className="metric-tab">
-                            <div className="metric-tab-title">COMMENTS</div>
-                            <div className="metric-tab-value">{totalComments.toLocaleString()}</div>
+                            <div className="metric-title">COMMENTS</div>
+                            <div className="metric-value">{totalComments.toLocaleString()}</div>
                         </div>
                     </Link>
                 </li>

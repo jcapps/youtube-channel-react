@@ -26,16 +26,16 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
                 <li>
                     <Link to={{pathname: "/analytics/views", state: filterState}}>
                         <div className="metric-tab">
-                            <div className="metric-tab-title">VIEWS</div>
-                            <div className="metric-tab-value">{totalViews.toLocaleString()}</div>
+                            <div className="metric-title">VIEWS</div>
+                            <div className="metric-value">{totalViews.toLocaleString()}</div>
                         </div>
                     </Link>
                 </li>
                 <li>
                     <Link to={{pathname: "/analytics/watchTime", state: filterState}}>
                         <div className="metric-tab">
-                            <div className="metric-tab-title">WATCH TIME (MINUTES)</div>
-                            <div className="metric-tab-value">{totalEstimatedMinutesWatched.toLocaleString()}</div>
+                            <div className="metric-title">WATCH TIME (MINUTES)</div>
+                            <div className="metric-value">{totalEstimatedMinutesWatched.toLocaleString()}</div>
                         </div>
                     </Link>
                 </li>
