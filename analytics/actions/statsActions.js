@@ -1,4 +1,5 @@
 import {bindActionCreators} from 'redux';
+import getDateRange from '../helpers/getDateRange';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
@@ -12,8 +13,19 @@ export function getTotalStatsError() {
     return { type: types.GET_TOTAL_STATS_ERROR };
 }
 
-export function getTotalStats(dateRange, metrics, filters = '') {
-    return function(dispatch) {
+export function getTotalStats(
+    period = Periods.TWENTY_EIGHT_DAY,
+    dateRange = null,
+    metrics,
+    filters = ''
+) {
+    return function(dispatch, getState) {
+        if (!dateRange) {
+            const channelInfo = getState().channelInfo;
+            let channelBirthdate = '';
+            if (channelInfo.snippet) channelBirthdate = channelInfo.snippet.publishedAt;
+            dateRange = getDateRange(period, channelBirthdate);
+        }
         const {startDate, endDate} = dateRange;
 
         dispatch(ajax.gettingTotalStats());

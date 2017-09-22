@@ -18,6 +18,7 @@ export default {
         isLoggedIn: 0,
         likes: 0,
         login: 0,
+        totalStats: 0,
         views: 0,
         watchTime: 0
     }

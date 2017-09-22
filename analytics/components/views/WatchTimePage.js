@@ -8,7 +8,8 @@ import Periods from '../../globals/Periods';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as watchTimeActions from '../../actions/watchTimeActions';
-import {clearWatchTime} from '../../actions/clearActions';
+import * as statsActions from '../../actions/statsActions';
+import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraph from '../common/graphs/LineGraph';
 import ViewsMetricsSection from './ViewsMetricsSection';
@@ -24,10 +25,11 @@ export class WatchTimePage extends React.PureComponent {
                 timePeriod: Periods.TWENTY_EIGHT_DAY,
                 dateRange: null,
                 filters: [],
-                addedFilters: [],
-                isLoading: true
+                addedFilters: []
             };
         }
+        this.state.isLoading = true;
+
         this.getData = this.getData.bind(this);
         this.renderLineGraph = this.renderLineGraph.bind(this);
     }
@@ -42,7 +44,7 @@ export class WatchTimePage extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.props.clearWatchTime();
+        this.props.clearActions.clearWatchTime();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -73,6 +75,7 @@ export class WatchTimePage extends React.PureComponent {
 
         this.showLoadingSpinner();
         this.props.actions.getWatchTime(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, 'views,estimatedMinutesWatched', formatFiltersString(state.filters));
     }
 
     renderLineGraph() {
@@ -117,22 +120,27 @@ WatchTimePage.propTypes = {
     watchTime: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
-    clearWatchTime: PropTypes.func.isRequired,
+    clearActions: PropTypes.object.isRequired,
     state: PropTypes.object
 };
 
 export function mapStateToProps(state) {
+    const totalAjaxCallsInProgress
+        = state.ajaxCallsInProgress.watchTime
+        + state.ajaxCallsInProgress.totalStats;
+
     return {
         watchTime: state.watchTime,
         totalStats: state.totalStats,
-        isLoading: state.ajaxCallsInProgress.watchTime > 0
+        isLoading: totalAjaxCallsInProgress > 0
     };
 }
 
 export function mapDispatchToProps(dispatch) {
+    const combinedActions = Object.assign({}, watchTimeActions, statsActions);
     return {
-        actions: bindActionCreators(watchTimeActions, dispatch),
-        clearWatchTime: bindActionCreators(clearWatchTime, dispatch)
+        actions: bindActionCreators(combinedActions, dispatch),
+        clearActions: bindActionCreators(clearActions, dispatch)
     };
 }
 
@@ -140,8 +148,7 @@ export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading) || 
-            (prev.watchTime !== next.watchTime) || 
-            (prev.totalStats !== next.totalStats)
+            ((prev.watchTime !== next.watchTime) && (prev.totalStats !== next.totalStats))
         );
     }
 };

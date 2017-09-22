@@ -6,7 +6,6 @@ import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
 import * as loginActions from './loginActions';
-import * as statsActions from './statsActions';
 
 export function getDislikesSuccess(report) {
     return { type: types.GET_DISLIKES_SUCCESS, report };
@@ -34,15 +33,12 @@ export function getDislikes(
         dispatch(ajax.gettingDislikes());
 
         const helperLoginActions = bindActionCreators(loginActions, dispatch);
-        const helperStatsActions = bindActionCreators(statsActions, dispatch);
 
         return helperLoginActions.isLoggedIn().then(isLoggedIn => {
             if (isLoggedIn) {
                 return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
                     const reportData = zeroMissingData(report, startDate, endDate);
-                    return helperStatsActions.getTotalStats(dateRange, 'likes,dislikes', filters).then(() => {
-                        dispatch(getDislikesSuccess(reportData));
-                    });
+                    dispatch(getDislikesSuccess(reportData));
                 }).catch(error => {
                     dispatch(getDislikesError());
                     throw(error);

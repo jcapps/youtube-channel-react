@@ -7,7 +7,8 @@ import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as likesActions from '../../actions/likesActions';
-import {clearLikes} from '../../actions/clearActions';
+import * as statsActions from '../../actions/statsActions';
+import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraph from '../common/graphs/LineGraph';
 import LikesMetricsSection from './LikesMetricsSection';
@@ -23,11 +24,11 @@ export class LikesPage extends React.PureComponent {
                 timePeriod: Periods.TWENTY_EIGHT_DAY,
                 dateRange: null,
                 filters: [],
-                addedFilters: [],
-                isLoading: true
+                addedFilters: []
             };
         }
         this.state.playlistAttempted = this.state.contentType == ContentTypes.PLAYLISTS;
+        this.state.isLoading = true;
 
         this.getData = this.getData.bind(this);
         this.renderLineGraph = this.renderLineGraph.bind(this);
@@ -45,7 +46,7 @@ export class LikesPage extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.props.clearLikes();
+        this.props.clearActions.clearLikes();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -82,6 +83,7 @@ export class LikesPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
         this.props.actions.getLikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, 'likes,dislikes', formatFiltersString(state.filters));
     }
 
     renderLineGraph() {
@@ -127,22 +129,27 @@ LikesPage.propTypes = {
     likes: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
-    clearLikes: PropTypes.func.isRequired,
+    clearActions: PropTypes.object.isRequired,
     state: PropTypes.object
 };
 
 export function mapStateToProps(state) {
+    const totalAjaxCallsInProgress
+        = state.ajaxCallsInProgress.likes
+        + state.ajaxCallsInProgress.totalStats;
+        
     return {
         likes: state.likes,
         totalStats: state.totalStats,
-        isLoading: state.ajaxCallsInProgress.likes > 0
+        isLoading: totalAjaxCallsInProgress > 0
     };
 }
 
 export function mapDispatchToProps(dispatch) {
+    const combinedActions = Object.assign({}, likesActions, statsActions);
     return {
-        actions: bindActionCreators(likesActions, dispatch),
-        clearLikes: bindActionCreators(clearLikes, dispatch)
+        actions: bindActionCreators(combinedActions, dispatch),
+        clearActions: bindActionCreators(clearActions, dispatch)
     };
 }
 
@@ -150,8 +157,7 @@ export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading) || 
-            (prev.likes !== next.likes) || 
-            (prev.totalStats !== next.totalStats)
+            ((prev.likes !== next.likes) && (prev.totalStats !== next.totalStats))
         );
     }
 };

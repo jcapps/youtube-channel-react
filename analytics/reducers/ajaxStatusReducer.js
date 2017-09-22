@@ -41,43 +41,37 @@ function isCheckingLoginActionSuccessType(type) {
 
 function isDislikesActionStartingType(type) {
     return (
-        type == types.GETTING_DISLIKES || 
-        type == types.GETTING_TOTAL_STATS
+        type == types.GETTING_DISLIKES
     );
 }
 
 function isDislikesActionSuccessType(type) {
     return (
-        type == types.GET_DISLIKES_SUCCESS || 
-        type == types.GET_TOTAL_STATS_SUCCESS
+        type == types.GET_DISLIKES_SUCCESS
     );
 }
 
 function isDislikesActionErrorType(type) {
     return (
-        type == types.GET_DISLIKES_ERROR || 
-        type == types.GET_TOTAL_STATS_ERROR
+        type == types.GET_DISLIKES_ERROR
     );
 }
 
 function isLikesActionStartingType(type) {
     return (
-        type == types.GETTING_LIKES || 
-        type == types.GETTING_TOTAL_STATS
+        type == types.GETTING_LIKES
     );
 }
 
 function isLikesActionSuccessType(type) {
     return (
-        type == types.GET_LIKES_SUCCESS || 
-        type == types.GET_TOTAL_STATS_SUCCESS
+        type == types.GET_LIKES_SUCCESS
     );
 }
 
 function isLikesActionErrorType(type) {
     return (
-        type == types.GET_LIKES_ERROR || 
-        type == types.GET_TOTAL_STATS_ERROR
+        type == types.GET_LIKES_ERROR
     );
 }
 
@@ -93,45 +87,57 @@ function isLoginActionSuccessType(type) {
     );
 }
 
+function isTotalStatsActionStartingType(type) {
+    return (
+        type == types.GETTING_TOTAL_STATS
+    );
+}
+
+function isTotalStatsActionSuccessType(type) {
+    return (
+        type == types.GET_TOTAL_STATS_SUCCESS
+    );
+}
+
+function isTotalStatsActionErrorType(type) {
+    return (
+        type == types.GET_TOTAL_STATS_ERROR
+    );
+}
+
 function isViewsActionStartingType(type) {
     return (
-        type == types.GETTING_VIEWS || 
-        type == types.GETTING_TOTAL_STATS
+        type == types.GETTING_VIEWS
     );
 }
 
 function isViewsActionSuccessType(type) {
     return (
-        type == types.GET_VIEWS_SUCCESS || 
-        type == types.GET_TOTAL_STATS_SUCCESS
+        type == types.GET_VIEWS_SUCCESS
     );
 }
 
 function isViewsActionErrorType(type) {
     return (
-        type == types.GET_VIEWS_ERROR || 
-        type == types.GET_TOTAL_STATS_ERROR
+        type == types.GET_VIEWS_ERROR
     );
 }
 
 function isWatchTimeActionStartingType(type) {
     return (
-        type == types.GETTING_WATCH_TIME || 
-        type == types.GETTING_TOTAL_STATS
+        type == types.GETTING_WATCH_TIME
     );
 }
 
 function isWatchTimeActionSuccessType(type) {
     return (
-        type == types.GET_WATCH_TIME_SUCCESS || 
-        type == types.GET_TOTAL_STATS_SUCCESS
+        type == types.GET_WATCH_TIME_SUCCESS
     );
 }
 
 function isWatchTimeActionErrorType(type) {
     return (
-        type == types.GET_WATCH_TIME_ERROR || 
-        type == types.GET_TOTAL_STATS_ERROR
+        type == types.GET_WATCH_TIME_ERROR
     );
 }
 
@@ -179,6 +185,15 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isLoginActionSuccessType(action.type)) {
         currentState.login -= 1;
+    }
+    if (isTotalStatsActionStartingType(action.type)) {
+        currentState.totalStats += 1;
+    }
+    if (isTotalStatsActionSuccessType(action.type)) {
+        currentState.totalStats -= 1;
+    }
+    if (isTotalStatsActionErrorType(action.type)) {
+        currentState.totalStats -= 1;
     }
     if (isViewsActionStartingType(action.type)) {
         currentState.views += 1;
