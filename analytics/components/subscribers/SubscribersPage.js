@@ -77,6 +77,8 @@ export class SubscribersPage extends React.PureComponent {
         this.setState({...state});
         if (state.contentType == ContentTypes.PLAYLISTS) {
             this.setState({playlistAttempted: true});
+            this.props.clearActions.clearSubscribers();
+            this.props.clearActions.clearUnsubscribers();
             return;
         } else {
             this.setState({playlistAttempted: false});

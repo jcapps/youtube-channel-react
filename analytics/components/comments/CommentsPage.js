@@ -75,6 +75,7 @@ export class CommentsPage extends React.PureComponent {
         this.setState({...state});
         if (state.contentType == ContentTypes.PLAYLISTS) {
             this.setState({playlistAttempted: true});
+            this.props.clearActions.clearComments();
             return;
         } else {
             this.setState({playlistAttempted: false});

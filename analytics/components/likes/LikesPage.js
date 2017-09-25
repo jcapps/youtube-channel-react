@@ -75,6 +75,7 @@ export class LikesPage extends React.PureComponent {
         this.setState({...state});
         if (state.contentType == ContentTypes.PLAYLISTS) {
             this.setState({playlistAttempted: true});
+            this.props.clearActions.clearLikes();
             return;
         } else {
             this.setState({playlistAttempted: false});
