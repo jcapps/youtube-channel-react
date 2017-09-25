@@ -1,11 +1,9 @@
 import {bindActionCreators} from 'redux';
 import Periods from '../globals/Periods';
-import getDateRange from '../helpers/getDateRange';
-import zeroMissingData from '../helpers/zeroMissingData';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
-import * as loginActions from './loginActions';
+import * as reportActions from './reportActions';
 
 export function getSubscribersSuccess(report) {
     return { type: types.GET_SUBSCRIBERS_SUCCESS, report };
@@ -29,31 +27,22 @@ export function getSubscribers(
     filters = '',
     dimensions = 'day'
 ) {
-    return function(dispatch, getState) {
-        if (!dateRange) {
-            const channelInfo = getState().channelInfo;
-            let channelBirthdate = '';
-            if (channelInfo.snippet) channelBirthdate = channelInfo.snippet.publishedAt;
-            dateRange = getDateRange(period, channelBirthdate);
-        }
-        const {startDate, endDate} = dateRange;
-        const metrics = 'subscribersGained';
+    return function(dispatch) {
+        const searchTerms = {
+            period,
+            dateRange,
+            metrics: 'subscribersGained',
+            filters,
+            dimensions
+        };
+
+        const helperReportActions = bindActionCreators(reportActions, dispatch);
+
         dispatch(ajax.gettingSubscribers());
-
-        const helperLoginActions = bindActionCreators(loginActions, dispatch);
-
-        return helperLoginActions.isLoggedIn().then(isLoggedIn => {
-            if (isLoggedIn) {
-                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
-                    const reportData = zeroMissingData(report, startDate, endDate);
-                    dispatch(getSubscribersSuccess(reportData));
-                }).catch(error => {
-                    dispatch(getSubscribersError());
-                    throw(error);
-                });
-            } else {
-                dispatch(getSubscribersError());
-            }
+        return helperReportActions.compileReport(searchTerms).then(report => {
+            dispatch(getSubscribersSuccess(report));
+        }).catch(error => {
+            dispatch(getSubscribersError());
         });
     };
 }
@@ -64,31 +53,22 @@ export function getUnsubscribers(
     filters = '',
     dimensions = 'day'
 ) {
-    return function(dispatch, getState) {
-        if (!dateRange) {
-            const channelInfo = getState().channelInfo;
-            let channelBirthdate = '';
-            if (channelInfo.snippet) channelBirthdate = channelInfo.snippet.publishedAt;
-            dateRange = getDateRange(period, channelBirthdate);
-        }
-        const {startDate, endDate} = dateRange;
-        const metrics = 'subscribersLost';
+    return function(dispatch) {
+        const searchTerms = {
+            period,
+            dateRange,
+            metrics: 'subscribersLost',
+            filters,
+            dimensions
+        };
+
+        const helperReportActions = bindActionCreators(reportActions, dispatch);
+
         dispatch(ajax.gettingUnsubscribers());
-
-        const helperLoginActions = bindActionCreators(loginActions, dispatch);
-
-        return helperLoginActions.isLoggedIn().then(isLoggedIn => {
-            if (isLoggedIn) {
-                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
-                    const reportData = zeroMissingData(report, startDate, endDate);
-                    dispatch(getUnsubscribersSuccess(reportData));
-                }).catch(error => {
-                    dispatch(getUnsubscribersError());
-                    throw(error);
-                });
-            } else {
-                dispatch(getUnsubscribersError());
-            }
+        return helperReportActions.compileReport(searchTerms).then(report => {
+            dispatch(getUnsubscribersSuccess(report));
+        }).catch(error => {
+            dispatch(getUnsubscribersError());
         });
     };
 }

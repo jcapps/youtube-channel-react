@@ -1,11 +1,9 @@
 import {bindActionCreators} from 'redux';
 import Periods from '../globals/Periods';
-import getDateRange from '../helpers/getDateRange';
-import zeroMissingData from '../helpers/zeroMissingData';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
-import * as loginActions from './loginActions';
+import * as reportActions from './reportActions';
 
 export function getCommentsSuccess(report) {
     return { type: types.GET_COMMENTS_SUCCESS, report };
@@ -21,31 +19,22 @@ export function getComments(
     filters = '',
     dimensions = 'day'
 ) {
-    return function(dispatch, getState) {
-        if (!dateRange) {
-            const channelInfo = getState().channelInfo;
-            let channelBirthdate = '';
-            if (channelInfo.snippet) channelBirthdate = channelInfo.snippet.publishedAt;
-            dateRange = getDateRange(period, channelBirthdate);
-        }
-        const {startDate, endDate} = dateRange;
-        const metrics = 'comments';
+    return function(dispatch) {
+        const searchTerms = {
+            period,
+            dateRange,
+            metrics: 'comments',
+            filters,
+            dimensions
+        };
+
+        const helperReportActions = bindActionCreators(reportActions, dispatch);
+
         dispatch(ajax.gettingComments());
-
-        const helperLoginActions = bindActionCreators(loginActions, dispatch);
-
-        return helperLoginActions.isLoggedIn().then(isLoggedIn => {
-            if (isLoggedIn) {
-                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
-                    const reportData = zeroMissingData(report, startDate, endDate);
-                    dispatch(getCommentsSuccess(reportData));
-                }).catch(error => {
-                    dispatch(getCommentsError());
-                    throw(error);
-                });
-            } else {
-                dispatch(getCommentsError());
-            }
+        return helperReportActions.compileReport(searchTerms).then(report => {
+            dispatch(getCommentsSuccess(report));
+        }).catch(error => {
+            dispatch(getCommentsError());
         });
     };
 }

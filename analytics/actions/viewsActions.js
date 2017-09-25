@@ -1,11 +1,9 @@
 import {bindActionCreators} from 'redux';
 import Periods from '../globals/Periods';
-import getDateRange from '../helpers/getDateRange';
-import zeroMissingData from '../helpers/zeroMissingData';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
-import * as loginActions from './loginActions';
+import * as reportActions from './reportActions';
 
 export function getViewsSuccess(report) {
     return { type: types.GET_VIEWS_SUCCESS, report };
@@ -29,31 +27,22 @@ export function getViews(
     filters = '',
     dimensions = 'day'
 ) {
-    return function(dispatch, getState) {
-        if (!dateRange) {
-            const channelInfo = getState().channelInfo;
-            let channelBirthdate = '';
-            if (channelInfo.snippet) channelBirthdate = channelInfo.snippet.publishedAt;
-            dateRange = getDateRange(period, channelBirthdate);
-        }
-        const {startDate, endDate} = dateRange;
-        const metrics = 'views';
+    return function(dispatch) {
+        const searchTerms = {
+            period,
+            dateRange,
+            metrics: 'views',
+            filters,
+            dimensions
+        };
+
+        const helperReportActions = bindActionCreators(reportActions, dispatch);
+
         dispatch(ajax.gettingViews());
-
-        const helperLoginActions = bindActionCreators(loginActions, dispatch);
-
-        return helperLoginActions.isLoggedIn().then(isLoggedIn => {
-            if (isLoggedIn) {
-                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
-                    const reportData = zeroMissingData(report, startDate, endDate);
-                    dispatch(getViewsSuccess(reportData));
-                }).catch(error => {
-                    dispatch(getViewsError());
-                    throw(error);
-                });
-            } else {
-                dispatch(getViewsError());
-            }
+        return helperReportActions.compileReport(searchTerms).then(report => {
+            dispatch(getViewsSuccess(report));
+        }).catch(error => {
+            dispatch(getViewsError());
         });
     };
 }
@@ -64,31 +53,22 @@ export function getWatchTime(
     filters = '',
     dimensions = 'day'
 ) {
-    return function(dispatch, getState) {
-        if (!dateRange) {
-            const channelInfo = getState().channelInfo;
-            let channelBirthdate = '';
-            if (channelInfo.snippet) channelBirthdate = channelInfo.snippet.publishedAt;
-            dateRange = getDateRange(period, channelBirthdate);
-        }
-        const {startDate, endDate} = dateRange;
-        const metrics = 'views,averageViewDuration';
+    return function(dispatch) {
+        const searchTerms = {
+            period,
+            dateRange,
+            metrics: 'views,averageViewDuration',
+            filters,
+            dimensions
+        };
+
+        const helperReportActions = bindActionCreators(reportActions, dispatch);
+
         dispatch(ajax.gettingWatchTime());
-
-        const helperLoginActions = bindActionCreators(loginActions, dispatch);
-
-        return helperLoginActions.isLoggedIn().then(isLoggedIn => {
-            if (isLoggedIn) {
-                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
-                    const reportData = zeroMissingData(report, startDate, endDate);
-                    dispatch(getWatchTimeSuccess(reportData));
-                }).catch(error => {
-                    dispatch(getWatchTimeError());
-                    throw(error);
-                });
-            } else {
-                dispatch(getWatchTimeError());
-            }
+        return helperReportActions.compileReport(searchTerms).then(report => {
+            dispatch(getWatchTimeSuccess(report));
+        }).catch(error => {
+            dispatch(getWatchTimeError());
         });
     };
 }

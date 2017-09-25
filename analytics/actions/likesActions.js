@@ -1,11 +1,9 @@
 import {bindActionCreators} from 'redux';
 import Periods from '../globals/Periods';
-import getDateRange from '../helpers/getDateRange';
-import zeroMissingData from '../helpers/zeroMissingData';
 import * as types from './actionTypes';
 import * as ajax from './ajaxStatusActions';
 import * as analyticsActions from './analyticsActions';
-import * as loginActions from './loginActions';
+import * as reportActions from './reportActions';
 
 export function getLikesSuccess(report) {
     return { type: types.GET_LIKES_SUCCESS, report };
@@ -29,31 +27,22 @@ export function getLikes(
     filters = '',
     dimensions = 'day'
 ) {
-    return function(dispatch, getState) {
-        if (!dateRange) {
-            const channelInfo = getState().channelInfo;
-            let channelBirthdate = '';
-            if (channelInfo.snippet) channelBirthdate = channelInfo.snippet.publishedAt;
-            dateRange = getDateRange(period, channelBirthdate);
-        }
-        const {startDate, endDate} = dateRange;
-        const metrics = 'likes';
+    return function(dispatch) {
+        const searchTerms = {
+            period,
+            dateRange,
+            metrics: 'likes',
+            filters,
+            dimensions
+        };
+
+        const helperReportActions = bindActionCreators(reportActions, dispatch);
+
         dispatch(ajax.gettingLikes());
-
-        const helperLoginActions = bindActionCreators(loginActions, dispatch);
-
-        return helperLoginActions.isLoggedIn().then(isLoggedIn => {
-            if (isLoggedIn) {
-                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
-                    const reportData = zeroMissingData(report, startDate, endDate);
-                    dispatch(getLikesSuccess(reportData));
-                }).catch(error => {
-                    dispatch(getLikesError());
-                    throw(error);
-                });
-            } else {
-                dispatch(getLikesError());
-            }
+        return helperReportActions.compileReport(searchTerms).then(report => {
+            dispatch(getLikesSuccess(report));
+        }).catch(error => {
+            dispatch(getLikesError());
         });
     };
 }
@@ -64,31 +53,22 @@ export function getDislikes(
     filters = '',
     dimensions = 'day'
 ) {
-    return function(dispatch, getState) {
-        if (!dateRange) {
-            const channelInfo = getState().channelInfo;
-            let channelBirthdate = '';
-            if (channelInfo.snippet) channelBirthdate = channelInfo.snippet.publishedAt;
-            dateRange = getDateRange(period, channelBirthdate);
-        }
-        const {startDate, endDate} = dateRange;
-        const metrics = 'dislikes';
+    return function(dispatch) {
+        const searchTerms = {
+            period,
+            dateRange,
+            metrics: 'dislikes',
+            filters,
+            dimensions
+        };
+
+        const helperReportActions = bindActionCreators(reportActions, dispatch);
+
         dispatch(ajax.gettingDislikes());
-
-        const helperLoginActions = bindActionCreators(loginActions, dispatch);
-
-        return helperLoginActions.isLoggedIn().then(isLoggedIn => {
-            if (isLoggedIn) {
-                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
-                    const reportData = zeroMissingData(report, startDate, endDate);
-                    dispatch(getDislikesSuccess(reportData));
-                }).catch(error => {
-                    dispatch(getDislikesError());
-                    throw(error);
-                });
-            } else {
-                dispatch(getDislikesError());
-            }
+        return helperReportActions.compileReport(searchTerms).then(report => {
+            dispatch(getDislikesSuccess(report));
+        }).catch(error => {
+            dispatch(getDislikesError());
         });
     };
 }
