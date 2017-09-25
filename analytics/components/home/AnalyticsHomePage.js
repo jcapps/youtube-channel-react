@@ -7,11 +7,9 @@ import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as commentsActions from '../../actions/commentsActions';
-import * as dislikesActions from '../../actions/dislikesActions';
 import * as likesActions from '../../actions/likesActions';
 import * as subscribersActions from '../../actions/subscribersActions';
 import * as viewsActions from '../../actions/viewsActions';
-import * as watchTimeActions from '../../actions/watchTimeActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
@@ -234,11 +232,9 @@ export function mapDispatchToProps(dispatch) {
     const combinedActions = Object.assign(
         {},
         commentsActions,
-        dislikesActions,
         likesActions,
         subscribersActions,
         viewsActions,
-        watchTimeActions,
         statsActions
     );
     return {

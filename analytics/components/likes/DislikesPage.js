@@ -6,7 +6,7 @@ import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import formatFiltersString from '../../helpers/formatFiltersString';
-import * as dislikesActions from '../../actions/dislikesActions';
+import * as likesActions from '../../actions/likesActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
@@ -147,7 +147,7 @@ export function mapStateToProps(state) {
 }
 
 export function mapDispatchToProps(dispatch) {
-    const combinedActions = Object.assign({}, dislikesActions, statsActions);
+    const combinedActions = Object.assign({}, likesActions, statsActions);
     return {
         actions: bindActionCreators(combinedActions, dispatch),
         clearActions: bindActionCreators(clearActions, dispatch)

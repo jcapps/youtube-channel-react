@@ -7,7 +7,7 @@ import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import formatFiltersString from '../../helpers/formatFiltersString';
-import * as watchTimeActions from '../../actions/watchTimeActions';
+import * as viewsActions from '../../actions/viewsActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
@@ -137,7 +137,7 @@ export function mapStateToProps(state) {
 }
 
 export function mapDispatchToProps(dispatch) {
-    const combinedActions = Object.assign({}, watchTimeActions, statsActions);
+    const combinedActions = Object.assign({}, viewsActions, statsActions);
     return {
         actions: bindActionCreators(combinedActions, dispatch),
         clearActions: bindActionCreators(clearActions, dispatch)
