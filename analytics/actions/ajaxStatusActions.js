@@ -28,6 +28,14 @@ export function gettingLikes() {
     return {type: types.GETTING_LIKES};
 }
 
+export function gettingSubscribers() {
+    return {type: types.GETTING_SUBSCRIBERS};
+}
+
+export function gettingUnsubscribers() {
+    return {type: types.GETTING_UNSUBSCRIBERS};
+}
+
 export function gettingViews() {
     return {type: types.GETTING_VIEWS};
 }

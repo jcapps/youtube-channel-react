@@ -6,6 +6,8 @@ export default {
     searchChannelResults: [],
     searchPlaylistResults: [],
     searchVideoResults: [],
+    subscribers: {},
+    unsubscribers: {},
     totalStats: {},
     views: {},
     watchTime: {},
@@ -18,7 +20,9 @@ export default {
         isLoggedIn: 0,
         likes: 0,
         login: 0,
+        subscribers: 0,
         totalStats: 0,
+        unsubscribers: 0,
         views: 0,
         watchTime: 0
     }

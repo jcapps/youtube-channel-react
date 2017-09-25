@@ -87,6 +87,24 @@ function isLoginActionSuccessType(type) {
     );
 }
 
+function isSubscribersActionStartingType(type) {
+    return (
+        type == types.GETTING_SUBSCRIBERS
+    );
+}
+
+function isSubscribersActionSuccessType(type) {
+    return (
+        type == types.GET_SUBSCRIBERS_SUCCESS
+    );
+}
+
+function isSubscribersActionErrorType(type) {
+    return (
+        type == types.GET_SUBSCRIBERS_ERROR
+    );
+}
+
 function isTotalStatsActionStartingType(type) {
     return (
         type == types.GETTING_TOTAL_STATS
@@ -102,6 +120,24 @@ function isTotalStatsActionSuccessType(type) {
 function isTotalStatsActionErrorType(type) {
     return (
         type == types.GET_TOTAL_STATS_ERROR
+    );
+}
+
+function isUnsubscribersActionStartingType(type) {
+    return (
+        type == types.GETTING_UNSUBSCRIBERS
+    );
+}
+
+function isUnsubscribersActionSuccessType(type) {
+    return (
+        type == types.GET_UNSUBSCRIBERS_SUCCESS
+    );
+}
+
+function isUnsubscribersActionErrorType(type) {
+    return (
+        type == types.GET_UNSUBSCRIBERS_ERROR
     );
 }
 
@@ -185,6 +221,24 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isLoginActionSuccessType(action.type)) {
         currentState.login -= 1;
+    }
+    if (isSubscribersActionStartingType(action.type)) {
+        currentState.subscribers += 1;
+    }
+    if (isSubscribersActionSuccessType(action.type)) {
+        currentState.subscribers -= 1;
+    }
+    if (isSubscribersActionErrorType(action.type)) {
+        currentState.subscribers -= 1;
+    }
+    if (isUnsubscribersActionStartingType(action.type)) {
+        currentState.unsubscribers += 1;
+    }
+    if (isUnsubscribersActionSuccessType(action.type)) {
+        currentState.unsubscribers -= 1;
+    }
+    if (isUnsubscribersActionErrorType(action.type)) {
+        currentState.unsubscribers -= 1;
     }
     if (isTotalStatsActionStartingType(action.type)) {
         currentState.totalStats += 1;

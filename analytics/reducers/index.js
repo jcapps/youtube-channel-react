@@ -8,6 +8,8 @@ import likes from './likesReducer';
 import searchChannelResults from './searchChannelResultsReducer';
 import searchPlaylistResults from './searchPlaylistResultsReducer';
 import searchVideoResults from './searchVideoResultsReducer';
+import subscribers from './subscribersReducer';
+import unsubscribers from './unsubscribersReducer';
 import totalStats from './totalStatsReducer';
 import views from './viewsReducer';
 import watchTime from './watchTimeReducer';
@@ -22,6 +24,8 @@ const rootReducer = combineReducers({
     searchChannelResults,
     searchPlaylistResults,
     searchVideoResults,
+    subscribers,
+    unsubscribers,
     totalStats,
     views,
     watchTime
