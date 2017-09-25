@@ -2,31 +2,29 @@
     #overview-sections {
         border: 1px solid $border;
         line-height: 0;
-    }
 
-    #comments-overview-section,
-    #likes-overview-section,
-    #views-overview-section,
-    #watchTime-overview-section {
-        display: inline-block;
-        position: relative;
-        height: 150px;
-        width: 50%;
-        border: 1px solid $border;
-        line-height: 1.42857143;
-
-        &:hover {
-            background-color: $background-hover;
-            color: $color-hover;
-            cursor: pointer;
-        }
-
-        .loading-spinner {
-            position: absolute;
-            height: 30px;
-            width: 30px;
-            top: calc(50% - 15px); // 15px = half height of spinner
-            left: calc(50% - 15px); // 15px = half width of spinner
+        .overview-section {
+            display: inline-block;
+            position: relative;
+            height: 150px;
+            width: 50%;
+            border: 1px solid $border;
+            line-height: 1.42857143;
+    
+            &:hover {
+                background-color: $background-hover;
+                color: $color-hover;
+                text-decoration: none;
+                cursor: pointer;
+            }
+    
+            .loading-spinner {
+                position: absolute;
+                height: 30px;
+                width: 30px;
+                top: calc(50% - 15px); // 15px = half height of spinner
+                left: calc(50% - 15px); // 15px = half width of spinner
+            }
         }
     }
 }

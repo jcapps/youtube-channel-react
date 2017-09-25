@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import ContentTypes from '../../globals/ContentTypes';
+import computeSubscribers from '../../helpers/computeSubscribers';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import getTotalStats from '../../helpers/getTotalStats';
 import LineGraph from '../common/graphs/LineGraph';
@@ -18,6 +19,9 @@ class OverviewSection extends React.PureComponent {
         const dataType = this.props.dataType;
 
         if (!dataInfo.columnHeaders) return;
+        if (dataType == 'subscribers') {
+            dataInfo = computeSubscribers(this.props.data, this.props.additionalData);
+        }
         if (dataType == 'watchTime') {
             dataInfo = computeWatchTimes(this.props.data);
         }
@@ -38,22 +42,33 @@ class OverviewSection extends React.PureComponent {
         const dataType = this.props.dataType;
         if (this.props.state.contentType == ContentTypes.PLAYLISTS) {
             if (dataType == 'likes') return <div/>;
+            if (dataType == 'dislikes') return <div/>;
             if (dataType == 'comments') return <div/>;
+            if (dataType == 'subscribers') return <div/>;
+            if (dataType == 'subscribersGained') return <div/>;
+            if (dataType == 'subscribersLost') return <div/>;
         }
 
         const loadingSpinner = require('../../images/loading.gif');
-        let dataSearchName = dataType;
         let sectionTitle = dataType.replace(/([A-Z])/g, ' $1').toUpperCase().trim(); // Add spaces before capital letters and make all CAPS
 
-        if (dataType == 'watchTime') {
-            dataSearchName = 'estimatedMinutesWatched';
-            sectionTitle = 'WATCH TIME (MINUTES)';
+        let totalValue;
+        let dataSearchName = dataType;
+        if (dataType == 'subscribers') {
+            const totalSubscribers = getTotalStats(this.props.totalStats, 'subscribersGained');
+            const totalUnsubscribers = getTotalStats(this.props.totalStats, 'subscribersLost');
+            totalValue = totalSubscribers - totalUnsubscribers;
+        } else {
+            if (dataType == 'watchTime') {
+                dataSearchName = 'estimatedMinutesWatched';
+                sectionTitle = 'WATCH TIME (MINUTES)';
+            }
+            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
         }
-        const totalValue = getTotalStats(this.props.totalStats, dataSearchName);
 
         return (
             <Link to={{pathname: `/analytics/${dataType}`, state: this.props.state}}>
-                <div id={`${dataType}-overview-section`}>
+                <div id={`${dataType}-overview-section`} className="overview-section">
                     <div className="metric-title">{sectionTitle}</div>
                     <div className="metric-value">{totalValue.toLocaleString()}</div>
                     {this.renderLineGraph()}
@@ -69,7 +84,8 @@ OverviewSection.propTypes = {
     dataType: PropTypes.string.isRequired,
     totalStats: PropTypes.object.isRequired,
     state: PropTypes.object.isRequired,
-    onRenderFinish: PropTypes.func.isRequired
+    onRenderFinish: PropTypes.func.isRequired,
+    additionalData: PropTypes.object
 };
 
 export default OverviewSection;

@@ -7,7 +7,9 @@ import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as commentsActions from '../../actions/commentsActions';
+import * as dislikesActions from '../../actions/dislikesActions';
 import * as likesActions from '../../actions/likesActions';
+import * as subscribersActions from '../../actions/subscribersActions';
 import * as viewsActions from '../../actions/viewsActions';
 import * as watchTimeActions from '../../actions/watchTimeActions';
 import * as statsActions from '../../actions/statsActions';
@@ -42,6 +44,8 @@ export class AnalyticsHomePage extends React.PureComponent {
     componentWillUnmount() {
         this.props.clearActions.clearComments();
         this.props.clearActions.clearLikes();
+        this.props.clearActions.clearSubscribers();
+        this.props.clearActions.clearUnsubscribers();
         this.props.clearActions.clearViews();
         this.props.clearActions.clearWatchTime();
     }
@@ -72,23 +76,44 @@ export class AnalyticsHomePage extends React.PureComponent {
         this.setState({...state});
         this.setState({isLoading: true});
 
-        let metrics = 'comments,likes,views,estimatedMinutesWatched';
+        let dataTypes = [
+            'comments',
+            'likes',
+            'dislikes',
+            'subscribers',
+            'subscribersGained',
+            'subscribersLost',
+            'views',
+            'estimatedMinutesWatched'
+        ];
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics = 'views,estimatedMinutesWatched';
+            dataTypes = ['views', 'estimatedMinutesWatched'];
         }
 
-        const dataTypes = metrics.split(',');
-        dataTypes.forEach(dataType => {
+        const newDataTypes = Object.assign([], dataTypes);
+
+        dataTypes.forEach((dataType, i) => {
             if (dataType == 'estimatedMinutesWatched') {
                 this.showLoadingSpinner('watchTime');
-            } else {
-                this.showLoadingSpinner(dataType);
+                return;
             }
+            if (dataType == 'subscribers') {
+                this.showLoadingSpinner('subscribers');
+                newDataTypes.splice(i, 1);
+                return;
+            }
+            this.showLoadingSpinner(dataType);
         });
+
+        dataTypes = newDataTypes;
+        const metrics = dataTypes.join(',');
 
         if (state.contentType != ContentTypes.PLAYLISTS) {
             this.props.actions.getComments(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
-            this.props.actions.getLikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));    
+            this.props.actions.getLikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+            this.props.actions.getDislikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+            this.props.actions.getSubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+            this.props.actions.getUnsubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters)); 
         }
         this.props.actions.getViews(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
         this.props.actions.getWatchTime(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
@@ -127,11 +152,40 @@ export class AnalyticsHomePage extends React.PureComponent {
                         onRenderFinish={() => this.hideLoadingSpinner('likes')}
                     />
                     <OverviewSection
+                        data={this.props.dislikes}
+                        dataType='dislikes'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('dislikes')}
+                    />
+                    <OverviewSection
                         data={this.props.comments}
                         dataType='comments'
                         totalStats={this.props.totalStats}
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('comments')}
+                    />
+                    <OverviewSection
+                        data={this.props.subscribers}
+                        additionalData={this.props.unsubscribers}
+                        dataType='subscribers'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('subscribers')}
+                    />
+                    <OverviewSection
+                        data={this.props.subscribers}
+                        dataType='subscribersGained'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('subscribersGained')}
+                    />
+                    <OverviewSection
+                        data={this.props.unsubscribers}
+                        dataType='subscribersLost'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('subscribersLost')}
                     />
                 </div>
             </div>
@@ -143,6 +197,9 @@ AnalyticsHomePage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     comments: PropTypes.object.isRequired,
     likes: PropTypes.object.isRequired,
+    dislikes: PropTypes.object.isRequired,
+    subscribers: PropTypes.object.isRequired,
+    unsubscribers: PropTypes.object.isRequired,
     views: PropTypes.object.isRequired,
     watchTime: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
@@ -153,13 +210,19 @@ AnalyticsHomePage.propTypes = {
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
         = state.ajaxCallsInProgress.comments
+        + state.ajaxCallsInProgress.dislikes
         + state.ajaxCallsInProgress.likes
+        + state.ajaxCallsInProgress.subscribers
+        + state.ajaxCallsInProgress.unsubscribers
         + state.ajaxCallsInProgress.views
         + state.ajaxCallsInProgress.watchTime;
 
     return {
         comments: state.comments,
+        dislikes: state.dislikes,
         likes: state.likes,
+        subscribers: state.subscribers,
+        unsubscribers: state.unsubscribers,
         views: state.views,
         watchTime: state.watchTime,
         totalStats: state.totalStats,
@@ -168,7 +231,16 @@ export function mapStateToProps(state) {
 }
 
 export function mapDispatchToProps(dispatch) {
-    const combinedActions = Object.assign({}, commentsActions, likesActions, viewsActions, watchTimeActions, statsActions);
+    const combinedActions = Object.assign(
+        {},
+        commentsActions,
+        dislikesActions,
+        likesActions,
+        subscribersActions,
+        viewsActions,
+        watchTimeActions,
+        statsActions
+    );
     return {
         actions: bindActionCreators(combinedActions, dispatch),
         clearActions: bindActionCreators(clearActions, dispatch)
