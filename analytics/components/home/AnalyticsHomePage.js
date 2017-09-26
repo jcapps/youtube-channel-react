@@ -43,6 +43,10 @@ export class AnalyticsHomePage extends React.PureComponent {
     componentWillUnmount() {
         this.props.clearActions.clearComments();
         this.props.clearActions.clearLikes();
+        this.props.clearActions.clearDislikes();
+        this.props.clearActions.clearRevenue();
+        this.props.clearActions.clearAdRevenue();
+        this.props.clearActions.clearYoutubeRedRevenue();
         this.props.clearActions.clearSubscribers();
         this.props.clearActions.clearUnsubscribers();
         this.props.clearActions.clearViews();
