@@ -8,8 +8,8 @@ export function getTotalStatsSuccess(report) {
     return { type: types.GET_TOTAL_STATS_SUCCESS, report };
 }
 
-export function getTotalStatsError() {
-    return { type: types.GET_TOTAL_STATS_ERROR };
+export function getTotalStatsError(error) {
+    return { type: types.GET_TOTAL_STATS_ERROR, error };
 }
 
 export function getTotalStats(
@@ -33,7 +33,7 @@ export function getTotalStats(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getTotalStatsSuccess(report));
         }).catch(error => {
-            dispatch(getTotalStatsError());
+            dispatch(getTotalStatsError(error));
         });
     };
 }

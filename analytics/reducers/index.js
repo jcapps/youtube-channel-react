@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 import isAuthenticated from './isAuthenticatedReducer';
+import error from './errorReducer';
 import channelInfo from './channelInfoReducer';
 import comments from './commentsReducer';
 import dislikes from './dislikesReducer';
@@ -20,6 +21,7 @@ import watchTime from './watchTimeReducer';
 const rootReducer = combineReducers({
     ajaxCallsInProgress,
     isAuthenticated,
+    error,
     channelInfo,
     comments,
     dislikes,

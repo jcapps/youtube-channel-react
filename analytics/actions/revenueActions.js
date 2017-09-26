@@ -9,24 +9,24 @@ export function getRevenueSuccess(report) {
     return { type: types.GET_REVENUE_SUCCESS, report };
 }
 
-export function getRevenueError() {
-    return { type: types.GET_REVENUE_ERROR };
+export function getRevenueError(error) {
+    return { type: types.GET_REVENUE_ERROR, error };
 }
 
 export function getAdRevenueSuccess(report) {
     return { type: types.GET_AD_REVENUE_SUCCESS, report };
 }
 
-export function getAdRevenueError() {
-    return { type: types.GET_AD_REVENUE_ERROR };
+export function getAdRevenueError(error) {
+    return { type: types.GET_AD_REVENUE_ERROR, error };
 }
 
 export function getYoutubeRedRevenueSuccess(report) {
     return { type: types.GET_YOUTUBE_RED_REVENUE_SUCCESS, report };
 }
 
-export function getYoutubeRedRevenueError() {
-    return { type: types.GET_YOUTUBE_RED_REVENUE_ERROR };
+export function getYoutubeRedRevenueError(error) {
+    return { type: types.GET_YOUTUBE_RED_REVENUE_ERROR, error };
 }
 
 export function getRevenue(
@@ -50,7 +50,7 @@ export function getRevenue(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getRevenueSuccess(report));
         }).catch(error => {
-            dispatch(getRevenueError());
+            dispatch(getRevenueError(error));
         });
     };
 }
@@ -76,7 +76,7 @@ export function getAdRevenue(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getAdRevenueSuccess(report));
         }).catch(error => {
-            dispatch(getAdRevenueError());
+            dispatch(getAdRevenueError(error));
         });
     };
 }
@@ -102,7 +102,7 @@ export function getYoutubeRedRevenue(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getYoutubeRedRevenueSuccess(report));
         }).catch(error => {
-            dispatch(getYoutubeRedRevenueError());
+            dispatch(getYoutubeRedRevenueError(error));
         });
     };
 }

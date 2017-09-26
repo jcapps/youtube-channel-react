@@ -9,16 +9,16 @@ export function getViewsSuccess(report) {
     return { type: types.GET_VIEWS_SUCCESS, report };
 }
 
-export function getViewsError() {
-    return { type: types.GET_VIEWS_ERROR };
+export function getViewsError(error) {
+    return { type: types.GET_VIEWS_ERROR, error };
 }
 
 export function getWatchTimeSuccess(report) {
     return { type: types.GET_WATCH_TIME_SUCCESS, report };
 }
 
-export function getWatchTimeError() {
-    return { type: types.GET_WATCH_ERROR };
+export function getWatchTimeError(error) {
+    return { type: types.GET_WATCH_ERROR, error };
 }
 
 export function getViews(
@@ -42,7 +42,7 @@ export function getViews(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getViewsSuccess(report));
         }).catch(error => {
-            dispatch(getViewsError());
+            dispatch(getViewsError(error));
         });
     };
 }
@@ -68,7 +68,7 @@ export function getWatchTime(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getWatchTimeSuccess(report));
         }).catch(error => {
-            dispatch(getWatchTimeError());
+            dispatch(getWatchTimeError(error));
         });
     };
 }

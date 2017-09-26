@@ -10,6 +10,10 @@ export function getChannelInfoSuccess(channelInfo) {
     return { type: types.GET_CHANNEL_INFO_SUCCESS, channelInfo };
 }
 
+export function getChannelInfoError(error) {
+    return { type: types.GET_CHANNEL_INFO_ERROR, error };
+}
+
 export function getSearchChannelResultsSuccess(result) {
     return { type: types.GET_SEARCH_CHANNEL_RESULTS_SUCCESS, result };
 }
@@ -22,8 +26,8 @@ export function getSearchVideoResultsSuccess(result) {
     return { type: types.GET_SEARCH_VIDEO_RESULTS_SUCCESS, result };
 }
 
-export function getSearchResultsError() {
-    return { type: types.GET_SEARCH_RESULTS_ERROR };
+export function getSearchResultsError(error) {
+    return { type: types.GET_SEARCH_RESULTS_ERROR, error };
 }
 
 export function getChannelInfo() {
@@ -32,7 +36,7 @@ export function getChannelInfo() {
         return youtubeActions.getChannelInfo().then(channelInfo => {
             dispatch(getChannelInfoSuccess(channelInfo));
         }).catch(error => {
-            throw(error);
+            dispatch(getChannelInfoError(error));
         });
     };
 }
@@ -56,14 +60,14 @@ export function getSearchResults(query, searchType) {
                             dispatch(getSearchVideoResultsSuccess(result));
                             return;
                         default:
-                            dispatch(getSearchResultsError());
+                            dispatch(getSearchResultsError(error));
                             return;
                     }
                 }).catch(error => {
-                    throw(error);
+                    dispatch(getSearchResultsError(error));
                 });
             } else {
-                dispatch(getSearchResultsError());
+                dispatch(getSearchResultsError(error));
             }
         });
     };

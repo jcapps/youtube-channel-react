@@ -9,16 +9,16 @@ export function getLikesSuccess(report) {
     return { type: types.GET_LIKES_SUCCESS, report };
 }
 
-export function getLikesError() {
-    return { type: types.GET_LIKES_ERROR };
+export function getLikesError(error) {
+    return { type: types.GET_LIKES_ERROR, error };
 }
 
 export function getDislikesSuccess(report) {
     return { type: types.GET_DISLIKES_SUCCESS, report };
 }
 
-export function getDislikesError() {
-    return { type: types.GET_DISLIKES_ERROR };
+export function getDislikesError(error) {
+    return { type: types.GET_DISLIKES_ERROR, error };
 }
 
 export function getLikes(
@@ -42,7 +42,7 @@ export function getLikes(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getLikesSuccess(report));
         }).catch(error => {
-            dispatch(getLikesError());
+            dispatch(getLikesError(error));
         });
     };
 }
@@ -68,7 +68,7 @@ export function getDislikes(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getDislikesSuccess(report));
         }).catch(error => {
-            dispatch(getDislikesError());
+            dispatch(getDislikesError(error));
         });
     };
 }

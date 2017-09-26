@@ -105,6 +105,8 @@ class YouTubeAnalyticsApi {
         return new Promise((resolve, reject) => {
             axios.get(reportsUrl, {headers: authHeader, params: reportParams}).then(res => {
                 resolve(res.data);
+            }).catch(error => {
+                reject(error);
             });
         });
     }

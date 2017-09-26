@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import $ from 'jquery';
+import toastr from 'toastr';
 import * as loginActions from '../actions/loginActions';
 import SideBar from './common/navigation/SideBar';
 import Routes from './Routes';
@@ -17,6 +19,7 @@ class App extends React.PureComponent {
     }
 
     render() {
+        if (!$.isEmptyObject(this.props.error)) toastr.error(this.props.error.message);
         if (this.props.isCheckingLogin) return <div/>;
         if (!this.props.isLoggedIn) {
             return (
@@ -45,11 +48,13 @@ App.propTypes = {
     isCheckingLogin: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     isLoggedIn: PropTypes.bool.isRequired,
+    error: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired
 };
 
 export function mapStateToProps(state) {
     return {
+        error: state.error,
         isLoggedIn: state.isAuthenticated,
         isCheckingLogin: state.ajaxCallsInProgress.isLoggedIn > 0,
         isLoading: state.ajaxCallsInProgress.login > 0 || state.ajaxCallsInProgress.channel > 0
@@ -67,7 +72,8 @@ export const connectOptions = {
         return !(
             (prev.isLoading !== next.isLoading) || 
             (!next.isLoggedIn) || 
-            (!next.isCheckingLogin && (prev.isLoggedIn !== next.isLoggedIn))
+            (!next.isCheckingLogin && (prev.isLoggedIn !== next.isLoggedIn)) || 
+            (prev.error !== next.error)
         );
     }
 };

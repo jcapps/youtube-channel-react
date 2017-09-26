@@ -9,16 +9,16 @@ export function getSubscribersSuccess(report) {
     return { type: types.GET_SUBSCRIBERS_SUCCESS, report };
 }
 
-export function getSubscribersError() {
-    return { type: types.GET_SUBSCRIBERS_ERROR };
+export function getSubscribersError(error) {
+    return { type: types.GET_SUBSCRIBERS_ERROR, error };
 }
 
 export function getUnsubscribersSuccess(report) {
     return { type: types.GET_UNSUBSCRIBERS_SUCCESS, report };
 }
 
-export function getUnsubscribersError() {
-    return { type: types.GET_UNSUBSCRIBERS_ERROR };
+export function getUnsubscribersError(error) {
+    return { type: types.GET_UNSUBSCRIBERS_ERROR, error };
 }
 
 export function getSubscribers(
@@ -42,7 +42,7 @@ export function getSubscribers(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getSubscribersSuccess(report));
         }).catch(error => {
-            dispatch(getSubscribersError());
+            dispatch(getSubscribersError(error));
         });
     };
 }
@@ -68,7 +68,7 @@ export function getUnsubscribers(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getUnsubscribersSuccess(report));
         }).catch(error => {
-            dispatch(getUnsubscribersError());
+            dispatch(getUnsubscribersError(error));
         });
     };
 }

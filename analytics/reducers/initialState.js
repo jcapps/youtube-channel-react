@@ -15,6 +15,7 @@ export default {
     views: {},
     watchTime: {},
     isAuthenticated: false,
+    error: {},
     ajaxCallsInProgress: {
         adRevenue: 0,
         channel: 0,

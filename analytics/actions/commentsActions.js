@@ -9,8 +9,8 @@ export function getCommentsSuccess(report) {
     return { type: types.GET_COMMENTS_SUCCESS, report };
 }
 
-export function getCommentsError() {
-    return { type: types.GET_COMMENTS_ERROR };
+export function getCommentsError(error) {
+    return { type: types.GET_COMMENTS_ERROR, error };
 }
 
 export function getComments(
@@ -34,7 +34,7 @@ export function getComments(
         return helperReportActions.compileReport(searchTerms).then(report => {
             dispatch(getCommentsSuccess(report));
         }).catch(error => {
-            dispatch(getCommentsError());
+            dispatch(getCommentsError(error));
         });
     };
 }
