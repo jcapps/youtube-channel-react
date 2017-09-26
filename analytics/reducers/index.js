@@ -5,6 +5,9 @@ import channelInfo from './channelInfoReducer';
 import comments from './commentsReducer';
 import dislikes from './dislikesReducer';
 import likes from './likesReducer';
+import revenue from './revenueReducer';
+import adRevenue from './adRevenueReducer';
+import youtubeRedRevenue from './youtubeRedRevenueReducer';
 import searchChannelResults from './searchChannelResultsReducer';
 import searchPlaylistResults from './searchPlaylistResultsReducer';
 import searchVideoResults from './searchVideoResultsReducer';
@@ -21,6 +24,9 @@ const rootReducer = combineReducers({
     comments,
     dislikes,
     likes,
+    revenue,
+    adRevenue,
+    youtubeRedRevenue,
     searchChannelResults,
     searchPlaylistResults,
     searchVideoResults,

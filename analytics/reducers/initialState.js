@@ -3,6 +3,9 @@ export default {
     comments: {},
     dislikes: {},
     likes: {},
+    revenue: {},
+    adRevenue: {},
+    youtubeRedRevenue: {},
     searchChannelResults: [],
     searchPlaylistResults: [],
     searchVideoResults: [],
@@ -13,6 +16,7 @@ export default {
     watchTime: {},
     isAuthenticated: false,
     ajaxCallsInProgress: {
+        adRevenue: 0,
         channel: 0,
         comments: 0,
         contentFilter: 0,
@@ -20,10 +24,12 @@ export default {
         isLoggedIn: 0,
         likes: 0,
         login: 0,
+        revenue: 0,
         subscribers: 0,
         totalStats: 0,
         unsubscribers: 0,
         views: 0,
-        watchTime: 0
+        watchTime: 0,
+        youtubeRedRevenue: 0
     }
 };

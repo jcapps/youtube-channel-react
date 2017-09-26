@@ -8,6 +8,7 @@ const googleClientApiUrl = 'https://apis.google.com/js/api.js';
 const analyticsApiUrl = 'https://www.googleapis.com/youtube/analytics/v1/';
 const reportsUrl = analyticsApiUrl + 'reports';
 const analyticsScope = 'https://www.googleapis.com/auth/yt-analytics.readonly';
+const monetaryScope = 'https://www.googleapis.com/auth/yt-analytics-monetary.readonly';
 const analyticsDiscoveryDocs = ['https://www.googleapis.com/discovery/v1/apis/youtubeAnalytics/v1/rest'];
 
 class YouTubeAnalyticsApi {
@@ -23,7 +24,7 @@ class YouTubeAnalyticsApi {
                     gapi.client.init({
                         'apiKey': KEY,
                         'clientId': CLIENT_ID,
-                        'scope': analyticsScope,
+                        'scope': analyticsScope + ' ' + monetaryScope,
                         'discoveryDocs': analyticsDiscoveryDocs
                     }).then(() => {
                         GoogleAuth = gapi.auth2.getAuthInstance();

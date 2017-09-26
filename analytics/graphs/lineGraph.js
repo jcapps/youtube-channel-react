@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import computeVoronoi from '../helpers/computeVoronoi';
 
+let isMoneyMetric;
 let graphSize;
 let graphContainer;
 let svgWidth;
@@ -81,12 +82,15 @@ const setXYDomains = (data, xyInfo) => {
     let yMin = d3.min(data, d => { return d.get(xyInfo.yColumnName); });
     if (yMin > 0) yMin = 0;
     let yMax = d3.max(data, d => { return d.get(xyInfo.yColumnName); });
-    if (yMax < 1) yMax = 1;
+    if (yMax == 0) yMax = 1;
 
     const xDomain = xExtent[1].getTime() - xExtent[0].getTime();
     const xDomainMargin = xDomain * .02;
 
-    const maxYTicks = Math.min(yMax, Math.ceil(height / yAxisLabelPadding));
+    let maxYTicks = Math.min(yMax, Math.ceil(height / yAxisLabelPadding));
+    if (isMoneyMetric) {
+        maxYTicks = Math.min(yMax * 100, Math.ceil(height / yAxisLabelPadding));
+    }
 
     xyInfo.x.domain([xExtent[0].getTime() - xDomainMargin, xExtent[1].getTime() + xDomainMargin]);
     xyInfo.y.domain([yMin, yMax]).nice(maxYTicks);
@@ -124,7 +128,10 @@ const createTooltip = () => {
 // Draw Grid Lines
 const drawGridLines = y => {
     const yDomain = y.domain();
-    const maxTicks = Math.min(yDomain[1], Math.ceil(height / yAxisLabelPadding));
+    let maxTicks = Math.min(yDomain[1], Math.ceil(height / yAxisLabelPadding));
+    if (isMoneyMetric) {
+        maxTicks = Math.min(yDomain[1] * 100, Math.ceil(height / yAxisLabelPadding));
+    }
 
     graphContainer.select('.graphCanvas').append('g')
         .attr('class', 'grid-line')
@@ -165,13 +172,21 @@ const drawXAxis = (x, data) => {
 // Draw Y-Axis
 const drawYAxis = y => {
     const yDomain = y.domain();
-    const maxTicks = Math.min(yDomain[1], Math.ceil(height / yAxisLabelPadding));
+    let maxTicks = Math.min(yDomain[1], Math.ceil(height / yAxisLabelPadding));
+    if (isMoneyMetric) {
+        maxTicks = Math.min(yDomain[1] * 100, Math.ceil(height / yAxisLabelPadding));
+    }
     
     graphContainer.select('.graphCanvas').append('g')
         .attr('class', 'yAxis')
         .call(d3.axisLeft(y)
             .ticks(maxTicks)
-            .tickFormat(d3.format('d')));
+            .tickFormat(d => {
+                if (isMoneyMetric) {
+                    return '$' + d.toFixed(2).toLocaleString();
+                }
+                return d.toLocaleString();
+            }));
 };
 
 // Draw the path of the line graph
@@ -256,6 +271,12 @@ const showAndSetTooltip = (d, xyInfo, container) => {
         const displayTime = displayTimeNicely(d.get(xyInfo.yColumnName));
         if (displayTime.length > 0) yValue += ' (' + displayTime + ')';
     }
+    if (xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
+        yLabel = 'Estimated YouTube Red Revenue';
+    }
+    if (xyInfo.yColumnName == 'estimatedRevenue' || xyInfo.yColumnName == 'estimatedAdRevenue' || xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
+        yValue = '$' + d.get(xyInfo.yColumnName).toFixed(2).toLocaleString();
+    }
 
     let tooltipHtml = formatTime(d.get(xyInfo.xColumnName)) + '<br/>' + yLabel + ': ' + yValue;
     if (yLabel.length + yValue.length > 25)
@@ -295,6 +316,9 @@ const showAndSetSmallerTooltip = (d, xyInfo, container) => {
     if (xyInfo.yColumnName == 'watchTime') {
         const displayTime = displayTimeNicely(d.get(xyInfo.yColumnName));
         if (displayTime.length > 0) yValue = displayTime;
+    }
+    if (xyInfo.yColumnName == 'estimatedRevenue' || xyInfo.yColumnName == 'estimatedAdRevenue' || xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
+        yValue = '$' + d.get(xyInfo.yColumnName).toFixed(2).toLocaleString();
     }
     
     const tooltip = container.select('.tooltip')
@@ -410,6 +434,16 @@ const createGraphFootnote = () => {
 
 // Create a line graph
 const lineGraph = (container, dataInfo, xColumnName, yColumnName, size = 'large') => {
+    if (
+        yColumnName == 'estimatedRevenue' || 
+        yColumnName == 'estimatedAdRevenue' || 
+        yColumnName == 'estimatedRedPartnerRevenue'
+    ) {
+        isMoneyMetric = true;
+    } else {
+        isMoneyMetric = false;
+    }
+
     container.style('position', 'relative');
     graphSize = size;
     graphContainer = container;

@@ -16,11 +16,20 @@ class OverviewSection extends React.PureComponent {
     renderLineGraph() {
         const parentId = `${dataType}-overview-section`;
         let dataInfo = Object.assign({}, this.props.data);
-        const dataType = this.props.dataType;
+        let dataType = this.props.dataType;
 
         if (!dataInfo.columnHeaders) return;
         if (dataType == 'subscribers') {
             dataInfo = computeSubscribers(this.props.data, this.props.additionalData);
+        }
+        if (dataType == 'revenue') {
+            dataType = 'estimatedRevenue';
+        }
+        if (dataType == 'adRevenue') {
+            dataType = 'estimatedAdRevenue';
+        }
+        if (dataType == 'youtubeRedRevenue') {
+            dataType = 'estimatedRedPartnerRevenue';
         }
         if (dataType == 'watchTime') {
             dataInfo = computeWatchTimes(this.props.data);
@@ -47,6 +56,9 @@ class OverviewSection extends React.PureComponent {
             if (dataType == 'subscribers') return <div/>;
             if (dataType == 'subscribersGained') return <div/>;
             if (dataType == 'subscribersLost') return <div/>;
+            if (dataType == 'estimatedRevenue') return <div/>;
+            if (dataType == 'estimatedAdRevenue') return <div/>;
+            if (dataType == 'estimatedRedPartnerRevenue') return <div/>;
         }
 
         const loadingSpinner = require('../../images/loading.gif');
@@ -58,6 +70,21 @@ class OverviewSection extends React.PureComponent {
             const totalSubscribers = getTotalStats(this.props.totalStats, 'subscribersGained');
             const totalUnsubscribers = getTotalStats(this.props.totalStats, 'subscribersLost');
             totalValue = totalSubscribers - totalUnsubscribers;
+        } else if (dataType == 'revenue' || dataType == 'adRevenue' || dataType == 'youtubeRedRevenue') {
+            if (dataType == 'revenue') {
+                dataSearchName = 'estimatedRevenue';
+                sectionTitle = 'ESTIMATED REVENUE';
+            }
+            if (dataType == 'adRevenue') {
+                dataSearchName = 'estimatedAdRevenue';
+                sectionTitle = 'ESTIMATED AD REVENUE';
+            }
+            if (dataType == 'youtubeRedRevenue') {
+                dataSearchName = 'estimatedRedPartnerRevenue';
+                sectionTitle = 'ESTIMATED YOUTUBE RED REVENUE';
+            }
+            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
+            totalValue = '$' + totalValue.toFixed(2);
         } else {
             if (dataType == 'watchTime') {
                 dataSearchName = 'estimatedMinutesWatched';

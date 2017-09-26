@@ -8,6 +8,7 @@ import Periods from '../../globals/Periods';
 import formatFiltersString from '../../helpers/formatFiltersString';
 import * as commentsActions from '../../actions/commentsActions';
 import * as likesActions from '../../actions/likesActions';
+import * as revenueActions from '../../actions/revenueActions';
 import * as subscribersActions from '../../actions/subscribersActions';
 import * as viewsActions from '../../actions/viewsActions';
 import * as statsActions from '../../actions/statsActions';
@@ -82,7 +83,10 @@ export class AnalyticsHomePage extends React.PureComponent {
             'subscribersGained',
             'subscribersLost',
             'views',
-            'estimatedMinutesWatched'
+            'estimatedMinutesWatched',
+            'estimatedRevenue',
+            'estimatedAdRevenue',
+            'estimatedRedPartnerRevenue'
         ];
         if (state.contentType == ContentTypes.PLAYLISTS) {
             dataTypes = ['views', 'estimatedMinutesWatched'];
@@ -111,7 +115,10 @@ export class AnalyticsHomePage extends React.PureComponent {
             this.props.actions.getLikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
             this.props.actions.getDislikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
             this.props.actions.getSubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
-            this.props.actions.getUnsubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters)); 
+            this.props.actions.getUnsubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+            this.props.actions.getRevenue(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+            this.props.actions.getAdRevenue(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+            this.props.actions.getYoutubeRedRevenue(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
         }
         this.props.actions.getViews(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
         this.props.actions.getWatchTime(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
@@ -185,6 +192,27 @@ export class AnalyticsHomePage extends React.PureComponent {
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('subscribersLost')}
                     />
+                    <OverviewSection
+                        data={this.props.revenue}
+                        dataType='revenue'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('revenue')}
+                    />
+                    <OverviewSection
+                        data={this.props.adRevenue}
+                        dataType='adRevenue'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('adRevenue')}
+                    />
+                    <OverviewSection
+                        data={this.props.youtubeRedRevenue}
+                        dataType='youtubeRedRevenue'
+                        totalStats={this.props.totalStats}
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('youtubeRedRevenue')}
+                    />
                 </div>
             </div>
         );
@@ -196,6 +224,9 @@ AnalyticsHomePage.propTypes = {
     comments: PropTypes.object.isRequired,
     likes: PropTypes.object.isRequired,
     dislikes: PropTypes.object.isRequired,
+    revenue: PropTypes.object.isRequired,
+    adRevenue: PropTypes.object.isRequired,
+    youtubeRedRevenue: PropTypes.object.isRequired,
     subscribers: PropTypes.object.isRequired,
     unsubscribers: PropTypes.object.isRequired,
     views: PropTypes.object.isRequired,
@@ -207,22 +238,28 @@ AnalyticsHomePage.propTypes = {
 
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
-        = state.ajaxCallsInProgress.comments
+        = state.ajaxCallsInProgress.adRevenue;
+        + state.ajaxCallsInProgress.comments
         + state.ajaxCallsInProgress.dislikes
         + state.ajaxCallsInProgress.likes
+        + state.ajaxCallsInProgress.revenue;
         + state.ajaxCallsInProgress.subscribers
         + state.ajaxCallsInProgress.unsubscribers
         + state.ajaxCallsInProgress.views
         + state.ajaxCallsInProgress.watchTime;
+        + state.ajaxCallsInProgress.youtubeRedRevenue;
 
     return {
+        adRevenue: state.adRevenue,
         comments: state.comments,
         dislikes: state.dislikes,
         likes: state.likes,
+        revenue: state.revenue,
         subscribers: state.subscribers,
         unsubscribers: state.unsubscribers,
         views: state.views,
         watchTime: state.watchTime,
+        youtubeRedRevenue: state.youtubeRedRevenue,
         totalStats: state.totalStats,
         isLoading: totalAjaxCallsInProgress > 0
     };
@@ -233,6 +270,7 @@ export function mapDispatchToProps(dispatch) {
         {},
         commentsActions,
         likesActions,
+        revenueActions,
         subscribersActions,
         viewsActions,
         statsActions

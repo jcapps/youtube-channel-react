@@ -1,6 +1,24 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState';
 
+function isAdRevenueActionStartingType(type) {
+    return (
+        type == types.GETTING_AD_REVENUE
+    );
+}
+
+function isAdRevenueActionSuccessType(type) {
+    return (
+        type == types.GET_AD_REVENUE_SUCCESS
+    );
+}
+
+function isAdRevenueActionErrorType(type) {
+    return (
+        type == types.GET_AD_REVENUE_ERROR
+    );
+}
+
 function isChannelActionStartingType(type) {
     return (
         type == types.GETTING_CHANNEL_INFO
@@ -84,6 +102,24 @@ function isLoginActionStartingType(type) {
 function isLoginActionSuccessType(type) {
     return (
         type == types.LOGIN_SUCCESS
+    );
+}
+
+function isRevenueActionStartingType(type) {
+    return (
+        type == types.GETTING_REVENUE
+    );
+}
+
+function isRevenueActionSuccessType(type) {
+    return (
+        type == types.GET_REVENUE_SUCCESS
+    );
+}
+
+function isRevenueActionErrorType(type) {
+    return (
+        type == types.GET_REVENUE_ERROR
     );
 }
 
@@ -177,9 +213,36 @@ function isWatchTimeActionErrorType(type) {
     );
 }
 
+function isYoutubeRedRevenueActionStartingType(type) {
+    return (
+        type == types.GETTING_YOUTUBE_RED_REVENUE
+    );
+}
+
+function isYoutubeRedRevenueActionSuccessType(type) {
+    return (
+        type == types.GET_YOUTUBE_RED_REVENUE_SUCCESS
+    );
+}
+
+function isYoutubeRedRevenueActionErrorType(type) {
+    return (
+        type == types.GET_YOUTUBE_RED_REVENUE_ERROR
+    );
+}
+
 export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgress, action) {
     let currentState = Object.assign({}, state);
 
+    if (isAdRevenueActionStartingType(action.type)) {
+        currentState.adRevenue += 1;
+    }
+    if (isAdRevenueActionSuccessType(action.type)) {
+        currentState.adRevenue -= 1;
+    }
+    if (isAdRevenueActionErrorType(action.type)) {
+        currentState.adRevenue -= 1;
+    }
     if (isChannelActionStartingType(action.type)) {
         currentState.channel += 1;
     }
@@ -221,6 +284,15 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isLoginActionSuccessType(action.type)) {
         currentState.login -= 1;
+    }
+    if (isRevenueActionStartingType(action.type)) {
+        currentState.revenue += 1;
+    }
+    if (isRevenueActionSuccessType(action.type)) {
+        currentState.revenue -= 1;
+    }
+    if (isRevenueActionErrorType(action.type)) {
+        currentState.revenue -= 1;
     }
     if (isSubscribersActionStartingType(action.type)) {
         currentState.subscribers += 1;
@@ -266,6 +338,15 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isWatchTimeActionErrorType(action.type)) {
         currentState.watchTime -= 1;
+    }
+    if (isYoutubeRedRevenueActionStartingType(action.type)) {
+        currentState.youtubeRedRevenue += 1;
+    }
+    if (isYoutubeRedRevenueActionSuccessType(action.type)) {
+        currentState.youtubeRedRevenue -= 1;
+    }
+    if (isYoutubeRedRevenueActionErrorType(action.type)) {
+        currentState.youtubeRedRevenue -= 1;
     }
 
     return currentState;

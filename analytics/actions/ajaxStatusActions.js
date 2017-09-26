@@ -28,6 +28,18 @@ export function gettingLikes() {
     return {type: types.GETTING_LIKES};
 }
 
+export function gettingRevenue() {
+    return {type: types.GETTING_REVENUE};
+}
+
+export function gettingAdRevenue() {
+    return {type: types.GETTING_AD_REVENUE};
+}
+
+export function gettingYoutubeRedRevenue() {
+    return {type: types.GETTING_YOUTUBE_RED_REVENUE};
+}
+
 export function gettingSubscribers() {
     return {type: types.GETTING_SUBSCRIBERS};
 }

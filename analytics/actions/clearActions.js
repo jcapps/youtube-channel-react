@@ -16,6 +16,18 @@ export function clearLikes() {
     return { type: types.CLEAR_LIKES };
 }
 
+export function clearRevenue() {
+    return { type: types.CLEAR_REVENUE };
+}
+
+export function clearAdRevenue() {
+    return { type: types.CLEAR_AD_REVENUE };
+}
+
+export function clearYoutubeRedRevenue() {
+    return { type: types.CLEAR_YOUTUBE_RED_REVENUE };
+}
+
 export function clearSubscribers() {
     return { type: types.CLEAR_SUBSCRIBERS };
 }
