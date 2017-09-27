@@ -362,26 +362,26 @@ const hideTooltip = container => {
 };
 
 // Show/hide data points and tooltip
-const highlight = (d, xyInfo, container) => {
+const highlight = (d, xyInfo, container, size) => {
     if (!d) {
         hideHighlightedDataPoint(container);
         hideTooltip(container);
     } else {
         showAndSetHighlightedDataPoint(d, xyInfo, container);
-        if (graphSize == 'large') showAndSetTooltip(d, xyInfo, container);
-        if (graphSize == 'medium') showAndSetSmallerTooltip(d, xyInfo, container);
+        if (size == 'large') showAndSetTooltip(d, xyInfo, container);
+        if (size == 'medium') showAndSetSmallerTooltip(d, xyInfo, container);
     }
 };
 
 // Overlays invisible canvas to handle hovering over data points
-const prepareVoronoiCanvas = (voronoiDiagram, xyInfo) => {
+const prepareVoronoiCanvas = (voronoiDiagram, xyInfo, size) => {
     const container = graphContainer; // Isolate the constant for this particular listener
     const graphCanvas = container.select('.graphCanvas');
 
     const hoverHandler = () => {
         const [mx, my] = d3.mouse(graphCanvas.node());
         const site = voronoiDiagram.find(mx, my, 25);
-        highlight(site && site.data, xyInfo, container);
+        highlight(site && site.data, xyInfo, container, size);
     };  
 
     graphCanvas.append('rect')
@@ -390,11 +390,11 @@ const prepareVoronoiCanvas = (voronoiDiagram, xyInfo) => {
         .style('opacity', 0)
         .on('mousemove', hoverHandler)
         .on('mouseleave', () => {
-            highlight(null, xyInfo, container);
+            highlight(null, xyInfo, container, size);
         });
 };
 
-const prepareXValueHover = (data, xyInfo) => {
+const prepareXValueHover = (data, xyInfo, size) => {
     const container = graphContainer; // Isolate the constant for this particular listener
     const graphCanvas = container.select('.graphCanvas');
 
@@ -409,7 +409,7 @@ const prepareXValueHover = (data, xyInfo) => {
             ? rightDataPoint
             : leftDataPoint;
         
-        highlight(nearestDataPoint, xyInfo, container);
+        highlight(nearestDataPoint, xyInfo, container, size);
     };
 
     graphCanvas.append('rect')
@@ -418,7 +418,7 @@ const prepareXValueHover = (data, xyInfo) => {
         .style('opacity', 0)
         .on('mousemove', hoverHandler)
         .on('mouseleave', () => {
-            highlight(null, xyInfo, container);
+            highlight(null, xyInfo, container, size);
         });
 };
 
@@ -478,14 +478,14 @@ const lineGraph = (container, dataInfo, xColumnName, yColumnName, size = 'large'
 
     if (size == 'medium') {
         drawHighlightedDataPoint();
-        prepareXValueHover(data, xyInfo);
+        prepareXValueHover(data, xyInfo, size);
     }
     
     if (size == 'large') {
         drawHighlightedDataPoint();
 
         const voronoiDiagram = computeVoronoi(width, height, data, xyInfo);
-        prepareVoronoiCanvas(voronoiDiagram, xyInfo);
+        prepareVoronoiCanvas(voronoiDiagram, xyInfo, size);
 
         createGraphFootnote();
     }
