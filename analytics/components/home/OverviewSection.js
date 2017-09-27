@@ -5,7 +5,7 @@ import ContentTypes from '../../globals/ContentTypes';
 import computeSubscribers from '../../helpers/computeSubscribers';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import getTotalStats from '../../helpers/getTotalStats';
-import LineGraph from '../common/graphs/LineGraph';
+import LineGraphContainer from '../common/graphs/LineGraphContainer';
 
 class OverviewSection extends React.PureComponent {
     constructor() {
@@ -36,7 +36,7 @@ class OverviewSection extends React.PureComponent {
         }
 
         return (
-            <LineGraph
+            <LineGraphContainer
                 dataInfo={dataInfo}
                 xColumnName="day"
                 yColumnName={dataType}

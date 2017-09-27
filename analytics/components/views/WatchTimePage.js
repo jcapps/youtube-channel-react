@@ -11,7 +11,7 @@ import * as viewsActions from '../../actions/viewsActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraph from '../common/graphs/LineGraph';
+import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import ViewsMetricsSection from './ViewsMetricsSection';
 
 export class WatchTimePage extends React.PureComponent {
@@ -83,7 +83,7 @@ export class WatchTimePage extends React.PureComponent {
 
         const watchTimeInfo = computeWatchTimes(this.props.watchTime);
         return (
-            <LineGraph
+            <LineGraphContainer
                 dataInfo={watchTimeInfo}
                 xColumnName="day"
                 yColumnName="watchTime"

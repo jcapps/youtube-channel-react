@@ -10,7 +10,7 @@ import * as viewsActions from '../../actions/viewsActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraph from '../common/graphs/LineGraph';
+import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import ViewsMetricsSection from './ViewsMetricsSection';
 
 export class ViewsPage extends React.PureComponent {
@@ -81,7 +81,7 @@ export class ViewsPage extends React.PureComponent {
         if (!this.props.views.columnHeaders) return <div/>;
 
         return (
-            <LineGraph
+            <LineGraphContainer
                 dataInfo={this.props.views}
                 xColumnName="day"
                 yColumnName="views"

@@ -10,7 +10,7 @@ import * as subscribersActions from '../../actions/subscribersActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraph from '../common/graphs/LineGraph';
+import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import SubscribersMetricsSection from './SubscribersMetricsSection';
 
 export class SubscribersLostPage extends React.PureComponent {
@@ -93,7 +93,7 @@ export class SubscribersLostPage extends React.PureComponent {
         if (!this.props.unsubscribers.columnHeaders) return <div/>;
 
         return (
-            <LineGraph
+            <LineGraphContainer
                 dataInfo={this.props.unsubscribers}
                 xColumnName="day"
                 yColumnName="subscribersLost"

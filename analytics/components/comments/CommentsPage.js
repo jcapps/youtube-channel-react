@@ -10,7 +10,7 @@ import * as commentsActions from '../../actions/commentsActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraph from '../common/graphs/LineGraph';
+import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import CommentsMetricsSection from './CommentsMetricsSection';
 
 export class CommentsPage extends React.PureComponent {
@@ -93,7 +93,7 @@ export class CommentsPage extends React.PureComponent {
         if (!this.props.comments.columnHeaders) return <div/>;
 
         return (
-            <LineGraph
+            <LineGraphContainer
                 dataInfo={this.props.comments}
                 xColumnName="day"
                 yColumnName="comments"

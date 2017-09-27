@@ -11,7 +11,7 @@ import * as subscribersActions from '../../actions/subscribersActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraph from '../common/graphs/LineGraph';
+import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import SubscribersMetricsSection from './SubscribersMetricsSection';
 
 export class SubscribersPage extends React.PureComponent {
@@ -99,7 +99,7 @@ export class SubscribersPage extends React.PureComponent {
 
         const subscribersInfo = computeSubscribers(this.props.subscribers, this.props.unsubscribers);
         return (
-            <LineGraph
+            <LineGraphContainer
                 dataInfo={subscribersInfo}
                 xColumnName="day"
                 yColumnName="subscribers"

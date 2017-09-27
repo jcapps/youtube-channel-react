@@ -10,7 +10,7 @@ import * as revenueActions from '../../actions/revenueActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraph from '../common/graphs/LineGraph';
+import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import RevenueMetricsSection from './RevenueMetricsSection';
 
 export class YoutubeRedRevenuePage extends React.PureComponent {
@@ -93,7 +93,7 @@ export class YoutubeRedRevenuePage extends React.PureComponent {
         if (!this.props.youtubeRedRevenue.columnHeaders) return <div/>;
 
         return (
-            <LineGraph
+            <LineGraphContainer
                 dataInfo={this.props.youtubeRedRevenue}
                 xColumnName="day"
                 yColumnName="estimatedRedPartnerRevenue"

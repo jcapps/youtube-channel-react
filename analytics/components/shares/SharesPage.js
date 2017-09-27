@@ -10,7 +10,7 @@ import * as sharesActions from '../../actions/sharesActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraph from '../common/graphs/LineGraph';
+import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import SharesMetricsSection from './SharesMetricsSection';
 
 export class SharesPage extends React.PureComponent {
@@ -93,7 +93,7 @@ export class SharesPage extends React.PureComponent {
         if (!this.props.shares.columnHeaders) return <div/>;
 
         return (
-            <LineGraph
+            <LineGraphContainer
                 dataInfo={this.props.shares}
                 xColumnName="day"
                 yColumnName="shares"

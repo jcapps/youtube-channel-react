@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import drawLineGraph from '../../../graphs/lineGraph';
+import LineGraphClass from '../../../graphs/LineGraphClass';
 
-class LineGraph extends React.PureComponent {
+class LineGraphContainer extends React.PureComponent {
     componentDidMount() {
         if (!this.props.isLoading) {
             this.drawLineGraph(this.props);
@@ -28,7 +28,8 @@ class LineGraph extends React.PureComponent {
         const container = d3.select(`.${yColumnName}-line-graph-container`);
         container.html('');
 
-        drawLineGraph(container, dataInfo, xColumnName, yColumnName, size);
+        const LineGraph = new LineGraphClass();
+        LineGraph.drawLineGraph(container, dataInfo, xColumnName, yColumnName, size);
         onRenderFinish();
     }
 
@@ -38,11 +39,11 @@ class LineGraph extends React.PureComponent {
     }
 }
 
-LineGraph.defaultProps = {
+LineGraphContainer.defaultProps = {
     size: 'large'
 };
 
-LineGraph.propTypes = {
+LineGraphContainer.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     dataInfo: PropTypes.object.isRequired,
     xColumnName: PropTypes.string.isRequired,
@@ -51,4 +52,4 @@ LineGraph.propTypes = {
     size: PropTypes.string
 };
 
-export default LineGraph;
+export default LineGraphContainer;

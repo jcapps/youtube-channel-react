@@ -10,7 +10,7 @@ import * as likesActions from '../../actions/likesActions';
 import * as statsActions from '../../actions/statsActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraph from '../common/graphs/LineGraph';
+import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import LikesMetricsSection from './LikesMetricsSection';
 
 export class LikesPage extends React.PureComponent {
@@ -93,7 +93,7 @@ export class LikesPage extends React.PureComponent {
         if (!this.props.likes.columnHeaders) return <div/>;
 
         return (
-            <LineGraph
+            <LineGraphContainer
                 dataInfo={this.props.likes}
                 xColumnName="day"
                 yColumnName="likes"
