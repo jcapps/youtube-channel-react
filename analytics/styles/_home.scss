@@ -3,6 +3,10 @@
         border: 1px solid $border;
         line-height: 0;
 
+        a {
+            pointer-events: none;
+        }
+
         .medium-overview-section {
             width: 50%;
         }
@@ -19,6 +23,7 @@
             border: 1px solid $border;
             line-height: 1.42857143;
             vertical-align: top;
+            pointer-events: auto;
     
             &:hover {
                 background-color: $background-hover;
