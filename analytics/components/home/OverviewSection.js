@@ -40,7 +40,7 @@ class OverviewSection extends React.PureComponent {
                 dataInfo={dataInfo}
                 xColumnName="day"
                 yColumnName={dataType}
-                size="medium"
+                size={this.props.size}
                 onRenderFinish={this.props.onRenderFinish}
                 isLoading={this.props.state.isLoading}
             />
@@ -56,9 +56,9 @@ class OverviewSection extends React.PureComponent {
             if (dataType == 'subscribers') return <div/>;
             if (dataType == 'subscribersGained') return <div/>;
             if (dataType == 'subscribersLost') return <div/>;
-            if (dataType == 'estimatedRevenue') return <div/>;
-            if (dataType == 'estimatedAdRevenue') return <div/>;
-            if (dataType == 'estimatedRedPartnerRevenue') return <div/>;
+            if (dataType == 'revenue') return <div/>;
+            if (dataType == 'adRevenue') return <div/>;
+            if (dataType == 'youtubeRedRevenue') return <div/>;
         }
 
         const loadingSpinner = require('../../images/loading.gif');
@@ -95,7 +95,7 @@ class OverviewSection extends React.PureComponent {
 
         return (
             <Link to={{pathname: `/analytics/${dataType}`, state: this.props.state}}>
-                <div id={`${dataType}-overview-section`} className="overview-section">
+                <div id={`${dataType}-overview-section`} className={`${this.props.size}-overview-section`}>
                     <div className="metric-title">{sectionTitle}</div>
                     <div className="metric-value">{totalValue.toLocaleString()}</div>
                     {this.renderLineGraph()}
@@ -110,6 +110,7 @@ OverviewSection.propTypes = {
     data: PropTypes.object.isRequired,
     dataType: PropTypes.string.isRequired,
     totalStats: PropTypes.object.isRequired,
+    size: PropTypes.string.isRequired,
     state: PropTypes.object.isRequired,
     onRenderFinish: PropTypes.func.isRequired,
     additionalData: PropTypes.object

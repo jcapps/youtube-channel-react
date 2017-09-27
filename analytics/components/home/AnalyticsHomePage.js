@@ -103,6 +103,18 @@ export class AnalyticsHomePage extends React.PureComponent {
                 this.showLoadingSpinner('watchTime');
                 return;
             }
+            if (dataType == 'estimatedRevenue') {
+                this.showLoadingSpinner('revenue');
+                return;
+            }
+            if (dataType == 'estimatedAdRevenue') {
+                this.showLoadingSpinner('adRevenue');
+                return;
+            }
+            if (dataType == 'estimatedRedPartnerRevenue') {
+                this.showLoadingSpinner('youtubeRedRevenue');
+                return;
+            }
             if (dataType == 'subscribers') {
                 this.showLoadingSpinner('subscribers');
                 newDataTypes.splice(i, 1);
@@ -141,79 +153,90 @@ export class AnalyticsHomePage extends React.PureComponent {
                 <div id="overview-sections">
                     <OverviewSection
                         data={this.props.views}
-                        dataType='views'
+                        dataType="views"
                         totalStats={this.props.totalStats}
+                        size="medium"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('views')}
                     />
                     <OverviewSection
                         data={this.props.watchTime}
-                        dataType='watchTime'
+                        dataType="watchTime"
                         totalStats={this.props.totalStats}
+                        size="medium"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('watchTime')}
                     />
                     <OverviewSection
                         data={this.props.likes}
-                        dataType='likes'
+                        dataType="likes"
                         totalStats={this.props.totalStats}
+                        size="medium"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('likes')}
                     />
                     <OverviewSection
                         data={this.props.dislikes}
-                        dataType='dislikes'
+                        dataType="dislikes"
                         totalStats={this.props.totalStats}
+                        size="medium"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('dislikes')}
                     />
                     <OverviewSection
                         data={this.props.comments}
-                        dataType='comments'
+                        dataType="comments"
                         totalStats={this.props.totalStats}
+                        size="small"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('comments')}
                     />
                     <OverviewSection
                         data={this.props.subscribers}
                         additionalData={this.props.unsubscribers}
-                        dataType='subscribers'
+                        dataType="subscribers"
                         totalStats={this.props.totalStats}
+                        size="small"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('subscribers')}
                     />
                     <OverviewSection
                         data={this.props.subscribers}
-                        dataType='subscribersGained'
+                        dataType="subscribersGained"
                         totalStats={this.props.totalStats}
+                        size="small"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('subscribersGained')}
                     />
                     <OverviewSection
                         data={this.props.unsubscribers}
-                        dataType='subscribersLost'
+                        dataType="subscribersLost"
                         totalStats={this.props.totalStats}
+                        size="small"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('subscribersLost')}
                     />
                     <OverviewSection
                         data={this.props.revenue}
-                        dataType='revenue'
+                        dataType="revenue"
                         totalStats={this.props.totalStats}
+                        size="small"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('revenue')}
                     />
                     <OverviewSection
                         data={this.props.adRevenue}
-                        dataType='adRevenue'
+                        dataType="adRevenue"
                         totalStats={this.props.totalStats}
+                        size="small"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('adRevenue')}
                     />
                     <OverviewSection
                         data={this.props.youtubeRedRevenue}
-                        dataType='youtubeRedRevenue'
+                        dataType="youtubeRedRevenue"
                         totalStats={this.props.totalStats}
+                        size="small"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('youtubeRedRevenue')}
                     />

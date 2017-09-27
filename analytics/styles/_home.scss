@@ -3,13 +3,22 @@
         border: 1px solid $border;
         line-height: 0;
 
-        .overview-section {
+        .medium-overview-section {
+            width: 50%;
+        }
+
+        .small-overview-section {
+            width: calc(100% / 6);
+        }
+
+        .medium-overview-section,
+        .small-overview-section {
             display: inline-block;
             position: relative;
             height: 150px;
-            width: 50%;
             border: 1px solid $border;
             line-height: 1.42857143;
+            vertical-align: top;
     
             &:hover {
                 background-color: $background-hover;
