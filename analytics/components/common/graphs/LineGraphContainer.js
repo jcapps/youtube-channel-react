@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import LineGraphClass from '../../../graphs/LineGraphClass';
+import LineGraph from '../../../graphs/LineGraph';
 
 class LineGraphContainer extends React.PureComponent {
     componentDidMount() {
@@ -28,8 +28,8 @@ class LineGraphContainer extends React.PureComponent {
         const container = d3.select(`.${yColumnName}-line-graph-container`);
         container.html('');
 
-        const LineGraph = new LineGraphClass();
-        LineGraph.drawLineGraph(container, dataInfo, xColumnName, yColumnName, size);
+        const LG = new LineGraph();
+        LG.drawLineGraph(container, dataInfo, xColumnName, yColumnName, size);
         onRenderFinish();
     }
 
