@@ -123,6 +123,24 @@ function isRevenueActionErrorType(type) {
     );
 }
 
+function isSharesActionStartingType(type) {
+    return (
+        type == types.GETTING_SHARES
+    );
+}
+
+function isSharesActionSuccessType(type) {
+    return (
+        type == types.GET_SHARES_SUCCESS
+    );
+}
+
+function isSharesActionErrorType(type) {
+    return (
+        type == types.GET_SHARES_ERROR
+    );
+}
+
 function isSubscribersActionStartingType(type) {
     return (
         type == types.GETTING_SUBSCRIBERS
@@ -293,6 +311,15 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isRevenueActionErrorType(action.type)) {
         currentState.revenue -= 1;
+    }
+    if (isSharesActionStartingType(action.type)) {
+        currentState.shares += 1;
+    }
+    if (isSharesActionSuccessType(action.type)) {
+        currentState.shares -= 1;
+    }
+    if (isSharesActionErrorType(action.type)) {
+        currentState.shares -= 1;
     }
     if (isSubscribersActionStartingType(action.type)) {
         currentState.subscribers += 1;

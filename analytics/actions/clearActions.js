@@ -28,6 +28,10 @@ export function clearYoutubeRedRevenue() {
     return { type: types.CLEAR_YOUTUBE_RED_REVENUE };
 }
 
+export function clearShares() {
+    return { type: types.CLEAR_SHARES };
+}
+
 export function clearSubscribers() {
     return { type: types.CLEAR_SUBSCRIBERS };
 }

@@ -53,6 +53,7 @@ class OverviewSection extends React.PureComponent {
             if (dataType == 'likes') return <div/>;
             if (dataType == 'dislikes') return <div/>;
             if (dataType == 'comments') return <div/>;
+            if (dataType == 'shares') return <div/>;
             if (dataType == 'subscribers') return <div/>;
             if (dataType == 'subscribersGained') return <div/>;
             if (dataType == 'subscribersLost') return <div/>;

@@ -40,6 +40,10 @@ export function gettingYoutubeRedRevenue() {
     return {type: types.GETTING_YOUTUBE_RED_REVENUE};
 }
 
+export function gettingShares() {
+    return {type: types.GETTING_SHARES};
+}
+
 export function gettingSubscribers() {
     return {type: types.GETTING_SUBSCRIBERS};
 }

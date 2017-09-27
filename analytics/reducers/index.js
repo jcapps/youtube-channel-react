@@ -12,6 +12,7 @@ import youtubeRedRevenue from './youtubeRedRevenueReducer';
 import searchChannelResults from './searchChannelResultsReducer';
 import searchPlaylistResults from './searchPlaylistResultsReducer';
 import searchVideoResults from './searchVideoResultsReducer';
+import shares from './sharesReducer';
 import subscribers from './subscribersReducer';
 import unsubscribers from './unsubscribersReducer';
 import totalStats from './totalStatsReducer';
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
     searchChannelResults,
     searchPlaylistResults,
     searchVideoResults,
+    shares,
     subscribers,
     unsubscribers,
     totalStats,

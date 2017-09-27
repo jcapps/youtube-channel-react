@@ -9,6 +9,7 @@ import formatFiltersString from '../../helpers/formatFiltersString';
 import * as commentsActions from '../../actions/commentsActions';
 import * as likesActions from '../../actions/likesActions';
 import * as revenueActions from '../../actions/revenueActions';
+import * as sharesActions from '../../actions/sharesActions';
 import * as subscribersActions from '../../actions/subscribersActions';
 import * as viewsActions from '../../actions/viewsActions';
 import * as statsActions from '../../actions/statsActions';
@@ -47,6 +48,7 @@ export class AnalyticsHomePage extends React.PureComponent {
         this.props.clearActions.clearRevenue();
         this.props.clearActions.clearAdRevenue();
         this.props.clearActions.clearYoutubeRedRevenue();
+        this.props.clearActions.clearShares();
         this.props.clearActions.clearSubscribers();
         this.props.clearActions.clearUnsubscribers();
         this.props.clearActions.clearViews();
@@ -83,6 +85,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             'comments',
             'likes',
             'dislikes',
+            'shares',
             'subscribers',
             'subscribersGained',
             'subscribersLost',
@@ -130,6 +133,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             this.props.actions.getComments(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
             this.props.actions.getLikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
             this.props.actions.getDislikes(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
+            this.props.actions.getShares(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
             this.props.actions.getSubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
             this.props.actions.getUnsubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
             this.props.actions.getRevenue(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
@@ -190,6 +194,14 @@ export class AnalyticsHomePage extends React.PureComponent {
                         size="small"
                         state={this.state}
                         onRenderFinish={() => this.hideLoadingSpinner('comments')}
+                    />
+                    <OverviewSection
+                        data={this.props.shares}
+                        dataType="shares"
+                        totalStats={this.props.totalStats}
+                        size="small"
+                        state={this.state}
+                        onRenderFinish={() => this.hideLoadingSpinner('shares')}
                     />
                     <OverviewSection
                         data={this.props.subscribers}
@@ -254,6 +266,7 @@ AnalyticsHomePage.propTypes = {
     revenue: PropTypes.object.isRequired,
     adRevenue: PropTypes.object.isRequired,
     youtubeRedRevenue: PropTypes.object.isRequired,
+    shares: PropTypes.object.isRequired,
     subscribers: PropTypes.object.isRequired,
     unsubscribers: PropTypes.object.isRequired,
     views: PropTypes.object.isRequired,
@@ -265,15 +278,16 @@ AnalyticsHomePage.propTypes = {
 
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
-        = state.ajaxCallsInProgress.adRevenue;
+        = state.ajaxCallsInProgress.adRevenue
         + state.ajaxCallsInProgress.comments
         + state.ajaxCallsInProgress.dislikes
         + state.ajaxCallsInProgress.likes
-        + state.ajaxCallsInProgress.revenue;
+        + state.ajaxCallsInProgress.revenue
+        + state.ajaxCallsInProgress.shares
         + state.ajaxCallsInProgress.subscribers
         + state.ajaxCallsInProgress.unsubscribers
         + state.ajaxCallsInProgress.views
-        + state.ajaxCallsInProgress.watchTime;
+        + state.ajaxCallsInProgress.watchTime
         + state.ajaxCallsInProgress.youtubeRedRevenue;
 
     return {
@@ -282,6 +296,7 @@ export function mapStateToProps(state) {
         dislikes: state.dislikes,
         likes: state.likes,
         revenue: state.revenue,
+        shares: state.shares,
         subscribers: state.subscribers,
         unsubscribers: state.unsubscribers,
         views: state.views,
@@ -298,6 +313,7 @@ export function mapDispatchToProps(dispatch) {
         commentsActions,
         likesActions,
         revenueActions,
+        sharesActions,
         subscribersActions,
         viewsActions,
         statsActions
