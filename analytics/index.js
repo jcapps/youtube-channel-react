@@ -8,18 +8,23 @@ import {isLoggedIn} from './actions/loginActions';
 import {getChannelInfo} from './actions/channelActions';
 import App from './components/App';
 
-const AnalyticsApp = () => {
-    const store = configureStore();
-    store.dispatch(isLoggedIn());
-    store.dispatch(getChannelInfo());
-    
-    return (
-        <Provider store={store}>
-            <Router>
-                <Route path="/analytics" component={App} />
-            </Router>
-        </Provider>
-    );
-};
+const store = configureStore();
+
+class AnalyticsApp extends React.PureComponent {
+    componentWillMount() {
+        store.dispatch(isLoggedIn());
+        store.dispatch(getChannelInfo());
+    }
+
+    render() {
+        return (
+            <Provider store={store}>
+                <Router>
+                    <Route path="/analytics" component={App} />
+                </Router>
+            </Provider>
+        );
+    }   
+}
 
 export default AnalyticsApp;
