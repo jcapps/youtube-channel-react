@@ -1,5 +1,6 @@
 export default {
     channelInfo: {},
+    aggregate: {playlist: {}, video: {}},
     comments: {},
     dislikes: {},
     likes: {},
@@ -19,6 +20,7 @@ export default {
     error: {},
     ajaxCallsInProgress: {
         adRevenue: 0,
+        aggregate: {playlist: 0, video: 0},
         channel: 0,
         comments: 0,
         contentFilter: 0,

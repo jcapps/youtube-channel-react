@@ -19,6 +19,42 @@ function isAdRevenueActionErrorType(type) {
     );
 }
 
+function isAggregatePlaylistActionStartingType(type) {
+    return (
+        type == types.GETTING_AGGREGATE_PLAYLIST
+    );
+}
+
+function isAggregatePlaylistActionSuccessType(type) {
+    return (
+        type == types.GET_AGGREGATE_PLAYLIST_SUCCESS
+    );
+}
+
+function isAggregatePlaylistActionErrorType(type) {
+    return (
+        type == types.GET_AGGREGATE_PLAYLIST_ERROR
+    );
+}
+
+function isAggregateVideoActionStartingType(type) {
+    return (
+        type == types.GETTING_AGGREGATE_VIDEO
+    );
+}
+
+function isAggregateVideoActionSuccessType(type) {
+    return (
+        type == types.GET_AGGREGATE_VIDEO_SUCCESS
+    );
+}
+
+function isAggregateVideoActionErrorType(type) {
+    return (
+        type == types.GET_AGGREGATE_VIDEO_ERROR
+    );
+}
+
 function isChannelActionStartingType(type) {
     return (
         type == types.GETTING_CHANNEL_INFO
@@ -260,6 +296,36 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isAdRevenueActionErrorType(action.type)) {
         currentState.adRevenue -= 1;
+    }
+    if (isAggregatePlaylistActionStartingType(action.type)) {
+        let aggregateState = Object.assign({}, currentState.aggregate);
+        aggregateState.playlist += 1;
+        currentState.aggregate = aggregateState;
+    }
+    if (isAggregatePlaylistActionSuccessType(action.type)) {
+        let aggregateState = Object.assign({}, currentState.aggregate);
+        aggregateState.playlist -= 1;
+        currentState.aggregate = aggregateState;
+    }
+    if (isAggregatePlaylistActionErrorType(action.type)) {
+        let aggregateState = Object.assign({}, currentState.aggregate);
+        aggregateState.playlist -= 1;
+        currentState.aggregate = aggregateState;
+    }
+    if (isAggregateVideoActionStartingType(action.type)) {
+        let aggregateState = Object.assign({}, currentState.aggregate);
+        aggregateState.video += 1;
+        currentState.aggregate = aggregateState;
+    }
+    if (isAggregateVideoActionSuccessType(action.type)) {
+        let aggregateState = Object.assign({}, currentState.aggregate);
+        aggregateState.video -= 1;
+        currentState.aggregate = aggregateState;
+    }
+    if (isAggregateVideoActionErrorType(action.type)) {
+        let aggregateState = Object.assign({}, currentState.aggregate);
+        aggregateState.video -= 1;
+        currentState.aggregate = aggregateState;
     }
     if (isChannelActionStartingType(action.type)) {
         currentState.channel += 1;

@@ -20,7 +20,7 @@ class OverviewSection extends React.PureComponent {
 
         if (!dataInfo.columnHeaders) return;
         if (dataType == 'subscribers') {
-            dataInfo = computeSubscribers(this.props.data, this.props.additionalData);
+            dataInfo = computeSubscribers(this.props.data, this.props.data);
         }
         if (dataType == 'revenue') {
             dataType = 'estimatedRevenue';
@@ -113,8 +113,7 @@ OverviewSection.propTypes = {
     totalStats: PropTypes.object.isRequired,
     size: PropTypes.string.isRequired,
     state: PropTypes.object.isRequired,
-    onRenderFinish: PropTypes.func.isRequired,
-    additionalData: PropTypes.object
+    onRenderFinish: PropTypes.func.isRequired
 };
 
 export default OverviewSection;

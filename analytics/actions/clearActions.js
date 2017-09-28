@@ -4,6 +4,14 @@ export function clearSearchResults() {
     return { type: types.CLEAR_SEARCH_RESULTS };
 }
 
+export function clearAggregateVideo() {
+    return { type: types.CLEAR_AGGREGATE_VIDEO };
+}
+
+export function clearAggregatePlaylist() {
+    return { type: types.CLEAR_AGGREGATE_PLAYLIST };
+}
+
 export function clearComments() {
     return { type: types.CLEAR_COMMENTS };
 }

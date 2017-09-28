@@ -3,6 +3,7 @@ import ajaxCallsInProgress from './ajaxStatusReducer';
 import isAuthenticated from './isAuthenticatedReducer';
 import error from './errorReducer';
 import channelInfo from './channelInfoReducer';
+import aggregate from './aggregateReducer';
 import comments from './commentsReducer';
 import dislikes from './dislikesReducer';
 import likes from './likesReducer';
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     isAuthenticated,
     error,
     channelInfo,
+    aggregate,
     comments,
     dislikes,
     likes,

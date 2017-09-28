@@ -16,6 +16,14 @@ export function searchingChannel() {
     return {type: types.SEARCHING_CHANNEL};
 }
 
+export function gettingAggregateVideo() {
+    return {type: types.GETTING_AGGREGATE_VIDEO};
+}
+
+export function gettingAggregatePlaylist() {
+    return {type: types.GETTING_AGGREGATE_PLAYLIST};
+}
+
 export function gettingComments() {
     return {type: types.GETTING_COMMENTS};
 }
