@@ -6,9 +6,7 @@ import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
 import computeSubscribers from '../../helpers/computeSubscribers';
-import formatFiltersString from '../../helpers/formatFiltersString';
-import * as subscribersActions from '../../actions/subscribersActions';
-import * as statsActions from '../../actions/statsActions';
+import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
@@ -47,8 +45,7 @@ export class SubscribersPage extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.props.clearActions.clearSubscribers();
-        this.props.clearActions.clearUnsubscribers();
+        this.props.clearActions.clearReport();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -77,8 +74,7 @@ export class SubscribersPage extends React.PureComponent {
         this.setState({...state});
         if (state.contentType == ContentTypes.PLAYLISTS) {
             this.setState({playlistAttempted: true});
-            this.props.clearActions.clearSubscribers();
-            this.props.clearActions.clearUnsubscribers();
+            this.props.clearActions.clearReport();
             return;
         } else {
             this.setState({playlistAttempted: false});
@@ -86,18 +82,19 @@ export class SubscribersPage extends React.PureComponent {
 
         this.setState({isLoading: true});
         this.showLoadingSpinner();
-        this.props.actions.getSubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
-        this.props.actions.getUnsubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
-        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, 'subscribersGained,subscribersLost', formatFiltersString(state.filters));
+        
+        const metrics = ['subscribersGained', 'subscribersLost'];
+        this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
 
     renderLineGraph() {
         if (this.state.playlistAttempted)
             return <div className="error-message">The subscribers metric does not allow filtering by playlist.</div>;
-        if (!this.props.subscribers.columnHeaders || !this.props.unsubscribers.columnHeaders)
+        if (!this.props.subscribers.columnHeaders)
             return <div/>;
 
-        const subscribersInfo = computeSubscribers(this.props.subscribers, this.props.unsubscribers);
+        const subscribersInfo = computeSubscribers(this.props.subscribers);
         return (
             <LineGraphContainer
                 dataInfo={subscribersInfo}
@@ -134,7 +131,6 @@ export class SubscribersPage extends React.PureComponent {
 SubscribersPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     subscribers: PropTypes.object.isRequired,
-    unsubscribers: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired,
@@ -143,22 +139,19 @@ SubscribersPage.propTypes = {
 
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
-        = state.ajaxCallsInProgress.subscribers
-        + state.ajaxCallsInProgress.unsubscribers
+        = state.ajaxCallsInProgress.report
         + state.ajaxCallsInProgress.totalStats;
         
     return {
-        subscribers: state.subscribers,
-        unsubscribers: state.unsubscribers,
+        subscribers: state.report,
         totalStats: state.totalStats,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }
 
 export function mapDispatchToProps(dispatch) {
-    const combinedActions = Object.assign({}, subscribersActions, statsActions);
     return {
-        actions: bindActionCreators(combinedActions, dispatch),
+        actions: bindActionCreators(reportActions, dispatch),
         clearActions: bindActionCreators(clearActions, dispatch)
     };
 }

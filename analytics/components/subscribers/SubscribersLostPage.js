@@ -5,9 +5,7 @@ import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
-import formatFiltersString from '../../helpers/formatFiltersString';
-import * as subscribersActions from '../../actions/subscribersActions';
-import * as statsActions from '../../actions/statsActions';
+import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
@@ -46,7 +44,7 @@ export class SubscribersLostPage extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.props.clearActions.clearUnsubscribers();
+        this.props.clearActions.clearReport();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -75,7 +73,7 @@ export class SubscribersLostPage extends React.PureComponent {
         this.setState({...state});
         if (state.contentType == ContentTypes.PLAYLISTS) {
             this.setState({playlistAttempted: true});
-            this.props.clearActions.clearUnsubscribers();
+            this.props.clearActions.clearReport();
             return;
         } else {
             this.setState({playlistAttempted: false});
@@ -83,8 +81,10 @@ export class SubscribersLostPage extends React.PureComponent {
 
         this.setState({isLoading: true});
         this.showLoadingSpinner();
-        this.props.actions.getUnsubscribers(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
-        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, 'subscribersGained,subscribersLost', formatFiltersString(state.filters));
+        
+        const metrics = ['subscribersGained', 'subscribersLost'];
+        this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
 
     renderLineGraph() {
@@ -136,20 +136,19 @@ SubscribersLostPage.propTypes = {
 
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
-        = state.ajaxCallsInProgress.unsubscribers
+        = state.ajaxCallsInProgress.report
         + state.ajaxCallsInProgress.totalStats;
         
     return {
-        unsubscribers: state.unsubscribers,
+        unsubscribers: state.report,
         totalStats: state.totalStats,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }
 
 export function mapDispatchToProps(dispatch) {
-    const combinedActions = Object.assign({}, subscribersActions, statsActions);
     return {
-        actions: bindActionCreators(combinedActions, dispatch),
+        actions: bindActionCreators(reportActions, dispatch),
         clearActions: bindActionCreators(clearActions, dispatch)
     };
 }

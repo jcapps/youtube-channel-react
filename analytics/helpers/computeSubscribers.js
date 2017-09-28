@@ -1,24 +1,18 @@
-const computeSubscribers = (subscribersGained, subscribersLost) => {
-    let subscribers = Object.assign({}, subscribersGained);
-    let unsubscribers = Object.assign({}, subscribersLost);
-    let subscribersRows = Object.assign([], subscribersGained.rows);
-    let unsubscribersRows = Object.assign([], subscribersLost.rows);
-    let subscribersColumnHeaders = Object.assign([], subscribersGained.columnHeaders);
-    let unsubscribersColumnHeaders = Object.assign([], subscribersLost.columnHeaders);
+const computeSubscribers = (report) => {
+    let subscribers = Object.assign({}, report);
+    let subscribersRows = Object.assign([], report.rows);
+    let subscribersColumnHeaders = Object.assign([], report.columnHeaders);
 
     const subscribersColumns = subscribersColumnHeaders.map(item => {
         return item.name;
     });
-    const unsubscribersColumns = unsubscribersColumnHeaders.map(item => {
-        return item.name;
-    });
     const subscribersGainedIndex = subscribersColumns.indexOf('subscribersGained');
-    const subscribersLostIndex = unsubscribersColumns.indexOf('subscribersLost');
+    const subscribersLostIndex = subscribersColumns.indexOf('subscribersLost');
 
     let newSubscribersRows = [];
     for (let i = 0; i < subscribersRows.length; i++) {
         const newRow = Object.assign([], subscribersRows[i]);
-        const numSubscribers = subscribersRows[i][subscribersGainedIndex] - unsubscribersRows[i][subscribersLostIndex];
+        const numSubscribers = subscribersRows[i][subscribersGainedIndex] - subscribersRows[i][subscribersLostIndex];
         newRow.push(numSubscribers);
         newSubscribersRows.push(newRow);
     }

@@ -5,9 +5,7 @@ import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
-import formatFiltersString from '../../helpers/formatFiltersString';
-import * as viewsActions from '../../actions/viewsActions';
-import * as statsActions from '../../actions/statsActions';
+import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
@@ -43,7 +41,7 @@ export class ViewsPage extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.props.clearActions.clearViews();
+        this.props.clearActions.clearReport();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -73,8 +71,10 @@ export class ViewsPage extends React.PureComponent {
         this.setState({isLoading: true});
 
         this.showLoadingSpinner();
-        this.props.actions.getViews(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
-        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, 'views,estimatedMinutesWatched', formatFiltersString(state.filters));        
+
+        const metrics = ['views', 'estimatedMinutesWatched', 'averageViewDuration'];
+        this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
 
     renderLineGraph() {
@@ -124,20 +124,19 @@ ViewsPage.propTypes = {
 
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
-        = state.ajaxCallsInProgress.views
+        = state.ajaxCallsInProgress.report
         + state.ajaxCallsInProgress.totalStats;
         
     return {
-        views: state.views,
+        views: state.report,
         totalStats: state.totalStats,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }
 
 export function mapDispatchToProps(dispatch) {
-    const combinedActions = Object.assign({}, viewsActions, statsActions);
     return {
-        actions: bindActionCreators(combinedActions, dispatch),
+        actions: bindActionCreators(reportActions, dispatch),
         clearActions: bindActionCreators(clearActions, dispatch)
     };
 }

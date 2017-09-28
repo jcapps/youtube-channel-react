@@ -1,11 +1,11 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState';
 
-export default function adRevenueReducer(state = initialState.adRevenue, action) {
+export default function reportReducer(state = initialState.report, action) {
     switch(action.type) {
-        case types.GET_AD_REVENUE_SUCCESS:
+        case types.GET_REPORT_SUCCESS:
             return action.report;
-        case types.CLEAR_AD_REVENUE:
+        case types.CLEAR_REPORT:
             return {};
         default:
             return state;

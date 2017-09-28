@@ -5,9 +5,7 @@ import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
-import formatFiltersString from '../../helpers/formatFiltersString';
-import * as aggregateActions from '../../actions/aggregateActions';
-import * as statsActions from '../../actions/statsActions';
+import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
 import OverviewSection from './OverviewSection';
@@ -38,8 +36,7 @@ export class AnalyticsHomePage extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.props.clearActions.clearAggregatePlaylist();
-        this.props.clearActions.clearAggregateVideo();
+        this.props.clearActions.clearReport();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -68,6 +65,20 @@ export class AnalyticsHomePage extends React.PureComponent {
         this.setState({...state});
         this.setState({isLoading: true});
 
+        let metrics = [
+            'comments',
+            'likes',
+            'dislikes',
+            'shares',
+            'subscribersGained',
+            'subscribersLost',
+            'views',
+            'averageViewDuration',
+            'estimatedMinutesWatched',
+            'estimatedRevenue',
+            'estimatedAdRevenue',
+            'estimatedRedPartnerRevenue'
+        ];
         let dataTypes = [
             'comments',
             'likes',
@@ -77,64 +88,32 @@ export class AnalyticsHomePage extends React.PureComponent {
             'subscribersGained',
             'subscribersLost',
             'views',
-            'estimatedMinutesWatched',
-            'estimatedRevenue',
-            'estimatedAdRevenue',
-            'estimatedRedPartnerRevenue'
+            'watchTime',
+            'revenue',
+            'adRevenue',
+            'youtubeRedRevenue'
         ];
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            dataTypes = ['views', 'estimatedMinutesWatched'];
+            metrics = ['views', 'estimatedMinutesWatched', 'averageViewDuration'];
+            dataTypes = ['views', 'watchTime'];
         }
 
-        const newDataTypes = Object.assign([], dataTypes);
-
         dataTypes.forEach((dataType, i) => {
-            if (dataType == 'estimatedMinutesWatched') {
-                this.showLoadingSpinner('watchTime');
-                return;
-            }
-            if (dataType == 'estimatedRevenue') {
-                this.showLoadingSpinner('revenue');
-                return;
-            }
-            if (dataType == 'estimatedAdRevenue') {
-                this.showLoadingSpinner('adRevenue');
-                return;
-            }
-            if (dataType == 'estimatedRedPartnerRevenue') {
-                this.showLoadingSpinner('youtubeRedRevenue');
-                return;
-            }
-            if (dataType == 'subscribers') {
-                this.showLoadingSpinner('subscribers');
-                newDataTypes.splice(i, 1);
-                return;
-            }
             this.showLoadingSpinner(dataType);
         });
 
-        dataTypes = newDataTypes;
-        const metrics = dataTypes.join(',');
-
-        if (state.contentType == ContentTypes.PLAYLISTS) {
-            this.props.actions.getAggregatePlaylist(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
-        } else {
-            this.props.actions.getAggregateVideo(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
-        }
-        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, formatFiltersString(state.filters));
+        this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
 
     renderOverviewSections() {
-        let data;
         let dataTypes;
         if (this.state.contentType == ContentTypes.PLAYLISTS) {
-            data = this.props.aggregate.playlist;
             dataTypes = [ // Order matters in determining layout
                 'views',
                 'watchTime'
             ];
         } else {
-            data = this.props.aggregate.video;
             dataTypes = [ // Order matters in determining layout
                 'views',
                 'watchTime',
@@ -160,7 +139,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             sectionsArray.push(
                 <OverviewSection
                     key={dataType}
-                    data={data}
+                    data={this.props.report}
                     dataType={dataType}
                     totalStats={this.props.totalStats}
                     size={size}
@@ -192,7 +171,7 @@ export class AnalyticsHomePage extends React.PureComponent {
 
 AnalyticsHomePage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
-    aggregate: PropTypes.object.isRequired,
+    report: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired
@@ -200,25 +179,19 @@ AnalyticsHomePage.propTypes = {
 
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
-        = state.ajaxCallsInProgress.aggregate.playlist
-        + state.ajaxCallsInProgress.aggregate.video
+        = state.ajaxCallsInProgress.report
         + state.ajaxCallsInProgress.totalStats
 
     return {
-        aggregate: state.aggregate,
+        report: state.report,
         totalStats: state.totalStats,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }
 
 export function mapDispatchToProps(dispatch) {
-    const combinedActions = Object.assign(
-        {},
-        aggregateActions,
-        statsActions
-    );
     return {
-        actions: bindActionCreators(combinedActions, dispatch),
+        actions: bindActionCreators(reportActions, dispatch),
         clearActions: bindActionCreators(clearActions, dispatch)
     };
 }

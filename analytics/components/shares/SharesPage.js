@@ -5,9 +5,7 @@ import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
-import formatFiltersString from '../../helpers/formatFiltersString';
-import * as sharesActions from '../../actions/sharesActions';
-import * as statsActions from '../../actions/statsActions';
+import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
@@ -46,7 +44,7 @@ export class SharesPage extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.props.clearActions.clearShares();
+        this.props.clearActions.clearReport();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -75,7 +73,7 @@ export class SharesPage extends React.PureComponent {
         this.setState({...state});
         if (state.contentType == ContentTypes.PLAYLISTS) {
             this.setState({playlistAttempted: true});
-            this.props.clearActions.clearShares();
+            this.props.clearActions.clearReport();
             return;
         } else {
             this.setState({playlistAttempted: false});
@@ -83,8 +81,10 @@ export class SharesPage extends React.PureComponent {
 
         this.setState({isLoading: true});
         this.showLoadingSpinner();
-        this.props.actions.getShares(state.timePeriod, state.dateRange, formatFiltersString(state.filters));
-        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, 'shares', formatFiltersString(state.filters));
+
+        const metrics = ['shares'];
+        this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
 
     renderLineGraph() {
@@ -136,20 +136,19 @@ SharesPage.propTypes = {
 
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
-        = state.ajaxCallsInProgress.shares
+        = state.ajaxCallsInProgress.report
         + state.ajaxCallsInProgress.totalStats;
         
     return {
-        shares: state.shares,
+        shares: state.report,
         totalStats: state.totalStats,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }
 
 export function mapDispatchToProps(dispatch) {
-    const combinedActions = Object.assign({}, sharesActions, statsActions);
     return {
-        actions: bindActionCreators(combinedActions, dispatch),
+        actions: bindActionCreators(reportActions, dispatch),
         clearActions: bindActionCreators(clearActions, dispatch)
     };
 }

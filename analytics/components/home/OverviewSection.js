@@ -20,7 +20,7 @@ class OverviewSection extends React.PureComponent {
 
         if (!dataInfo.columnHeaders) return;
         if (dataType == 'subscribers') {
-            dataInfo = computeSubscribers(this.props.data, this.props.data);
+            dataInfo = computeSubscribers(this.props.data);
         }
         if (dataType == 'revenue') {
             dataType = 'estimatedRevenue';
