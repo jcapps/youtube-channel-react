@@ -50,6 +50,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             JSON.stringify(this.state) != JSON.stringify(nextState)) {
             return true;
         }
+        this.hideAllLoadingSpinners();
         return false;
     }
 
@@ -59,6 +60,29 @@ export class AnalyticsHomePage extends React.PureComponent {
 
     hideLoadingSpinner(dataType) {
         $(`#${dataType}-overview-section .loading-spinner`).addClass('hidden');
+    }
+
+    hideAllLoadingSpinners() {
+        let dataTypes = [
+            'comments',
+            'likes',
+            'dislikes',
+            'shares',
+            'subscribers',
+            'subscribersGained',
+            'subscribersLost',
+            'views',
+            'watchTime',
+            'revenue',
+            'adRevenue',
+            'youtubeRedRevenue'
+        ];
+        if (this.state.contentType == ContentTypes.PLAYLISTS) {
+            dataTypes = ['views', 'watchTime'];
+        }
+        dataTypes.forEach(dataType => {
+            this.hideLoadingSpinner(dataType);
+        });
     }
 
     getData(state) {
@@ -153,7 +177,6 @@ export class AnalyticsHomePage extends React.PureComponent {
     }
 
     render() {
-        if (this.props.isLoading) return <div/>;
         return (
             <div id="analytics-home-page">
                 <h2>YouTube Analytics Overview</h2>

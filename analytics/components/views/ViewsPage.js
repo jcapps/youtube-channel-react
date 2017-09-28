@@ -55,6 +55,7 @@ export class ViewsPage extends React.PureComponent {
             JSON.stringify(this.state) != JSON.stringify(nextState)) {
             return true;
         }
+        this.hideLoadingSpinner();
         return false;
     }
 
