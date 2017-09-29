@@ -107,15 +107,10 @@ class FiltersSection extends React.Component {
         }
         const filterInfo = JSON.parse(element.children[0].value);
 
-        const {newFiltersArray, newAddedFiltersArray, shouldClearContentTypeFilter}
+        const {newFiltersArray, newAddedFiltersArray}
             = removeGraphFilter(filterInfo, this.state.filters, this.state.addedFilters);
         
-        let contentType = this.state.contentType;
-        if (shouldClearContentTypeFilter) {
-            contentType = ContentTypes.ALL;
-        }
-
-        const {timePeriod, dateRange} = this.state;
+        const {contentType, timePeriod, dateRange} = this.state;
         this.props.onChangeFilters({
             contentType,
             timePeriod,
@@ -128,22 +123,15 @@ class FiltersSection extends React.Component {
     clearFilters() {
         let addedFiltersArray = Object.assign([], this.state.addedFilters);
         let filtersArray = [];
-        let shouldResetContentTypeFilter = false;
 
         while (addedFiltersArray.length > 0) {
-            const {newFiltersArray, newAddedFiltersArray, shouldClearContentTypeFilter}
+            const {newFiltersArray, newAddedFiltersArray}
                 = removeGraphFilter(addedFiltersArray[0], this.state.filters, addedFiltersArray);
             addedFiltersArray = newAddedFiltersArray;
             filtersArray = newFiltersArray;
-            shouldResetContentTypeFilter = shouldClearContentTypeFilter;
         }
 
-        let contentType = this.state.contentType;
-        if (shouldResetContentTypeFilter) {
-            contentType = ContentTypes.ALL;
-        }
-        
-        const {timePeriod, dateRange} = this.state;
+        const {contentType, timePeriod, dateRange} = this.state;
         this.props.onChangeFilters({
             contentType,
             timePeriod,

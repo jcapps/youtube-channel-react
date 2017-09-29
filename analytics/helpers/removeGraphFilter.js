@@ -11,7 +11,6 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
 
     let filterKey = '';
     let itemId = '';
-    let shouldClearContentTypeFilter = false;
     const kind = filterInfo.id.kind;
     
     if (kind == 'youtube#channel') {
@@ -33,16 +32,7 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
                     if (newFiltersArray[i].value[j] == itemId) {
                         newFiltersArray[i].value.splice(j, 1);
                         if (newFiltersArray[i].value.length == 0) {
-                            shouldClearContentTypeFilter = true;
                             newFiltersArray.splice(i, 1);
-                            if (kind != 'youtube#video') {
-                                for (let k = 0; k < newFiltersArray.length; k++) {
-                                    if (newFiltersArray[k].key == 'isCurated') {
-                                        newFiltersArray.splice(k, 1);
-                                        break;
-                                    }
-                                }
-                            }
                         }
                         break;
                     }
@@ -52,7 +42,7 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
         }
     }
 
-    return {newFiltersArray, newAddedFiltersArray, shouldClearContentTypeFilter};
+    return {newFiltersArray, newAddedFiltersArray};
 }
 
 export default removeGraphFilter;
