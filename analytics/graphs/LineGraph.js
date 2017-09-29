@@ -461,12 +461,12 @@ class LineGraph {
         this.createSvg();
         this.createGraphCanvas();
 
+        this.drawBaseline();
         if (size == 'large') {
             this.drawGridLines();
             this.drawXAxis();
             this.drawYAxis();
         }
-        this.drawBaseline();
 
         if (size == 'large' || size == 'medium') {
             this.createTooltip();
