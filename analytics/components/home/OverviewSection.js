@@ -60,6 +60,8 @@ class OverviewSection extends React.PureComponent {
             if (dataType == 'revenue') return <div/>;
             if (dataType == 'adRevenue') return <div/>;
             if (dataType == 'youtubeRedRevenue') return <div/>;
+        } else {
+            if (dataType == 'playlistStarts') return <div/>;
         }
 
         const loadingSpinner = require('../../images/loading.gif');
@@ -85,7 +87,9 @@ class OverviewSection extends React.PureComponent {
                 sectionTitle = 'ESTIMATED YOUTUBE RED REVENUE';
             }
             totalValue = getTotalStats(this.props.totalStats, dataSearchName);
-            totalValue = '$' + totalValue.toFixed(2);
+            if (totalValue != 'N/A') {
+                totalValue = '$' + totalValue.toFixed(2);
+            }
         } else {
             if (dataType == 'watchTime') {
                 dataSearchName = 'estimatedMinutesWatched';

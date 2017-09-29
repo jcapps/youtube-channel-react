@@ -13,6 +13,7 @@ import SubscribersGainedPage from './subscribers/SubscribersGainedPage.js';
 import SubscribersLostPage from './subscribers/SubscribersLostPage.js';
 import ViewsPage from './views/ViewsPage';
 import WatchTimePage from './views/WatchTimePage';
+import PlaylistStartsPage from './views/PlaylistStartsPage';
 
 const Routes = () => {
     return (
@@ -22,6 +23,7 @@ const Routes = () => {
             <Route path="/analytics/comments" component={CommentsPage} />
             <Route path="/analytics/dislikes" component={DislikesPage} />
             <Route path="/analytics/likes" component={LikesPage} />
+            <Route path="/analytics/playlistStarts" component={PlaylistStartsPage} />
             <Route path="/analytics/revenue" component={TotalRevenuePage} />
             <Route path="/analytics/shares" component={SharesPage} />
             <Route path="/analytics/subscribers" component={SubscribersPage} />

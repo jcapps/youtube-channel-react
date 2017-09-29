@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {withRouter} from "react-router-dom";
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
@@ -11,7 +12,7 @@ import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import ViewsMetricsSection from './ViewsMetricsSection';
 
-export class ViewsPage extends React.PureComponent {
+export class PlaylistStartsPage extends React.PureComponent {
     constructor(props) {
         super(props);
         if (props.location.state) {
@@ -36,7 +37,7 @@ export class ViewsPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Views";
+        document.title = "Analytics: Playlist Starts";
         window.scrollTo(0, 0);
     }
 
@@ -60,35 +61,36 @@ export class ViewsPage extends React.PureComponent {
     }
 
     showLoadingSpinner() {
-        $('#views-page .loading-spinner').removeClass('hidden');
+        $('#playlist-starts-page .loading-spinner').removeClass('hidden');
     }
 
     hideLoadingSpinner() {
-        $('#views-page .loading-spinner').addClass('hidden');
+        $('#playlist-starts-page .loading-spinner').addClass('hidden');
     }
 
     getData(state) {
         this.setState({...state});
-        this.setState({isLoading: true});
+        if (state.contentType != ContentTypes.PLAYLISTS) {
+            this.props.history.push({pathname: '/analytics/views', state: state});
+            return;
+        }
 
+        this.setState({isLoading: true});
         this.showLoadingSpinner();
 
-        let metrics = ['views', 'estimatedMinutesWatched', 'averageViewDuration'];
-        if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics.push('playlistStarts');
-        }
+        const metrics = ['views', 'estimatedMinutesWatched', 'averageViewDuration', 'playlistStarts'];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
 
     renderLineGraph() {
-        if (!this.props.views.columnHeaders) return <div/>;
+        if (!this.props.playlistStarts.columnHeaders) return <div/>;
 
         return (
             <LineGraphContainer
-                dataInfo={this.props.views}
+                dataInfo={this.props.playlistStarts}
                 xColumnName="day"
-                yColumnName="views"
+                yColumnName="playlistStarts"
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -100,8 +102,8 @@ export class ViewsPage extends React.PureComponent {
 
         const loadingSpinner = require('../../images/loading.gif');
         return (
-            <div id="views-page">
-                <h2>Views</h2>
+            <div id="playlist-starts-page">
+                <h2>Playlist Starts</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}
@@ -117,13 +119,14 @@ export class ViewsPage extends React.PureComponent {
     }
 }
 
-ViewsPage.propTypes = {
+PlaylistStartsPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
-    views: PropTypes.object.isRequired,
+    playlistStarts: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired,
-    state: PropTypes.object
+    state: PropTypes.object,
+    history: PropTypes.object
 };
 
 export function mapStateToProps(state) {
@@ -132,7 +135,7 @@ export function mapStateToProps(state) {
         + state.ajaxCallsInProgress.totalStats;
         
     return {
-        views: state.report,
+        playlistStarts: state.report,
         totalStats: state.totalStats,
         isLoading: totalAjaxCallsInProgress > 0
     };
@@ -149,9 +152,9 @@ export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading) || 
-            ((prev.views !== next.views) && (prev.totalStats !== next.totalStats))
+            ((prev.playlistStarts !== next.playlistStarts) && (prev.totalStats !== next.totalStats))
         );
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(ViewsPage);
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(withRouter(PlaylistStartsPage));

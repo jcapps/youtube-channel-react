@@ -73,6 +73,9 @@ export class WatchTimePage extends React.PureComponent {
         this.setState({isLoading: true});
 
         const metrics = ['views', 'estimatedMinutesWatched', 'averageViewDuration'];
+        if (state.contentType == ContentTypes.PLAYLISTS) {
+            metrics.push('playlistStarts');
+        }
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }

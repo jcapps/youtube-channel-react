@@ -1,5 +1,5 @@
 const getTotalStats = (totalStats, columnName) => {
-    let totalValue = 0;
+    let totalValue = 'N/A';
     if (totalStats.columnHeaders) {
         const totalStatsColumns = totalStats.columnHeaders.map(item => {
             return item.name;

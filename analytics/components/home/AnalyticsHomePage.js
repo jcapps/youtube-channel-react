@@ -78,7 +78,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             'youtubeRedRevenue'
         ];
         if (this.state.contentType == ContentTypes.PLAYLISTS) {
-            dataTypes = ['views', 'watchTime'];
+            dataTypes = ['views', 'watchTime', 'playlistStarts'];
         }
         dataTypes.forEach(dataType => {
             this.hideLoadingSpinner(dataType);
@@ -118,8 +118,17 @@ export class AnalyticsHomePage extends React.PureComponent {
             'youtubeRedRevenue'
         ];
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics = ['views', 'estimatedMinutesWatched', 'averageViewDuration'];
-            dataTypes = ['views', 'watchTime'];
+            metrics = [
+                'views',
+                'estimatedMinutesWatched',
+                'averageViewDuration',
+                'playlistStarts'
+            ];
+            dataTypes = [
+                'views',
+                'watchTime',
+                'playlistStarts'
+            ];
         }
 
         dataTypes.forEach((dataType, i) => {
@@ -135,7 +144,8 @@ export class AnalyticsHomePage extends React.PureComponent {
         if (this.state.contentType == ContentTypes.PLAYLISTS) {
             dataTypes = [ // Order matters in determining layout
                 'views',
-                'watchTime'
+                'watchTime',
+                'playlistStarts'
             ];
         } else {
             dataTypes = [ // Order matters in determining layout
@@ -157,7 +167,7 @@ export class AnalyticsHomePage extends React.PureComponent {
         let sectionsArray = [];
         dataTypes.forEach(dataType => {
             let size = 'small';
-            if (dataType == 'views' || dataType == 'watchTime' || dataType == 'likes' || dataType == 'dislikes') {
+            if (dataType == 'views' || dataType == 'watchTime' || dataType == 'likes' || dataType == 'dislikes' || dataType == 'playlistStarts') {
                 size = 'medium';
             }
             sectionsArray.push(
