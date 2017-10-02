@@ -160,10 +160,8 @@ export function mapDispatchToProps(dispatch) {
 export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
-            (!next.isLoading) || 
-            ((prev.subscribers !== next.subscribers) &&
-            (prev.unsubscribers !== next.unsubscribers) &&
-            (prev.totalStats !== next.totalStats))
+            (!next.isLoading) ||
+            ((prev.subscribers !== next.subscribers) && (prev.totalStats !== next.totalStats))
         );
     }
 };
