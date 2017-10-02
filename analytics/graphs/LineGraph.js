@@ -341,6 +341,11 @@ class LineGraph {
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName));
             if (displayTime.length > 0) yValue = displayTime;
         }
+        if (this.xyInfo.yColumnName == 'averageViewDuration') {
+            yValue = '0 seconds';
+            const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName) / 60); // Divide by 60 to put time in minutes
+            if (displayTime.length > 0) yValue = displayTime;
+        }
         if (this.xyInfo.yColumnName == 'estimatedRevenue' || this.xyInfo.yColumnName == 'estimatedAdRevenue' || this.xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
             yValue = '$' + d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
         }
