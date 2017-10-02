@@ -4,9 +4,12 @@ import {Link} from 'react-router-dom';
 import getTotalStats from '../../helpers/getTotalStats';
 
 const RevenueMetricsSection = ({totalStats, filterState}) => {
-    const totalRevenue = getTotalStats(totalStats, 'estimatedRevenue').toFixed(2);
-    const totalAdRevenue = getTotalStats(totalStats, 'estimatedAdRevenue').toFixed(2);
-    const totalYoutubeRedRevenue = getTotalStats(totalStats, 'estimatedRedPartnerRevenue').toFixed(2);
+    let totalRevenue = getTotalStats(totalStats, 'estimatedRevenue');
+    let totalAdRevenue = getTotalStats(totalStats, 'estimatedAdRevenue');
+    let totalYoutubeRedRevenue = getTotalStats(totalStats, 'estimatedRedPartnerRevenue');
+    if (totalRevenue != 'N/A') totalRevenue = totalRevenue.toFixed(2);
+    if (totalAdRevenue != 'N/A') totalAdRevenue = totalAdRevenue.toFixed(2);
+    if (totalYoutubeRedRevenue != 'N/A') totalYoutubeRedRevenue = totalYoutubeRedRevenue.toFixed(2);
 
     return (
         <div className="metrics-section">
