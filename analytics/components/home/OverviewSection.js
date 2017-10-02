@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import ContentTypes from '../../globals/ContentTypes';
 import computeSubscribers from '../../helpers/computeSubscribers';
+import computeVideosInPlaylists from '../../helpers/computeVideosInPlaylists';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import convertSecondsToTimestamp from '../../helpers/convertSecondsToTimestamp';
 import getTotalStats from '../../helpers/getTotalStats';
@@ -22,6 +23,9 @@ class OverviewSection extends React.PureComponent {
         if (!dataInfo.columnHeaders) return;
         if (dataType == 'subscribers') {
             dataInfo = computeSubscribers(this.props.data);
+        }
+        if (dataType == 'videosInPlaylists') {
+            dataInfo = computeVideosInPlaylists(this.props.data);
         }
         if (dataType == 'revenue') {
             dataType = 'estimatedRevenue';
@@ -50,21 +54,6 @@ class OverviewSection extends React.PureComponent {
 
     render() {
         const dataType = this.props.dataType;
-        if (this.props.state.contentType == ContentTypes.PLAYLISTS) {
-            if (dataType == 'likes') return <div/>;
-            if (dataType == 'dislikes') return <div/>;
-            if (dataType == 'comments') return <div/>;
-            if (dataType == 'shares') return <div/>;
-            if (dataType == 'subscribers') return <div/>;
-            if (dataType == 'subscribersGained') return <div/>;
-            if (dataType == 'subscribersLost') return <div/>;
-            if (dataType == 'revenue') return <div/>;
-            if (dataType == 'adRevenue') return <div/>;
-            if (dataType == 'youtubeRedRevenue') return <div/>;
-        } else {
-            if (dataType == 'playlistStarts') return <div/>;
-        }
-
         const loadingSpinner = require('../../images/loading.gif');
         let sectionTitle = dataType.replace(/([A-Z])/g, ' $1').toUpperCase().trim(); // Add spaces before capital letters and make all CAPS
 
@@ -74,6 +63,10 @@ class OverviewSection extends React.PureComponent {
             const totalSubscribers = getTotalStats(this.props.totalStats, 'subscribersGained');
             const totalUnsubscribers = getTotalStats(this.props.totalStats, 'subscribersLost');
             totalValue = totalSubscribers - totalUnsubscribers;
+        } else if (dataType == 'videosInPlaylists') {
+            const totalVideosAddedToPlaylists = getTotalStats(this.props.totalStats, 'videosAddedToPlaylists');
+            const totalVideosRemovedFromPlaylists = getTotalStats(this.props.totalStats, 'videosRemovedFromPlaylists');
+            totalValue = totalVideosAddedToPlaylists - totalVideosRemovedFromPlaylists;
         } else if (dataType == 'revenue' || dataType == 'adRevenue' || dataType == 'youtubeRedRevenue') {
             if (dataType == 'revenue') {
                 dataSearchName = 'estimatedRevenue';

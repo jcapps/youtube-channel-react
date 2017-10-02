@@ -7,8 +7,10 @@ div.metrics-section {
 
         li {
             display: inline-block;
+            line-height: 0;
             border: 2px solid $metric-border;
             border-left: 0;
+            vertical-align: top;
             
             &:first-child {
                 border-left: 2px solid $metric-border;
@@ -21,9 +23,11 @@ div.metrics-section {
     }
 
     div.metric-tab {
-        width: 210px;
-        height: 56px;
-        padding: 4px;
+        display: table-cell;
+        vertical-align: middle;
+        line-height: 1.42857143;
+        width: 200px;
+        height: 65px;
         color: $metric-color;
 
         &:hover {

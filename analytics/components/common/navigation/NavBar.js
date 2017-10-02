@@ -14,6 +14,7 @@ export class NavBar extends React.PureComponent {
                         <li><Link to="/analytics/comments"><div>Comments</div></Link></li>
                         <li><Link to="/analytics/shares"><div>Shares</div></Link></li>
                         <li><Link to="/analytics/subscribers"><div>Subscribers</div></Link></li>
+                        <li><Link to="/analytics/videosInPlaylists"><div>Videos in Playlists</div></Link></li>
                         <li><Link to="/analytics/revenue"><div>Revenue</div></Link></li>
                     </ul>
                 </nav>
