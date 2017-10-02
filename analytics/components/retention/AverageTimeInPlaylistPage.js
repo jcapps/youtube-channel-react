@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {withRouter} from "react-router-dom";
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Periods from '../../globals/Periods';
@@ -11,7 +12,7 @@ import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import RetentionMetricsSection from './RetentionMetricsSection';
 
-export class AverageViewDurationPage extends React.PureComponent {
+export class AverageTimeInPlaylistPage extends React.PureComponent {
     constructor(props) {
         super(props);
         if (props.location.state) {
@@ -36,7 +37,7 @@ export class AverageViewDurationPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Average View Duration";
+        document.title = "Analytics: Average Time In Playlist";
         window.scrollTo(0, 0);
     }
 
@@ -60,35 +61,36 @@ export class AverageViewDurationPage extends React.PureComponent {
     }
 
     showLoadingSpinner() {
-        $('#average-view-duration-page .loading-spinner').removeClass('hidden');
+        $('#average-time-in-playlist-page .loading-spinner').removeClass('hidden');
     }
 
     hideLoadingSpinner() {
-        $('#average-view-duration-page .loading-spinner').addClass('hidden');
+        $('#average-time-in-playlist-page .loading-spinner').addClass('hidden');
     }
 
     getData(state) {
         this.setState({...state});
-        this.setState({isLoading: true});
+        if (state.contentType != ContentTypes.PLAYLISTS) {
+            this.props.history.push({pathname: '/analytics/averageViewDuration', state: state});
+            return;
+        }
 
+        this.setState({isLoading: true});
         this.showLoadingSpinner();
 
-        let metrics = ['averageViewDuration', 'averageViewPercentage'];
-        if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics = ['averageViewDuration', 'averageTimeInPlaylist'];
-        }
+        let metrics = ['averageViewDuration', 'averageTimeInPlaylist'];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
 
     renderLineGraph() {
-        if (!this.props.averageViewDuration.columnHeaders) return <div/>;
+        if (!this.props.averageTimeInPlaylist.columnHeaders) return <div/>;
 
         return (
             <LineGraphContainer
-                dataInfo={this.props.averageViewDuration}
+                dataInfo={this.props.averageTimeInPlaylist}
                 xColumnName="day"
-                yColumnName="averageViewDuration"
+                yColumnName="averageTimeInPlaylist"
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -100,8 +102,8 @@ export class AverageViewDurationPage extends React.PureComponent {
 
         const loadingSpinner = require('../../images/loading.gif');
         return (
-            <div id="average-view-duration-page">
-                <h2>Average View Duration</h2>
+            <div id="average-time-in-playlist-page">
+                <h2>Average Time In Playlist</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}
@@ -117,9 +119,9 @@ export class AverageViewDurationPage extends React.PureComponent {
     }
 }
 
-AverageViewDurationPage.propTypes = {
+AverageTimeInPlaylistPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
-    averageViewDuration: PropTypes.object.isRequired,
+    averageTimeInPlaylist: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired,
@@ -132,7 +134,7 @@ export function mapStateToProps(state) {
         + state.ajaxCallsInProgress.totalStats;
         
     return {
-        averageViewDuration: state.report,
+        averageTimeInPlaylist: state.report,
         totalStats: state.totalStats,
         isLoading: totalAjaxCallsInProgress > 0
     };
@@ -149,9 +151,9 @@ export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading) || 
-            ((prev.averageViewDuration !== next.averageViewDuration) && (prev.totalStats !== next.totalStats))
+            ((prev.averageTimeInPlaylist !== next.averageTimeInPlaylist) && (prev.totalStats !== next.totalStats))
         );
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(AverageViewDurationPage);
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(withRouter(AverageTimeInPlaylistPage));

@@ -16,12 +16,14 @@ import WatchTimePage from './views/WatchTimePage';
 import PlaylistStartsPage from './views/PlaylistStartsPage';
 import AverageViewDurationPage from './retention/AverageViewDurationPage';
 import AverageViewPercentagePage from './retention/AverageViewPercentagePage';
+import AverageTimeInPlaylistPage from './retention/AverageTimeInPlaylistPage';
 
 const Routes = () => {
     return (
         <Switch>
             <Route exact path="/analytics" component={AnalyticsHomePage} />
             <Route path="/analytics/adRevenue" component={AdRevenuePage} />
+            <Route path="/analytics/averageTimeInPlaylist" component={AverageTimeInPlaylistPage} />
             <Route path="/analytics/averageViewDuration" component={AverageViewDurationPage} />
             <Route path="/analytics/averageViewPercentage" component={AverageViewPercentagePage} />
             <Route path="/analytics/comments" component={CommentsPage} />

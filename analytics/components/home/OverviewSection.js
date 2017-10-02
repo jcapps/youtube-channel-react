@@ -91,7 +91,7 @@ class OverviewSection extends React.PureComponent {
             if (totalValue != 'N/A') {
                 totalValue = '$' + totalValue.toFixed(2);
             }
-        } else if (dataType == 'averageViewDuration') {
+        } else if (dataType == 'averageViewDuration' || dataType == 'averageTimeInPlaylist') {
             totalValue = getTotalStats(this.props.totalStats, dataSearchName);
             if (totalValue != 'N/A') {
                 totalValue = convertSecondsToTimestamp(totalValue);

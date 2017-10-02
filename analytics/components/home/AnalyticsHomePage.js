@@ -73,12 +73,20 @@ export class AnalyticsHomePage extends React.PureComponent {
             'subscribersLost',
             'views',
             'watchTime',
+            'averageViewDuration',
+            'averageViewPercentage',
             'revenue',
             'adRevenue',
             'youtubeRedRevenue'
         ];
         if (this.state.contentType == ContentTypes.PLAYLISTS) {
-            dataTypes = ['views', 'watchTime', 'playlistStarts'];
+            dataTypes = [
+                'views',
+                'watchTime',
+                'playlistStarts',
+                'averageViewDuration',
+                'averageTimeInPlaylist'
+            ];
         }
         dataTypes.forEach(dataType => {
             this.hideLoadingSpinner(dataType);
@@ -125,12 +133,14 @@ export class AnalyticsHomePage extends React.PureComponent {
                 'views',
                 'estimatedMinutesWatched',
                 'averageViewDuration',
+                'averageTimeInPlaylist',
                 'playlistStarts'
             ];
             dataTypes = [
                 'views',
                 'watchTime',
                 'averageViewDuration',
+                'averageTimeInPlaylist',
                 'playlistStarts'
             ];
         }
@@ -150,7 +160,8 @@ export class AnalyticsHomePage extends React.PureComponent {
                 'views',
                 'watchTime',
                 'averageViewDuration',
-                'playlistStarts'
+                'playlistStarts',
+                'averageTimeInPlaylist'
             ];
         } else {
             dataTypes = [ // Order matters in determining layout

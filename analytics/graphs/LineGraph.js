@@ -285,7 +285,7 @@ class LineGraph {
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName));
             if (displayTime.length > 0) yValue += ' (' + displayTime + ')';
         }
-        if (this.xyInfo.yColumnName == 'averageViewDuration') {
+        if (this.xyInfo.yColumnName == 'averageViewDuration' || this.xyInfo.yColumnName == 'averageTimeInPlaylist') {
             yValue = '0 seconds';
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName) / 60); // Divide by 60 to put time in minutes
             if (displayTime.length > 0) yValue = displayTime;
@@ -340,7 +340,7 @@ class LineGraph {
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName));
             if (displayTime.length > 0) yValue = displayTime;
         }
-        if (this.xyInfo.yColumnName == 'averageViewDuration') {
+        if (this.xyInfo.yColumnName == 'averageViewDuration' || this.xyInfo.yColumnName == 'averageTimeInPlaylist') {
             yValue = '0 seconds';
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName) / 60); // Divide by 60 to put time in minutes
             if (displayTime.length > 0) yValue = displayTime;
@@ -479,7 +479,10 @@ class LineGraph {
             this.isPercentMetric = false;
         }
 
-        if (yColumnName == 'averageViewDuration') {
+        if (
+            yColumnName == 'averageViewDuration' ||
+            yColumnName == 'averageTimeInPlaylist'
+        ) {
             this.isTimeMetric = true;
         } else {
             this.isTimeMetric = false;

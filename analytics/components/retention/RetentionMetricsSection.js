@@ -13,15 +13,33 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
     }
 
     const renderAverageViewPercentage = () => {
-        let totalAverageViewPercentage = getTotalStats(totalStats, 'averageViewPercentage');
-        if (totalAverageViewPercentage != 'N/A') {
-            totalAverageViewPercentage = totalAverageViewPercentage.toFixed(1);
+        let averageViewPercentage = getTotalStats(totalStats, 'averageViewPercentage');
+        if (averageViewPercentage != 'N/A') {
+            averageViewPercentage = averageViewPercentage.toFixed(1);
             return (
                 <li>
                     <Link to={{pathname: "/analytics/averageViewPercentage", state: filterState}}>
                         <div className="metric-tab">
                             <div className="metric-title">AVERAGE PERCENTAGE VIEWED</div>
-                            <div className="metric-value">{totalAverageViewPercentage.toLocaleString()}%</div>
+                            <div className="metric-value">{averageViewPercentage.toLocaleString()}%</div>
+                        </div>
+                    </Link>
+                </li>
+            );
+        }
+        return;
+    }
+
+    const renderAverageTimeInPlaylist = () => {
+        let averageTimeInPlaylist = getTotalStats(totalStats, 'averageTimeInPlaylist');
+        if (averageTimeInPlaylist != 'N/A') {
+            averageTimeInPlaylist = convertSecondsToTimestamp(averageTimeInPlaylist);
+            return (
+                <li>
+                    <Link to={{pathname: "/analytics/averageTimeInPlaylist", state: filterState}}>
+                        <div className="metric-tab">
+                            <div className="metric-title">AVERAGE TIME IN PLAYLIST</div>
+                            <div className="metric-value">{averageTimeInPlaylist}</div>
                         </div>
                     </Link>
                 </li>
@@ -42,6 +60,7 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
                     </Link>
                 </li>
                 {renderAverageViewPercentage()}
+                {renderAverageTimeInPlaylist()}
             </ul>
         </div>
     );
