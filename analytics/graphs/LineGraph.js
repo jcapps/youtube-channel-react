@@ -1,9 +1,11 @@
 import * as d3 from 'd3';
 import computeVoronoi from '../helpers/computeVoronoi';
+import convertSecondsToTimestamp from '../helpers/convertSecondsToTimestamp';
 
 class LineGraph {
     constructor() {
         this.isMoneyMetric;
+        this.isTimeMetric;
         this.data;
         this.xyInfo;
         this.graphSize;
@@ -96,6 +98,9 @@ class LineGraph {
         if (this.isMoneyMetric) {
             maxYTicks = Math.min(yMax * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
+        if (this.isTimeMetric) {
+            maxYTicks = Math.min(yMax, Math.ceil(this.height / this.yAxisLabelPadding));
+        }
 
         this.xyInfo.x.domain([xExtent[0].getTime() - xDomainMargin, xExtent[1].getTime() + xDomainMargin]);
         this.xyInfo.y.domain([yMin, yMax]).nice(maxYTicks);
@@ -136,6 +141,9 @@ class LineGraph {
         let maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
         if (this.isMoneyMetric) {
             maxTicks = Math.min(yDomain[1] * 100, Math.ceil(this.height / this.yAxisLabelPadding));
+        }
+        if (this.isTimeMetric) {
+            maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
         }
 
         this.graphContainer.select('.graphCanvas').append('g')
@@ -181,6 +189,9 @@ class LineGraph {
         if (this.isMoneyMetric) {
             maxTicks = Math.min(yDomain[1] * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
+        if (this.isTimeMetric) {
+            maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
+        }
         
         this.graphContainer.select('.graphCanvas').append('g')
             .attr('class', 'yAxis')
@@ -189,6 +200,9 @@ class LineGraph {
                 .tickFormat(d => {
                     if (this.isMoneyMetric) {
                         return '$' + d.toFixed(2).toLocaleString();
+                    }
+                    if (this.isTimeMetric) {
+                        return convertSecondsToTimestamp(d);
                     }
                     return d.toLocaleString();
                 }));
@@ -275,6 +289,11 @@ class LineGraph {
             yValue = Math.round(d.get(this.xyInfo.yColumnName)).toLocaleString();
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName));
             if (displayTime.length > 0) yValue += ' (' + displayTime + ')';
+        }
+        if (this.xyInfo.yColumnName == 'averageViewDuration') {
+            yValue = '0 seconds';
+            const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName) / 60); // Divide by 60 to put time in minutes
+            if (displayTime.length > 0) yValue = displayTime;
         }
         if (this.xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
             yLabel = 'Estimated YouTube Red Revenue';
@@ -445,6 +464,12 @@ class LineGraph {
             this.isMoneyMetric = true;
         } else {
             this.isMoneyMetric = false;
+        }
+
+        if (yColumnName == 'averageViewDuration') {
+            this.isTimeMetric = true;
+        } else {
+            this.isTimeMetric = false;
         }
 
         container.style('position', 'relative');

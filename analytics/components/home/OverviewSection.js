@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import ContentTypes from '../../globals/ContentTypes';
 import computeSubscribers from '../../helpers/computeSubscribers';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
+import convertSecondsToTimestamp from '../../helpers/convertSecondsToTimestamp';
 import getTotalStats from '../../helpers/getTotalStats';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
 
@@ -89,6 +90,11 @@ class OverviewSection extends React.PureComponent {
             totalValue = getTotalStats(this.props.totalStats, dataSearchName);
             if (totalValue != 'N/A') {
                 totalValue = '$' + totalValue.toFixed(2);
+            }
+        } else if (dataType == 'averageViewDuration') {
+            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
+            if (totalValue != 'N/A') {
+                totalValue = convertSecondsToTimestamp(totalValue);
             }
         } else {
             if (dataType == 'watchTime') {

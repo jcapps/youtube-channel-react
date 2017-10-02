@@ -14,12 +14,14 @@ import SubscribersLostPage from './subscribers/SubscribersLostPage.js';
 import ViewsPage from './views/ViewsPage';
 import WatchTimePage from './views/WatchTimePage';
 import PlaylistStartsPage from './views/PlaylistStartsPage';
+import AverageViewDurationPage from './retention/AverageViewDurationPage';
 
 const Routes = () => {
     return (
         <Switch>
             <Route exact path="/analytics" component={AnalyticsHomePage} />
             <Route path="/analytics/adRevenue" component={AdRevenuePage} />
+            <Route path="/analytics/averageViewDuration" component={AverageViewDurationPage} />
             <Route path="/analytics/comments" component={CommentsPage} />
             <Route path="/analytics/dislikes" component={DislikesPage} />
             <Route path="/analytics/likes" component={LikesPage} />

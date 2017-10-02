@@ -112,6 +112,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             'subscribersGained',
             'subscribersLost',
             'views',
+            'averageViewDuration',
             'watchTime',
             'revenue',
             'adRevenue',
@@ -127,6 +128,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             dataTypes = [
                 'views',
                 'watchTime',
+                'averageViewDuration',
                 'playlistStarts'
             ];
         }
@@ -145,12 +147,15 @@ export class AnalyticsHomePage extends React.PureComponent {
             dataTypes = [ // Order matters in determining layout
                 'views',
                 'watchTime',
+                'averageViewDuration',
                 'playlistStarts'
             ];
         } else {
             dataTypes = [ // Order matters in determining layout
                 'views',
                 'watchTime',
+                'averageViewDuration',
+                'revenue',
                 'likes',
                 'dislikes',
                 'comments',
@@ -158,18 +163,15 @@ export class AnalyticsHomePage extends React.PureComponent {
                 'subscribers',
                 'subscribersGained',
                 'subscribersLost',
-                'revenue',
                 'adRevenue',
                 'youtubeRedRevenue'
             ];
         }
 
         let sectionsArray = [];
-        dataTypes.forEach(dataType => {
+        dataTypes.forEach((dataType, i) => {
             let size = 'small';
-            if (dataType == 'views' || dataType == 'watchTime' || dataType == 'likes' || dataType == 'dislikes' || dataType == 'playlistStarts') {
-                size = 'medium';
-            }
+            if (i < 4) size = 'medium';
             sectionsArray.push(
                 <OverviewSection
                     key={dataType}

@@ -9,6 +9,7 @@ export class NavBar extends React.PureComponent {
                     <ul>
                         <li><Link to="/analytics"><div>Home</div></Link></li>
                         <li><Link to="/analytics/views"><div>Views</div></Link></li>
+                        <li><Link to="/analytics/averageViewDuration"><div>Audience Retention</div></Link></li>
                         <li><Link to="/analytics/likes"><div>Likes</div></Link></li>
                         <li><Link to="/analytics/comments"><div>Comments</div></Link></li>
                         <li><Link to="/analytics/shares"><div>Shares</div></Link></li>
