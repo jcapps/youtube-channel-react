@@ -98,6 +98,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             'subscribersLost',
             'views',
             'averageViewDuration',
+            'averageViewPercentage',
             'estimatedMinutesWatched',
             'estimatedRevenue',
             'estimatedAdRevenue',
@@ -113,6 +114,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             'subscribersLost',
             'views',
             'averageViewDuration',
+            'averageViewPercentage',
             'watchTime',
             'revenue',
             'adRevenue',
@@ -163,6 +165,7 @@ export class AnalyticsHomePage extends React.PureComponent {
                 'subscribers',
                 'subscribersGained',
                 'subscribersLost',
+                'averageViewPercentage',
                 'adRevenue',
                 'youtubeRedRevenue'
             ];

@@ -5,6 +5,7 @@ import convertSecondsToTimestamp from '../helpers/convertSecondsToTimestamp';
 class LineGraph {
     constructor() {
         this.isMoneyMetric;
+        this.isPercentMetric;
         this.isTimeMetric;
         this.data;
         this.xyInfo;
@@ -98,9 +99,6 @@ class LineGraph {
         if (this.isMoneyMetric) {
             maxYTicks = Math.min(yMax * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
-        if (this.isTimeMetric) {
-            maxYTicks = Math.min(yMax, Math.ceil(this.height / this.yAxisLabelPadding));
-        }
 
         this.xyInfo.x.domain([xExtent[0].getTime() - xDomainMargin, xExtent[1].getTime() + xDomainMargin]);
         this.xyInfo.y.domain([yMin, yMax]).nice(maxYTicks);
@@ -141,9 +139,6 @@ class LineGraph {
         let maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
         if (this.isMoneyMetric) {
             maxTicks = Math.min(yDomain[1] * 100, Math.ceil(this.height / this.yAxisLabelPadding));
-        }
-        if (this.isTimeMetric) {
-            maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
         }
 
         this.graphContainer.select('.graphCanvas').append('g')
@@ -189,9 +184,6 @@ class LineGraph {
         if (this.isMoneyMetric) {
             maxTicks = Math.min(yDomain[1] * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
-        if (this.isTimeMetric) {
-            maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
-        }
         
         this.graphContainer.select('.graphCanvas').append('g')
             .attr('class', 'yAxis')
@@ -200,6 +192,9 @@ class LineGraph {
                 .tickFormat(d => {
                     if (this.isMoneyMetric) {
                         return '$' + d.toFixed(2).toLocaleString();
+                    }
+                    if (this.isPercentMetric) {
+                        return d.toFixed(1).toLocaleString() + '%';
                     }
                     if (this.isTimeMetric) {
                         return convertSecondsToTimestamp(d);
@@ -295,6 +290,10 @@ class LineGraph {
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName) / 60); // Divide by 60 to put time in minutes
             if (displayTime.length > 0) yValue = displayTime;
         }
+        if (this.xyInfo.yColumnName == 'averageViewPercentage') {
+            yLabel = 'Average Percentage Viewed';
+            yValue = d.get(this.xyInfo.yColumnName).toFixed(1).toLocaleString() + '%';
+        }
         if (this.xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
             yLabel = 'Estimated YouTube Red Revenue';
         }
@@ -345,6 +344,9 @@ class LineGraph {
             yValue = '0 seconds';
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName) / 60); // Divide by 60 to put time in minutes
             if (displayTime.length > 0) yValue = displayTime;
+        }
+        if (this.xyInfo.yColumnName == 'averageViewPercentage') {
+            yValue = d.get(this.xyInfo.yColumnName).toFixed(1).toLocaleString() + '%';
         }
         if (this.xyInfo.yColumnName == 'estimatedRevenue' || this.xyInfo.yColumnName == 'estimatedAdRevenue' || this.xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
             yValue = '$' + d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
@@ -469,6 +471,12 @@ class LineGraph {
             this.isMoneyMetric = true;
         } else {
             this.isMoneyMetric = false;
+        }
+
+        if (yColumnName == 'averageViewPercentage') {
+            this.isPercentMetric = true;
+        } else {
+            this.isPercentMetric = false;
         }
 
         if (yColumnName == 'averageViewDuration') {

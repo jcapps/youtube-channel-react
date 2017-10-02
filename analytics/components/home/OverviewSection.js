@@ -96,6 +96,11 @@ class OverviewSection extends React.PureComponent {
             if (totalValue != 'N/A') {
                 totalValue = convertSecondsToTimestamp(totalValue);
             }
+        } else if (dataType == 'averageViewPercentage') {
+            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
+            if (totalValue != 'N/A') {
+                totalValue = totalValue.toFixed(1).toLocaleString() + '%';
+            }
         } else {
             if (dataType == 'watchTime') {
                 dataSearchName = 'estimatedMinutesWatched';

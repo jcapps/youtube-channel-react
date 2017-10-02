@@ -12,6 +12,24 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
         time = convertSecondsToTimestamp(averageViewDuration);
     }
 
+    const renderAverageViewPercentage = () => {
+        let totalAverageViewPercentage = getTotalStats(totalStats, 'averageViewPercentage');
+        if (totalAverageViewPercentage != 'N/A') {
+            totalAverageViewPercentage = totalAverageViewPercentage.toFixed(1);
+            return (
+                <li>
+                    <Link to={{pathname: "/analytics/averageViewPercentage", state: filterState}}>
+                        <div className="metric-tab">
+                            <div className="metric-title">AVERAGE PERCENTAGE VIEWED</div>
+                            <div className="metric-value">{totalAverageViewPercentage.toLocaleString()}%</div>
+                        </div>
+                    </Link>
+                </li>
+            );
+        }
+        return;
+    }
+
     return (
         <div className="metrics-section">
             <ul>
@@ -23,6 +41,7 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
                         </div>
                     </Link>
                 </li>
+                {renderAverageViewPercentage()}
             </ul>
         </div>
     );

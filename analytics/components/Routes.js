@@ -15,6 +15,7 @@ import ViewsPage from './views/ViewsPage';
 import WatchTimePage from './views/WatchTimePage';
 import PlaylistStartsPage from './views/PlaylistStartsPage';
 import AverageViewDurationPage from './retention/AverageViewDurationPage';
+import AverageViewPercentagePage from './retention/AverageViewPercentagePage';
 
 const Routes = () => {
     return (
@@ -22,6 +23,7 @@ const Routes = () => {
             <Route exact path="/analytics" component={AnalyticsHomePage} />
             <Route path="/analytics/adRevenue" component={AdRevenuePage} />
             <Route path="/analytics/averageViewDuration" component={AverageViewDurationPage} />
+            <Route path="/analytics/averageViewPercentage" component={AverageViewPercentagePage} />
             <Route path="/analytics/comments" component={CommentsPage} />
             <Route path="/analytics/dislikes" component={DislikesPage} />
             <Route path="/analytics/likes" component={LikesPage} />
