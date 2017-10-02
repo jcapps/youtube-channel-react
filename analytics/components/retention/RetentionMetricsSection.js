@@ -48,6 +48,24 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
         return;
     }
 
+    const renderViewsPerPlaylistStart = () => {
+        let viewsPerPlaylistStart = getTotalStats(totalStats, 'viewsPerPlaylistStart');
+        if (viewsPerPlaylistStart != 'N/A') {
+            viewsPerPlaylistStart = viewsPerPlaylistStart.toFixed(2);
+            return (
+                <li>
+                    <Link to={{pathname: "/analytics/viewsPerPlaylistStart", state: filterState}}>
+                        <div className="metric-tab">
+                            <div className="metric-title">VIEWS PER PLAYLIST START</div>
+                            <div className="metric-value">{viewsPerPlaylistStart.toLocaleString()}</div>
+                        </div>
+                    </Link>
+                </li>
+            );
+        }
+        return;
+    }
+
     return (
         <div className="metrics-section">
             <ul>
@@ -61,6 +79,7 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
                 </li>
                 {renderAverageViewPercentage()}
                 {renderAverageTimeInPlaylist()}
+                {renderViewsPerPlaylistStart()}
             </ul>
         </div>
     );

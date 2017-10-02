@@ -85,7 +85,8 @@ export class AnalyticsHomePage extends React.PureComponent {
                 'watchTime',
                 'playlistStarts',
                 'averageViewDuration',
-                'averageTimeInPlaylist'
+                'averageTimeInPlaylist',
+                'viewsPerPlaylistStart'
             ];
         }
         dataTypes.forEach(dataType => {
@@ -134,14 +135,16 @@ export class AnalyticsHomePage extends React.PureComponent {
                 'estimatedMinutesWatched',
                 'averageViewDuration',
                 'averageTimeInPlaylist',
-                'playlistStarts'
+                'playlistStarts',
+                'viewsPerPlaylistStart'
             ];
             dataTypes = [
                 'views',
                 'watchTime',
                 'averageViewDuration',
                 'averageTimeInPlaylist',
-                'playlistStarts'
+                'playlistStarts',
+                'viewsPerPlaylistStart'
             ];
         }
 
@@ -161,7 +164,8 @@ export class AnalyticsHomePage extends React.PureComponent {
                 'watchTime',
                 'averageViewDuration',
                 'playlistStarts',
-                'averageTimeInPlaylist'
+                'averageTimeInPlaylist',
+                'viewsPerPlaylistStart'
             ];
         } else {
             dataTypes = [ // Order matters in determining layout

@@ -75,7 +75,7 @@ export class AverageViewDurationPage extends React.PureComponent {
 
         let metrics = ['averageViewDuration', 'averageViewPercentage'];
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics = ['averageViewDuration', 'averageTimeInPlaylist'];
+            metrics = ['averageViewDuration', 'averageTimeInPlaylist', 'viewsPerPlaylistStart'];
         }
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);

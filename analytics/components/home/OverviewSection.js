@@ -101,6 +101,11 @@ class OverviewSection extends React.PureComponent {
             if (totalValue != 'N/A') {
                 totalValue = totalValue.toFixed(1).toLocaleString() + '%';
             }
+        } else if (dataType == 'viewsPerPlaylistStart') {
+            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
+            if (totalValue != 'N/A') {
+                totalValue = totalValue.toFixed(2).toLocaleString();
+            }
         } else {
             if (dataType == 'watchTime') {
                 dataSearchName = 'estimatedMinutesWatched';

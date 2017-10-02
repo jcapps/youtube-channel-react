@@ -294,6 +294,9 @@ class LineGraph {
             yLabel = 'Average Percentage Viewed';
             yValue = d.get(this.xyInfo.yColumnName).toFixed(1).toLocaleString() + '%';
         }
+        if (this.xyInfo.yColumnName == 'viewsPerPlaylistStart') {
+            yValue = d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
+        }
         if (this.xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
             yLabel = 'Estimated YouTube Red Revenue';
         }
@@ -347,6 +350,9 @@ class LineGraph {
         }
         if (this.xyInfo.yColumnName == 'averageViewPercentage') {
             yValue = d.get(this.xyInfo.yColumnName).toFixed(1).toLocaleString() + '%';
+        }
+        if (this.xyInfo.yColumnName == 'viewsPerPlaylistStart') {
+            yValue = d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
         }
         if (this.xyInfo.yColumnName == 'estimatedRevenue' || this.xyInfo.yColumnName == 'estimatedAdRevenue' || this.xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
             yValue = '$' + d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
