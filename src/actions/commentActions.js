@@ -53,7 +53,7 @@ export function getNextReplies(commentId, currentReplies, pageToken) {
         dispatch(ajax.gettingCommentReplies());
         return youtubeActions.getCommentReplies(commentId, 10, pageToken).then(replies => {
             let oldReplies = Object.assign([], currentReplies.items);
-            if (oldReplies[oldReplies.length - 1].id == replies.items[0].id) {
+            if (replies.items.length > 0 && oldReplies[oldReplies.length - 1].id == replies.items[0].id) {
                 oldReplies.pop(); // API sometimes returns a duplicate of the previous array.
             }
             const replyItems = [...oldReplies, ...replies.items];
