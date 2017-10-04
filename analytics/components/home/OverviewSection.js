@@ -28,7 +28,7 @@ class OverviewSection extends React.PureComponent {
         if (dataName == Metrics.VIDEOS_IN_PLAYLISTS.name) {
             dataInfo = computeVideosInPlaylists(this.props.data);
         }
-        if (dataName == Metrics.WATCH_TIME.name) {
+        if (dataName == Metrics.WATCH_TIME.name || dataName == Metrics.YOUTUBE_RED_WATCH_TIME.name) {
             dataInfo = computeWatchTimes(this.props.data);
         }
 
