@@ -74,13 +74,20 @@ export class ViewsPage extends React.PureComponent {
 
         this.showLoadingSpinner();
 
-        const metrics = [
+        let metrics = [
             Metrics.VIEWS.metric,
             Metrics.WATCH_TIME.metric,
+            Metrics.YOUTUBE_RED_VIEWS.metric,
+            Metrics.YOUTUBE_RED_WATCH_TIME.metric,
             Metrics.AVERAGE_VIEW_DURATION.metric
         ];
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics.push(Metrics.PLAYLIST_STARTS.metric);
+            metrics = [
+                Metrics.PLAYLIST_STARTS.metric,
+                Metrics.VIEWS.metric,
+                Metrics.WATCH_TIME.metric,
+                Metrics.AVERAGE_VIEW_DURATION.metric
+            ];
         }
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);

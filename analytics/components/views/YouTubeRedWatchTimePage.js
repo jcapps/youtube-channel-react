@@ -13,7 +13,7 @@ import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import ViewsMetricsSection from './ViewsMetricsSection';
 
-export class WatchTimePage extends React.PureComponent {
+export class YouTubeRedWatchTimePage extends React.PureComponent {
     constructor(props) {
         super(props);
         if (props.location.state) {
@@ -38,7 +38,7 @@ export class WatchTimePage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = `Analytics: ${Metrics.WATCH_TIME.displayName}`;
+        document.title = `Analytics: ${Metrics.YOUTUBE_RED_WATCH_TIME.displayName}`;
         window.scrollTo(0, 0);
     }
 
@@ -62,16 +62,22 @@ export class WatchTimePage extends React.PureComponent {
     }
 
     showLoadingSpinner() {
-        $('#watch-time-page .loading-spinner').removeClass('hidden');
+        $('#youtube-red-watch-time-page .loading-spinner').removeClass('hidden');
     }
 
     hideLoadingSpinner() {
-        $('#watch-time-page .loading-spinner').addClass('hidden');
+        $('#youtube-red-watch-time-page .loading-spinner').addClass('hidden');
     }
 
     getData(state) {
         this.setState({...state});
+        if (state.contentType == ContentTypes.PLAYLISTS) {
+            this.props.history.push({pathname: `/analytics/${Metrics.VIEWS.name}`, state: state});
+            return;
+        }
+
         this.setState({isLoading: true});
+        this.showLoadingSpinner();
 
         let metrics = [
             Metrics.VIEWS.metric,
@@ -80,27 +86,19 @@ export class WatchTimePage extends React.PureComponent {
             Metrics.YOUTUBE_RED_WATCH_TIME.metric,
             Metrics.AVERAGE_VIEW_DURATION.metric
         ];
-        if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics = [
-                Metrics.PLAYLIST_STARTS.metric,
-                Metrics.VIEWS.metric,
-                Metrics.WATCH_TIME.metric,
-                Metrics.AVERAGE_VIEW_DURATION.metric
-            ];
-        }
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
 
     renderLineGraph() {
-        if (!this.props.watchTime.columnHeaders) return <div/>;
+        if (!this.props.redWatchTime.columnHeaders) return <div/>;
 
-        const watchTimeInfo = computeWatchTimes(this.props.watchTime);
+        const redWatchTimeInfo = computeWatchTimes(this.props.redWatchTime);
         return (
             <LineGraphContainer
-                dataInfo={watchTimeInfo}
+                dataInfo={redWatchTimeInfo}
                 xColumnName="day"
-                metricInfo={Metrics.WATCH_TIME}
+                metricInfo={Metrics.YOUTUBE_RED_WATCH_TIME}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -112,8 +110,8 @@ export class WatchTimePage extends React.PureComponent {
 
         const loadingSpinner = require('../../images/loading.gif');
         return (
-            <div id="watch-time-page">
-                <h2>{Metrics.WATCH_TIME.displayName}</h2>
+            <div id="youtube-red-watch-time-page">
+                <h2>{Metrics.YOUTUBE_RED_WATCH_TIME.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}
@@ -129,9 +127,9 @@ export class WatchTimePage extends React.PureComponent {
     }
 }
 
-WatchTimePage.propTypes = {
+YouTubeRedWatchTimePage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
-    watchTime: PropTypes.object.isRequired,
+    redWatchTime: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired,
@@ -142,9 +140,9 @@ export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
         = state.ajaxCallsInProgress.report
         + state.ajaxCallsInProgress.totalStats;
-
+        
     return {
-        watchTime: state.report,
+        redWatchTime: state.report,
         totalStats: state.totalStats,
         isLoading: totalAjaxCallsInProgress > 0
     };
@@ -161,9 +159,9 @@ export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading) || 
-            ((prev.watchTime !== next.watchTime) && (prev.totalStats !== next.totalStats))
+            ((prev.redWatchTime !== next.redWatchTime) && (prev.totalStats !== next.totalStats))
         );
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(WatchTimePage);
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(YouTubeRedWatchTimePage);

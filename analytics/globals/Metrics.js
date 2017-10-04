@@ -173,13 +173,31 @@ const Metrics = {
         dataType: DataTypes.TIME_MINUTES
     },
     YOUTUBE_RED_REVENUE: {
-        name: 'youtubeRedRevenue',
+        name: 'redRevenue',
         metric: 'estimatedRedPartnerRevenue',
         shouldUseMetricForGraph: true,
         displayName: 'Estimated YouTube Red Revenue',
         isPlaylistMetric: false,
         isVideoMetric: true,
         dataType: DataTypes.CURRENCY
+    },
+    YOUTUBE_RED_VIEWS: {
+        name: 'redViews',
+        metric: 'redViews',
+        shouldUseMetricForGraph: true,
+        displayName: 'YouTube Red Views',
+        isPlaylistMetric: false,
+        isVideoMetric: true,
+        dataType: DataTypes.NUMBER
+    },
+    YOUTUBE_RED_WATCH_TIME: {
+        name: 'redWatchTime',
+        metric: 'estimatedRedMinutesWatched',
+        displayName: 'YouTube Red Watch Time (minutes)',
+        shouldUseMetricForGraph: false,
+        isPlaylistMetric: false,
+        isVideoMetric: true,
+        dataType: DataTypes.TIME_MINUTES
     }
 };
 

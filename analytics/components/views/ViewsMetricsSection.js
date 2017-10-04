@@ -26,6 +26,40 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
         return;
     }
 
+    const renderRedViews = () => {
+        const totalRedViews = getTotalStats(totalStats, Metrics.YOUTUBE_RED_VIEWS.metric);
+        if (totalRedViews != 'N/A') {
+            return (
+                <li>
+                    <Link to={{pathname: `/analytics/${Metrics.YOUTUBE_RED_VIEWS.name}`, state: filterState}}>
+                        <div className="metric-tab">
+                            <div className="metric-title">{Metrics.YOUTUBE_RED_VIEWS.displayName.toUpperCase()}</div>
+                            <div className="metric-value">{totalRedViews.toLocaleString()}</div>
+                        </div>
+                    </Link>
+                </li>
+            );
+        }
+        return;
+    }
+
+    const renderRedWatchTime = () => {
+        const totalRedWatchTime = getTotalStats(totalStats, Metrics.YOUTUBE_RED_WATCH_TIME.metric);
+        if (totalRedWatchTime != 'N/A') {
+            return (
+                <li>
+                    <Link to={{pathname: `/analytics/${Metrics.YOUTUBE_RED_WATCH_TIME.name}`, state: filterState}}>
+                        <div className="metric-tab">
+                            <div className="metric-title">{Metrics.YOUTUBE_RED_WATCH_TIME.displayName.toUpperCase()}</div>
+                            <div className="metric-value">{totalRedWatchTime.toLocaleString()}</div>
+                        </div>
+                    </Link>
+                </li>
+            );
+        }
+        return;
+    }
+
     return (
         <div className="metrics-section">
             <ul>
@@ -46,6 +80,8 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
                         </div>
                     </Link>
                 </li>
+                {renderRedViews()}
+                {renderRedWatchTime()}
             </ul>
         </div>
     );

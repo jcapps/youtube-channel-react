@@ -14,6 +14,8 @@ import SubscribersGainedPage from './subscribers/SubscribersGainedPage.js';
 import SubscribersLostPage from './subscribers/SubscribersLostPage.js';
 import ViewsPage from './views/ViewsPage';
 import WatchTimePage from './views/WatchTimePage';
+import YouTubeRedViewsPage from './views/YouTubeRedViewsPage';
+import YouTubeRedWatchTimePage from './views/YouTubeRedWatchTimePage';
 import PlaylistStartsPage from './views/PlaylistStartsPage';
 import AverageViewDurationPage from './retention/AverageViewDurationPage';
 import AverageViewPercentagePage from './retention/AverageViewPercentagePage';
@@ -47,6 +49,8 @@ const Routes = () => {
             <Route path={`/analytics/${Metrics.VIEWS_PER_PLAYLIST_START.name}`} component={ViewsPerPlaylistStartPage} />
             <Route path={`/analytics/${Metrics.WATCH_TIME.name}`} component={WatchTimePage} />
             <Route path={`/analytics/${Metrics.YOUTUBE_RED_REVENUE.name}`} component={YouTubeRedRevenuePage} />
+            <Route path={`/analytics/${Metrics.YOUTUBE_RED_VIEWS.name}`} component={YouTubeRedViewsPage} />
+            <Route path={`/analytics/${Metrics.YOUTUBE_RED_WATCH_TIME.name}`} component={YouTubeRedWatchTimePage} />
         </Switch>
     );
 };
