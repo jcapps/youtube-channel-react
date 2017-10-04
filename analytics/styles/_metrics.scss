@@ -2,19 +2,16 @@ div.metrics-section {
     margin: 5px;
 
     ul {
+        display: inline-block;
         margin: 0;
         padding: 0;
+        border: 1px solid $metric-border;
 
         li {
             display: inline-block;
             line-height: 0;
-            border: 2px solid $metric-border;
-            border-left: 0;
+            border: 1px solid $metric-border;
             vertical-align: top;
-            
-            &:first-child {
-                border-left: 2px solid $metric-border;
-            }
         }
     }
 
