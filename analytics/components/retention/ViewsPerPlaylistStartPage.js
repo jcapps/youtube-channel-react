@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import {withRouter} from "react-router-dom";
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -37,7 +38,7 @@ export class ViewsPerPlaylistStartPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Views Per Playlist Start";
+        document.title = `Analytics: ${Metrics.VIEWS_PER_PLAYLIST_START.displayName}`;
         window.scrollTo(0, 0);
     }
 
@@ -71,14 +72,18 @@ export class ViewsPerPlaylistStartPage extends React.PureComponent {
     getData(state) {
         this.setState({...state});
         if (state.contentType != ContentTypes.PLAYLISTS) {
-            this.props.history.push({pathname: '/analytics/averageViewDuration', state: state});
+            this.props.history.push({pathname: `/analytics/${Metrics.AVERAGE_VIEW_DURATION.name}`, state: state});
             return;
         }
 
         this.setState({isLoading: true});
         this.showLoadingSpinner();
 
-        let metrics = ['averageViewDuration', 'averageTimeInPlaylist', 'viewsPerPlaylistStart'];
+        const metrics = [
+            Metrics.AVERAGE_VIEW_DURATION.metric,
+            Metrics.AVERAGE_TIME_IN_PLAYLISTS.metric,
+            Metrics.VIEWS_PER_PLAYLIST_START.metric
+        ];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -90,7 +95,7 @@ export class ViewsPerPlaylistStartPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.viewsPerPlaylistStart}
                 xColumnName="day"
-                yColumnName="viewsPerPlaylistStart"
+                metricInfo={Metrics.VIEWS_PER_PLAYLIST_START}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -103,7 +108,7 @@ export class ViewsPerPlaylistStartPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="views-per-playlist-start-page">
-                <h2>Views Per Playlist Start</h2>
+                <h2>{Metrics.VIEWS_PER_PLAYLIST_START.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

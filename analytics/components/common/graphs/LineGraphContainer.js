@@ -20,21 +20,21 @@ class LineGraphContainer extends React.PureComponent {
         const {
             dataInfo,
             xColumnName,
-            yColumnName,
+            metricInfo,
             size,
             onRenderFinish
         } = props;
 
-        const container = d3.select(`.${yColumnName}-line-graph-container`);
+        const container = d3.select(`.${metricInfo.name}-line-graph-container`);
         container.html('');
 
         const LG = new LineGraph();
-        LG.drawLineGraph(container, dataInfo, xColumnName, yColumnName, size);
+        LG.drawLineGraph(container, dataInfo, xColumnName, metricInfo, size);
         onRenderFinish();
     }
 
     render() {
-        const classString = `${this.props.yColumnName}-line-graph-container`;
+        const classString = `${this.props.metricInfo.name}-line-graph-container`;
         return <div className={classString} />;
     }
 }
@@ -47,7 +47,7 @@ LineGraphContainer.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     dataInfo: PropTypes.object.isRequired,
     xColumnName: PropTypes.string.isRequired,
-    yColumnName: PropTypes.string.isRequired,
+    metricInfo: PropTypes.object.isRequired,
     onRenderFinish: PropTypes.func.isRequired,
     size: PropTypes.string
 };

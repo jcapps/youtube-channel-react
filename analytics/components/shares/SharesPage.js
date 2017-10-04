@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -37,7 +38,7 @@ export class SharesPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Shares";
+        document.title = `Analytics: ${Metrics.SHARES.displayName}`;
         window.scrollTo(0, 0);
 
         if (this.state.playlistAttempted) this.hideLoadingSpinner();
@@ -83,7 +84,7 @@ export class SharesPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
 
-        const metrics = ['shares'];
+        const metrics = [Metrics.SHARES.metric];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -97,7 +98,7 @@ export class SharesPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.shares}
                 xColumnName="day"
-                yColumnName="shares"
+                metricInfo={Metrics.SHARES}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -110,7 +111,7 @@ export class SharesPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="shares-page">
-                <h2>Shares</h2>
+                <h2>{Metrics.SHARES.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

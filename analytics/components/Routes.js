@@ -1,10 +1,11 @@
 import React from 'react';
 import {Switch, Route} from 'react-router';
+import Metrics from '../globals/Metrics';
 import AnalyticsHomePage from './home/AnalyticsHomePage';
 import CommentsPage from './comments/CommentsPage';
 import DislikesPage from './likes/DislikesPage';
 import LikesPage from './likes/LikesPage';
-import TotalRevenuePage from './revenue/TotalRevenuePage';
+import RevenuePage from './revenue/RevenuePage';
 import AdRevenuePage from './revenue/AdRevenuePage';
 import YouTubeRedRevenuePage from './revenue/YouTubeRedRevenuePage';
 import SharesPage from './shares/SharesPage.js';
@@ -26,26 +27,26 @@ const Routes = () => {
     return (
         <Switch>
             <Route exact path="/analytics" component={AnalyticsHomePage} />
-            <Route path="/analytics/adRevenue" component={AdRevenuePage} />
-            <Route path="/analytics/averageTimeInPlaylist" component={AverageTimeInPlaylistPage} />
-            <Route path="/analytics/averageViewDuration" component={AverageViewDurationPage} />
-            <Route path="/analytics/averageViewPercentage" component={AverageViewPercentagePage} />
-            <Route path="/analytics/comments" component={CommentsPage} />
-            <Route path="/analytics/dislikes" component={DislikesPage} />
-            <Route path="/analytics/likes" component={LikesPage} />
-            <Route path="/analytics/playlistStarts" component={PlaylistStartsPage} />
-            <Route path="/analytics/revenue" component={TotalRevenuePage} />
-            <Route path="/analytics/shares" component={SharesPage} />
-            <Route path="/analytics/subscribers" component={SubscribersPage} />
-            <Route path="/analytics/subscribersGained" component={SubscribersGainedPage} />
-            <Route path="/analytics/subscribersLost" component={SubscribersLostPage} />
-            <Route path="/analytics/videosAddedToPlaylists" component={VideosAddedToPlaylistsPage} />
-            <Route path="/analytics/videosRemovedFromPlaylists" component={VideosRemovedFromPlaylistsPage} />
-            <Route path="/analytics/videosInPlaylists" component={VideosInPlaylistsPage} />
-            <Route path="/analytics/views" component={ViewsPage} />
-            <Route path="/analytics/viewsPerPlaylistStart" component={ViewsPerPlaylistStartPage} />
-            <Route path="/analytics/watchTime" component={WatchTimePage} />
-            <Route path="/analytics/youtubeRedRevenue" component={YouTubeRedRevenuePage} />
+            <Route path={`/analytics/${Metrics.AD_REVENUE.name}`} component={AdRevenuePage} />
+            <Route path={`/analytics/${Metrics.AVERAGE_TIME_IN_PLAYLISTS.name}`} component={AverageTimeInPlaylistPage} />
+            <Route path={`/analytics/${Metrics.AVERAGE_VIEW_DURATION.name}`} component={AverageViewDurationPage} />
+            <Route path={`/analytics/${Metrics.AVERAGE_VIEW_PERCENTAGE.name}`} component={AverageViewPercentagePage} />
+            <Route path={`/analytics/${Metrics.COMMENTS.name}`} component={CommentsPage} />
+            <Route path={`/analytics/${Metrics.DISLIKES.name}`} component={DislikesPage} />
+            <Route path={`/analytics/${Metrics.LIKES.name}`} component={LikesPage} />
+            <Route path={`/analytics/${Metrics.PLAYLIST_STARTS.name}`} component={PlaylistStartsPage} />
+            <Route path={`/analytics/${Metrics.REVENUE.name}`} component={RevenuePage} />
+            <Route path={`/analytics/${Metrics.SHARES.name}`} component={SharesPage} />
+            <Route path={`/analytics/${Metrics.SUBSCRIBERS.name}`} component={SubscribersPage} />
+            <Route path={`/analytics/${Metrics.SUBSCRIBERS_GAINED.name}`} component={SubscribersGainedPage} />
+            <Route path={`/analytics/${Metrics.SUBSCRIBERS_LOST.name}`} component={SubscribersLostPage} />
+            <Route path={`/analytics/${Metrics.VIDEOS_ADDED_TO_PLAYLISTS.name}`} component={VideosAddedToPlaylistsPage} />
+            <Route path={`/analytics/${Metrics.VIDEOS_IN_PLAYLISTS.name}`} component={VideosInPlaylistsPage} />
+            <Route path={`/analytics/${Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.name}`} component={VideosRemovedFromPlaylistsPage} />
+            <Route path={`/analytics/${Metrics.VIEWS.name}`} component={ViewsPage} />
+            <Route path={`/analytics/${Metrics.VIEWS_PER_PLAYLIST_START.name}`} component={ViewsPerPlaylistStartPage} />
+            <Route path={`/analytics/${Metrics.WATCH_TIME.name}`} component={WatchTimePage} />
+            <Route path={`/analytics/${Metrics.YOUTUBE_RED_REVENUE.name}`} component={YouTubeRedRevenuePage} />
         </Switch>
     );
 };

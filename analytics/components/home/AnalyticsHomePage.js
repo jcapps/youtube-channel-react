@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -54,46 +55,25 @@ export class AnalyticsHomePage extends React.PureComponent {
         return false;
     }
 
-    showLoadingSpinner(dataType) {
-        $(`#${dataType}-overview-section .loading-spinner`).removeClass('hidden');
+    showLoadingSpinner(dataName) {
+        $(`#${dataName}-overview-section .loading-spinner`).removeClass('hidden');
     }
 
-    hideLoadingSpinner(dataType) {
-        $(`#${dataType}-overview-section .loading-spinner`).addClass('hidden');
+    hideLoadingSpinner(dataName) {
+        $(`#${dataName}-overview-section .loading-spinner`).addClass('hidden');
     }
 
     hideAllLoadingSpinners() {
-        let dataTypes = [
-            'comments',
-            'likes',
-            'dislikes',
-            'shares',
-            'subscribers',
-            'subscribersGained',
-            'subscribersLost',
-            'views',
-            'watchTime',
-            'averageViewDuration',
-            'averageViewPercentage',
-            'videosInPlaylists',
-            'videosAddedToPlaylists',
-            'videosRemovedFromPlaylists',
-            'revenue',
-            'adRevenue',
-            'youtubeRedRevenue'
-        ];
-        if (this.state.contentType == ContentTypes.PLAYLISTS) {
-            dataTypes = [
-                'views',
-                'watchTime',
-                'playlistStarts',
-                'averageViewDuration',
-                'averageTimeInPlaylist',
-                'viewsPerPlaylistStart'
-            ];
-        }
-        dataTypes.forEach(dataType => {
-            this.hideLoadingSpinner(dataType);
+        $.each(Metrics, (i, metricEntry) => {
+            if (this.state.contentType == ContentTypes.PLAYLISTS) {
+                if (metricEntry.isPlaylistMetric) {
+                    this.hideLoadingSpinner(metricEntry.name);
+                }
+            } else {
+                if (metricEntry.isVideoMetric) {
+                    this.hideLoadingSpinner(metricEntry.name);
+                }
+            }
         });
     }
 
@@ -101,63 +81,24 @@ export class AnalyticsHomePage extends React.PureComponent {
         this.setState({...state});
         this.setState({isLoading: true});
 
-        let metrics = [
-            'comments',
-            'likes',
-            'dislikes',
-            'shares',
-            'subscribersGained',
-            'subscribersLost',
-            'videosAddedToPlaylists',
-            'videosRemovedFromPlaylists',
-            'views',
-            'averageViewDuration',
-            'averageViewPercentage',
-            'estimatedMinutesWatched',
-            'estimatedRevenue',
-            'estimatedAdRevenue',
-            'estimatedRedPartnerRevenue'
-        ];
-        let dataTypes = [
-            'comments',
-            'likes',
-            'dislikes',
-            'shares',
-            'subscribers',
-            'subscribersGained',
-            'subscribersLost',
-            'videosInPlaylists',
-            'videosAddedToPlaylists',
-            'videosRemovedFromPlaylists',
-            'views',
-            'averageViewDuration',
-            'averageViewPercentage',
-            'watchTime',
-            'revenue',
-            'adRevenue',
-            'youtubeRedRevenue'
-        ];
-        if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics = [
-                'views',
-                'estimatedMinutesWatched',
-                'averageViewDuration',
-                'averageTimeInPlaylist',
-                'playlistStarts',
-                'viewsPerPlaylistStart'
-            ];
-            dataTypes = [
-                'views',
-                'watchTime',
-                'averageViewDuration',
-                'averageTimeInPlaylist',
-                'playlistStarts',
-                'viewsPerPlaylistStart'
-            ];
-        }
+        const metrics = [];
+        const dataNames = [];
+        $.each(Metrics, (key, metricEntry) => {
+            if (state.contentType == ContentTypes.PLAYLISTS) {
+                if (metricEntry.isPlaylistMetric) {
+                    if (metricEntry.metric) metrics.push(metricEntry.metric);
+                    dataNames.push(metricEntry.name);
+                }
+            } else {
+                if (metricEntry.isVideoMetric) {
+                    if (metricEntry.metric) metrics.push(metricEntry.metric);
+                    dataNames.push(metricEntry.name);
+                }
+            }
+        });
 
-        dataTypes.forEach((dataType, i) => {
-            this.showLoadingSpinner(dataType);
+        dataNames.forEach((dataName, i) => {
+            this.showLoadingSpinner(dataName);
         });
 
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
@@ -165,51 +106,33 @@ export class AnalyticsHomePage extends React.PureComponent {
     }
 
     renderOverviewSections() {
-        let dataTypes;
-        if (this.state.contentType == ContentTypes.PLAYLISTS) {
-            dataTypes = [ // Order matters in determining layout
-                'views',
-                'watchTime',
-                'averageViewDuration',
-                'playlistStarts',
-                'averageTimeInPlaylist',
-                'viewsPerPlaylistStart'
-            ];
-        } else {
-            dataTypes = [ // Order matters in determining layout
-                'views',
-                'watchTime',
-                'averageViewDuration',
-                'revenue',
-                'likes',
-                'dislikes',
-                'comments',
-                'shares',
-                'subscribers',
-                'subscribersGained',
-                'subscribersLost',
-                'videosInPlaylists',
-                'videosAddedToPlaylists',
-                'videosRemovedFromPlaylists',
-                'averageViewPercentage',
-                'adRevenue',
-                'youtubeRedRevenue'
-            ];
-        }
+        // Order matters in determining layout
+        let metricInfos = [];
+        $.each(Metrics, (key, metricEntry) => {
+            if (this.state.contentType == ContentTypes.PLAYLISTS) {
+                if (metricEntry.isPlaylistMetric) {
+                    metricInfos.push(metricEntry);
+                }
+            } else {
+                if (metricEntry.isVideoMetric) {
+                    metricInfos.push(metricEntry);
+                }
+            }
+        });
 
         let sectionsArray = [];
-        dataTypes.forEach((dataType, i) => {
+        metricInfos.forEach((metricInfo, i) => {
             let size = 'small';
             if (i < 4) size = 'medium';
             sectionsArray.push(
                 <OverviewSection
-                    key={dataType}
+                    key={metricInfo.name}
                     data={this.props.report}
-                    dataType={dataType}
+                    metricInfo={metricInfo}
                     totalStats={this.props.totalStats}
                     size={size}
                     state={this.state}
-                    onRenderFinish={() => this.hideLoadingSpinner(dataType)}
+                    onRenderFinish={() => this.hideLoadingSpinner(metricInfo.name)}
                 />
             );
         });

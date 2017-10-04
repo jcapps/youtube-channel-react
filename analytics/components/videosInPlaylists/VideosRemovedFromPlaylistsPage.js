@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -37,7 +38,7 @@ export class VideosRemovedFromPlaylistsPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Videos Removed from Playlists";
+        document.title = `Analytics: ${Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.displayName}`;
         window.scrollTo(0, 0);
 
         if (this.state.playlistAttempted) this.hideLoadingSpinner();
@@ -83,7 +84,10 @@ export class VideosRemovedFromPlaylistsPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
         
-        const metrics = ['videosAddedToPlaylists', 'videosRemovedFromPlaylists'];
+        const metrics = [
+            Metrics.VIDEOS_ADDED_TO_PLAYLISTS.metric,
+            Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.metric
+        ];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -97,7 +101,7 @@ export class VideosRemovedFromPlaylistsPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.videosRemovedFromPlaylists}
                 xColumnName="day"
-                yColumnName="videosRemovedFromPlaylists"
+                metricInfo={Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -110,7 +114,7 @@ export class VideosRemovedFromPlaylistsPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="videos-removed-from-playlists-page">
-                <h2>Videos Removed From Playlists</h2>
+                <h2>{Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

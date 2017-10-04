@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -37,7 +38,7 @@ export class TotalRevenuePage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Estimated Total Revenue";
+        document.title = `Analytics: ${Metrics.REVENUE.displayName}`;
         window.scrollTo(0, 0);
 
         if (this.state.playlistAttempted) this.hideLoadingSpinner();
@@ -83,7 +84,11 @@ export class TotalRevenuePage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
 
-        const metrics = ['estimatedRevenue', 'estimatedAdRevenue', 'estimatedRedPartnerRevenue'];
+        const metrics = [
+            Metrics.REVENUE.metric,
+            Metrics.AD_REVENUE.metric,
+            Metrics.YOUTUBE_RED_REVENUE.metric
+        ];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -97,7 +102,7 @@ export class TotalRevenuePage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.revenue}
                 xColumnName="day"
-                yColumnName="estimatedRevenue"
+                metricInfo={Metrics.REVENUE}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -110,7 +115,7 @@ export class TotalRevenuePage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="revenue-page">
-                <h2>Estimated Total Revenue</h2>
+                <h2>{Metrics.REVENUE.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

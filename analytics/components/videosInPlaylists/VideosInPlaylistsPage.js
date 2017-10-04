@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import computeVideosInPlaylists from '../../helpers/computeVideosInPlaylists';
 import * as reportActions from '../../actions/reportActions';
@@ -38,7 +39,7 @@ export class VideosInPlaylistsPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Videos In Playlists";
+        document.title = `Analytics: ${Metrics.VIDEOS_IN_PLAYLISTS.displayName}`;
         window.scrollTo(0, 0);
 
         if (this.state.playlistAttempted) this.hideLoadingSpinner();
@@ -84,7 +85,10 @@ export class VideosInPlaylistsPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
         
-        const metrics = ['videosAddedToPlaylists', 'videosRemovedFromPlaylists'];
+        const metrics = [
+            Metrics.VIDEOS_ADDED_TO_PLAYLISTS.metric,
+            Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.metric
+        ];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -100,7 +104,7 @@ export class VideosInPlaylistsPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={videosInPlaylistsInfo}
                 xColumnName="day"
-                yColumnName="videosInPlaylists"
+                metricInfo={Metrics.VIDEOS_IN_PLAYLISTS}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -113,7 +117,7 @@ export class VideosInPlaylistsPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="videos-in-playlists-page">
-                <h2>Videos in Playlists</h2>
+                <h2>{Metrics.VIDEOS_IN_PLAYLISTS.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

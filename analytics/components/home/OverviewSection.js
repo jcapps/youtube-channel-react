@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import ContentTypes from '../../globals/ContentTypes';
+import DataTypes from '../../globals/DataTypes';
+import Metrics from '../../globals/Metrics';
 import computeSubscribers from '../../helpers/computeSubscribers';
 import computeVideosInPlaylists from '../../helpers/computeVideosInPlaylists';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
@@ -16,27 +18,17 @@ class OverviewSection extends React.PureComponent {
     }
 
     renderLineGraph() {
-        const parentId = `${dataType}-overview-section`;
         let dataInfo = Object.assign({}, this.props.data);
-        let dataType = this.props.dataType;
+        let dataName = this.props.metricInfo.name;
 
         if (!dataInfo.columnHeaders) return;
-        if (dataType == 'subscribers') {
+        if (dataName == Metrics.SUBSCRIBERS.name) {
             dataInfo = computeSubscribers(this.props.data);
         }
-        if (dataType == 'videosInPlaylists') {
+        if (dataName == Metrics.VIDEOS_IN_PLAYLISTS.name) {
             dataInfo = computeVideosInPlaylists(this.props.data);
         }
-        if (dataType == 'revenue') {
-            dataType = 'estimatedRevenue';
-        }
-        if (dataType == 'adRevenue') {
-            dataType = 'estimatedAdRevenue';
-        }
-        if (dataType == 'youtubeRedRevenue') {
-            dataType = 'estimatedRedPartnerRevenue';
-        }
-        if (dataType == 'watchTime') {
+        if (dataName == Metrics.WATCH_TIME.name) {
             dataInfo = computeWatchTimes(this.props.data);
         }
 
@@ -44,7 +36,7 @@ class OverviewSection extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={dataInfo}
                 xColumnName="day"
-                yColumnName={dataType}
+                metricInfo={this.props.metricInfo}
                 size={this.props.size}
                 onRenderFinish={this.props.onRenderFinish}
                 isLoading={this.props.state.isLoading}
@@ -53,65 +45,62 @@ class OverviewSection extends React.PureComponent {
     }
 
     render() {
-        const dataType = this.props.dataType;
         const loadingSpinner = require('../../images/loading.gif');
-        let sectionTitle = dataType.replace(/([A-Z])/g, ' $1').toUpperCase().trim(); // Add spaces before capital letters and make all CAPS
 
-        let totalValue;
-        let dataSearchName = dataType;
-        if (dataType == 'subscribers') {
-            const totalSubscribers = getTotalStats(this.props.totalStats, 'subscribersGained');
-            const totalUnsubscribers = getTotalStats(this.props.totalStats, 'subscribersLost');
-            totalValue = totalSubscribers - totalUnsubscribers;
-        } else if (dataType == 'videosInPlaylists') {
-            const totalVideosAddedToPlaylists = getTotalStats(this.props.totalStats, 'videosAddedToPlaylists');
-            const totalVideosRemovedFromPlaylists = getTotalStats(this.props.totalStats, 'videosRemovedFromPlaylists');
-            totalValue = totalVideosAddedToPlaylists - totalVideosRemovedFromPlaylists;
-        } else if (dataType == 'revenue' || dataType == 'adRevenue' || dataType == 'youtubeRedRevenue') {
-            if (dataType == 'revenue') {
-                dataSearchName = 'estimatedRevenue';
-                sectionTitle = 'ESTIMATED REVENUE';
+        const metricInfo = this.props.metricInfo;
+        const dataName = metricInfo.name;
+        let totalValue = getTotalStats(this.props.totalStats, metricInfo.metric);
+
+        if (dataName == Metrics.SUBSCRIBERS.name) {
+            const totalSubscribers = getTotalStats(this.props.totalStats, Metrics.SUBSCRIBERS_GAINED.metric);
+            const totalUnsubscribers = getTotalStats(this.props.totalStats, Metrics.SUBSCRIBERS_LOST.metric);
+            if (totalSubscribers == 'N/A' || totalUnsubscribers == 'N/A') {
+                totalValue = 'N/A';
+            } else {
+                totalValue = totalSubscribers - totalUnsubscribers;
             }
-            if (dataType == 'adRevenue') {
-                dataSearchName = 'estimatedAdRevenue';
-                sectionTitle = 'ESTIMATED AD REVENUE';
+        }
+        if (dataName == Metrics.VIDEOS_IN_PLAYLISTS.name) {
+            const totalVideosAddedToPlaylists = getTotalStats(this.props.totalStats, Metrics.VIDEOS_ADDED_TO_PLAYLISTS.name);
+            const totalVideosRemovedFromPlaylists = getTotalStats(this.props.totalStats, Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.name);
+            if (totalVideosAddedToPlaylists == 'N/A' || totalVideosRemovedFromPlaylists == 'N/A') {
+                totalValue = 'N/A';
+            } else {
+                totalValue = totalVideosAddedToPlaylists - totalVideosRemovedFromPlaylists;
             }
-            if (dataType == 'youtubeRedRevenue') {
-                dataSearchName = 'estimatedRedPartnerRevenue';
-                sectionTitle = 'ESTIMATED YOUTUBE RED REVENUE';
-            }
-            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
+        }
+        
+        if (metricInfo.dataType == DataTypes.CURRENCY) {
             if (totalValue != 'N/A') {
-                totalValue = '$' + totalValue.toFixed(2);
+                totalValue = '$' + totalValue.toFixed(2).toLocaleString();
             }
-        } else if (dataType == 'averageViewDuration' || dataType == 'averageTimeInPlaylist') {
-            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
+        }
+        if (metricInfo.dataType == DataTypes.TIME) {
             if (totalValue != 'N/A') {
                 totalValue = convertSecondsToTimestamp(totalValue);
             }
-        } else if (dataType == 'averageViewPercentage') {
-            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
+        }
+        if (metricInfo.dataType == DataTypes.PERCENTAGE) {
             if (totalValue != 'N/A') {
                 totalValue = totalValue.toFixed(1).toLocaleString() + '%';
             }
-        } else if (dataType == 'viewsPerPlaylistStart') {
-            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
+        }
+        if (metricInfo.dataType == DataTypes.DECIMAL) {
             if (totalValue != 'N/A') {
                 totalValue = totalValue.toFixed(2).toLocaleString();
             }
-        } else {
-            if (dataType == 'watchTime') {
-                dataSearchName = 'estimatedMinutesWatched';
-                sectionTitle = 'WATCH TIME (MINUTES)';
+        }
+        if (metricInfo.dataType == DataTypes.NUMBER) {
+            if (totalValue != 'N/A') {
+                totalValue = totalValue.toLocaleString();
             }
-            totalValue = getTotalStats(this.props.totalStats, dataSearchName);
         }
 
         return (
-            <Link to={{pathname: `/analytics/${dataType}`, state: this.props.state}}>
-                <div id={`${dataType}-overview-section`} className={`${this.props.size}-overview-section`}>
-                    <div className="metric-title">{sectionTitle}</div>
-                    <div className="metric-value">{totalValue.toLocaleString()}</div>
+            <Link to={{pathname: `/analytics/${dataName}`, state: this.props.state}}>
+                <div id={`${dataName}-overview-section`} className={`${this.props.size}-overview-section`}>
+                    <div className="metric-title">{this.props.metricInfo.displayName.toUpperCase()}</div>
+                    <div className="metric-value">{totalValue}</div>
                     {this.renderLineGraph()}
                     <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
                 </div>
@@ -122,7 +111,7 @@ class OverviewSection extends React.PureComponent {
 
 OverviewSection.propTypes = {
     data: PropTypes.object.isRequired,
-    dataType: PropTypes.string.isRequired,
+    metricInfo: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     size: PropTypes.string.isRequired,
     state: PropTypes.object.isRequired,

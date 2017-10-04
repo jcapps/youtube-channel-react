@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import * as reportActions from '../../actions/reportActions';
@@ -37,7 +38,7 @@ export class WatchTimePage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Watch Time";
+        document.title = `Analytics: ${Metrics.WATCH_TIME.displayName}`;
         window.scrollTo(0, 0);
     }
 
@@ -72,9 +73,13 @@ export class WatchTimePage extends React.PureComponent {
         this.setState({...state});
         this.setState({isLoading: true});
 
-        const metrics = ['views', 'estimatedMinutesWatched', 'averageViewDuration'];
+        const metrics = [
+            Metrics.VIEWS.metric,
+            Metrics.WATCH_TIME.metric,
+            Metrics.AVERAGE_VIEW_DURATION.metric
+        ];
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics.push('playlistStarts');
+            metrics.push(Metrics.PLAYLIST_STARTS.metric);
         }
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
@@ -88,7 +93,7 @@ export class WatchTimePage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={watchTimeInfo}
                 xColumnName="day"
-                yColumnName="watchTime"
+                metricInfo={Metrics.WATCH_TIME}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -101,7 +106,7 @@ export class WatchTimePage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="watch-time-page">
-                <h2>Watch Time</h2>
+                <h2>{Metrics.WATCH_TIME.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

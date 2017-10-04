@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import Metrics from '../../globals/Metrics';
 import convertSecondsToTimestamp from '../../helpers/convertSecondsToTimestamp';
 import getTotalStats from '../../helpers/getTotalStats';
 
 const RetentionMetricsSection = ({totalStats, filterState}) => {
-    const averageViewDuration = getTotalStats(totalStats, 'averageViewDuration');
+    const averageViewDuration = getTotalStats(totalStats, Metrics.AVERAGE_VIEW_DURATION.metric);
 
     let time = averageViewDuration;
     if (averageViewDuration != 'N/A') {
@@ -13,14 +14,14 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
     }
 
     const renderAverageViewPercentage = () => {
-        let averageViewPercentage = getTotalStats(totalStats, 'averageViewPercentage');
+        let averageViewPercentage = getTotalStats(totalStats, Metrics.AVERAGE_VIEW_PERCENTAGE.metric);
         if (averageViewPercentage != 'N/A') {
             averageViewPercentage = averageViewPercentage.toFixed(1);
             return (
                 <li>
-                    <Link to={{pathname: "/analytics/averageViewPercentage", state: filterState}}>
+                    <Link to={{pathname: `/analytics/${Metrics.AVERAGE_VIEW_PERCENTAGE.name}`, state: filterState}}>
                         <div className="metric-tab">
-                            <div className="metric-title">AVERAGE PERCENTAGE VIEWED</div>
+                            <div className="metric-title">{Metrics.AVERAGE_VIEW_PERCENTAGE.displayName.toUpperCase()}</div>
                             <div className="metric-value">{averageViewPercentage.toLocaleString()}%</div>
                         </div>
                     </Link>
@@ -31,14 +32,14 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
     }
 
     const renderAverageTimeInPlaylist = () => {
-        let averageTimeInPlaylist = getTotalStats(totalStats, 'averageTimeInPlaylist');
+        let averageTimeInPlaylist = getTotalStats(totalStats, Metrics.AVERAGE_TIME_IN_PLAYLISTS.metric);
         if (averageTimeInPlaylist != 'N/A') {
             averageTimeInPlaylist = convertSecondsToTimestamp(averageTimeInPlaylist);
             return (
                 <li>
-                    <Link to={{pathname: "/analytics/averageTimeInPlaylist", state: filterState}}>
+                    <Link to={{pathname: `/analytics/${Metrics.AVERAGE_TIME_IN_PLAYLISTS.name}`, state: filterState}}>
                         <div className="metric-tab">
-                            <div className="metric-title">AVERAGE TIME IN PLAYLIST</div>
+                            <div className="metric-title">{Metrics.AVERAGE_TIME_IN_PLAYLISTS.displayName.toUpperCase()}</div>
                             <div className="metric-value">{averageTimeInPlaylist}</div>
                         </div>
                     </Link>
@@ -49,14 +50,14 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
     }
 
     const renderViewsPerPlaylistStart = () => {
-        let viewsPerPlaylistStart = getTotalStats(totalStats, 'viewsPerPlaylistStart');
+        let viewsPerPlaylistStart = getTotalStats(totalStats, Metrics.VIEWS_PER_PLAYLIST_START.metric);
         if (viewsPerPlaylistStart != 'N/A') {
             viewsPerPlaylistStart = viewsPerPlaylistStart.toFixed(2);
             return (
                 <li>
-                    <Link to={{pathname: "/analytics/viewsPerPlaylistStart", state: filterState}}>
+                    <Link to={{pathname: `/analytics/${Metrics.VIEWS_PER_PLAYLIST_START.name}`, state: filterState}}>
                         <div className="metric-tab">
-                            <div className="metric-title">VIEWS PER PLAYLIST START</div>
+                            <div className="metric-title">{Metrics.VIEWS_PER_PLAYLIST_START.displayName.toUpperCase()}</div>
                             <div className="metric-value">{viewsPerPlaylistStart.toLocaleString()}</div>
                         </div>
                     </Link>
@@ -70,9 +71,9 @@ const RetentionMetricsSection = ({totalStats, filterState}) => {
         <div className="metrics-section">
             <ul>
                 <li>
-                    <Link to={{pathname: "/analytics/averageViewDuration", state: filterState}}>
+                    <Link to={{pathname: `/analytics/${Metrics.AVERAGE_VIEW_DURATION.name}`, state: filterState}}>
                         <div className="metric-tab">
-                            <div className="metric-title">AVERAGE VIEW DURATION</div>
+                            <div className="metric-title">{Metrics.AVERAGE_VIEW_DURATION.displayName.toUpperCase()}</div>
                             <div className="metric-value">{time}</div>
                         </div>
                     </Link>

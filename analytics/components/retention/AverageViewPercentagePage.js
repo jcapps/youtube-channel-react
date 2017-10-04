@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import {withRouter} from "react-router-dom";
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -37,7 +38,7 @@ export class AverageViewPercentagePage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Average Percentage Viewed";
+        document.title = `Analytics: ${Metrics.AVERAGE_VIEW_PERCENTAGE.displayName}`;
         window.scrollTo(0, 0);
     }
 
@@ -71,14 +72,17 @@ export class AverageViewPercentagePage extends React.PureComponent {
     getData(state) {
         this.setState({...state});
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            this.props.history.push({pathname: '/analytics/averageViewDuration', state: state});
+            this.props.history.push({pathname: `/analytics/${Metrics.AVERAGE_VIEW_DURATION.name}`, state: state});
             return;
         }
 
         this.setState({isLoading: true});
         this.showLoadingSpinner();
 
-        let metrics = ['averageViewDuration', 'averageViewPercentage'];
+        const metrics = [
+            Metrics.AVERAGE_VIEW_DURATION.metric,
+            Metrics.AVERAGE_VIEW_PERCENTAGE.metric
+        ];;
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -90,7 +94,7 @@ export class AverageViewPercentagePage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.averageViewPercentage}
                 xColumnName="day"
-                yColumnName="averageViewPercentage"
+                metricInfo={Metrics.AVERAGE_VIEW_PERCENTAGE}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -103,7 +107,7 @@ export class AverageViewPercentagePage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="average-view-percentage-page">
-                <h2>Average Percentage Viewed</h2>
+                <h2>{Metrics.AVERAGE_VIEW_PERCENTAGE.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import {withRouter} from "react-router-dom";
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -37,7 +38,7 @@ export class PlaylistStartsPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Playlist Starts";
+        document.title = `Analytics: ${Metrics.PLAYLIST_STARTS.displayName}`;
         window.scrollTo(0, 0);
     }
 
@@ -71,14 +72,19 @@ export class PlaylistStartsPage extends React.PureComponent {
     getData(state) {
         this.setState({...state});
         if (state.contentType != ContentTypes.PLAYLISTS) {
-            this.props.history.push({pathname: '/analytics/views', state: state});
+            this.props.history.push({pathname: `/analytics/${Metrics.VIEWS.name}`, state: state});
             return;
         }
 
         this.setState({isLoading: true});
         this.showLoadingSpinner();
 
-        const metrics = ['views', 'estimatedMinutesWatched', 'averageViewDuration', 'playlistStarts'];
+        const metrics = [
+            Metrics.VIEWS.metric,
+            Metrics.WATCH_TIME.metric,
+            Metrics.PLAYLIST_STARTS.metric,
+            Metrics.AVERAGE_VIEW_DURATION.metric
+        ];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -90,7 +96,7 @@ export class PlaylistStartsPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.playlistStarts}
                 xColumnName="day"
-                yColumnName="playlistStarts"
+                metricInfo={Metrics.PLAYLIST_STARTS}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -103,7 +109,7 @@ export class PlaylistStartsPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="playlist-starts-page">
-                <h2>Playlist Starts</h2>
+                <h2>{Metrics.PLAYLIST_STARTS.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

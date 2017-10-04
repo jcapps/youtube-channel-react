@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -37,7 +38,7 @@ export class CommentsPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Comments";
+        document.title = `Analytics: ${Metrics.COMMENTS.displayName}`;
         window.scrollTo(0, 0);
 
         if (this.state.playlistAttempted) this.hideLoadingSpinner();
@@ -83,7 +84,7 @@ export class CommentsPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
         
-        const metrics = ['comments'];
+        const metrics = [Metrics.COMMENTS.metric];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -97,7 +98,7 @@ export class CommentsPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.comments}
                 xColumnName="day"
-                yColumnName="comments"
+                metricInfo={Metrics.COMMENTS}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -110,7 +111,7 @@ export class CommentsPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="comments-page">
-                <h2>Comments</h2>
+                <h2>{Metrics.COMMENTS.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

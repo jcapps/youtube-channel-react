@@ -1,0 +1,10 @@
+const DataTypes = {
+    CURRENCY: 'CURRENCY',
+    DECIMAL: 'DECIMAL',
+    NUMBER: 'NUMBER',
+    PERCENTAGE: 'PERCENTAGE',
+    TIME_MINUTES: 'TIME_MINUTES',
+    TIME_SECONDS: 'TIME_SECONDS'
+};
+
+export default DataTypes;

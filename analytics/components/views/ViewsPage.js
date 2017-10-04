@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -36,7 +37,7 @@ export class ViewsPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Views";
+        document.title = `Analytics: ${Metrics.VIEWS.displayName}`;
         window.scrollTo(0, 0);
     }
 
@@ -73,9 +74,13 @@ export class ViewsPage extends React.PureComponent {
 
         this.showLoadingSpinner();
 
-        let metrics = ['views', 'estimatedMinutesWatched', 'averageViewDuration'];
+        const metrics = [
+            Metrics.VIEWS.metric,
+            Metrics.WATCH_TIME.metric,
+            Metrics.AVERAGE_VIEW_DURATION.metric
+        ];
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics.push('playlistStarts');
+            metrics.push(Metrics.PLAYLIST_STARTS.metric);
         }
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
@@ -88,7 +93,7 @@ export class ViewsPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.views}
                 xColumnName="day"
-                yColumnName="views"
+                metricInfo={Metrics.VIEWS}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -101,7 +106,7 @@ export class ViewsPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="views-page">
-                <h2>Views</h2>
+                <h2>{Metrics.VIEWS.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

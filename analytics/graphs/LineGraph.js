@@ -1,13 +1,12 @@
 import * as d3 from 'd3';
+import DataTypes from '../globals/DataTypes';
 import computeVoronoi from '../helpers/computeVoronoi';
 import convertSecondsToTimestamp from '../helpers/convertSecondsToTimestamp';
 
 class LineGraph {
     constructor() {
-        this.isMoneyMetric;
-        this.isPercentMetric;
-        this.isTimeMetric;
         this.data;
+        this.metricInfo;
         this.xyInfo;
         this.graphSize;
         this.graphContainer;
@@ -96,7 +95,7 @@ class LineGraph {
         const xDomainMargin = xDomain * .02;
 
         let maxYTicks = Math.min(yMax, Math.ceil(this.height / this.yAxisLabelPadding));
-        if (this.isMoneyMetric) {
+        if (this.metricInfo.dataType == DataTypes.CURRENCY) {
             maxYTicks = Math.min(yMax * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
 
@@ -137,7 +136,7 @@ class LineGraph {
     drawGridLines() {
         const yDomain = this.xyInfo.y.domain();
         let maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
-        if (this.isMoneyMetric) {
+        if (this.metricInfo.dataType == DataTypes.CURRENCY) {
             maxTicks = Math.min(yDomain[1] * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
 
@@ -181,7 +180,7 @@ class LineGraph {
     drawYAxis() {
         const yDomain = this.xyInfo.y.domain();
         let maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
-        if (this.isMoneyMetric) {
+        if (this.metricInfo.dataType == DataTypes.CURRENCY) {
             maxTicks = Math.min(yDomain[1] * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
         
@@ -190,13 +189,13 @@ class LineGraph {
             .call(d3.axisLeft(this.xyInfo.y)
                 .ticks(maxTicks)
                 .tickFormat(d => {
-                    if (this.isMoneyMetric) {
+                    if (this.metricInfo.dataType == DataTypes.CURRENCY) {
                         return '$' + d.toFixed(2).toLocaleString();
                     }
-                    if (this.isPercentMetric) {
+                    if (this.metricInfo.dataType == DataTypes.PERCENTAGE) {
                         return d.toFixed(1).toLocaleString() + '%';
                     }
-                    if (this.isTimeMetric) {
+                    if (this.metricInfo.dataType == DataTypes.TIME_SECONDS) {
                         return convertSecondsToTimestamp(d);
                     }
                     return d.toLocaleString();
@@ -273,34 +272,26 @@ class LineGraph {
     // Show tooltip with correct info, and set position over correct point
     showAndSetTooltip(d) {
         // Update tooltip with correct info to display
-        let yLabel = this.xyInfo.yColumnName;
-        yLabel = yLabel.replace(/([A-Z])/g, ' $1').trim(); // Add spaces before capital letters
-        yLabel = yLabel.charAt(0).toUpperCase() + yLabel.slice(1); // Capitalize first letter
-
+        const yLabel = this.metricInfo.displayName;
         let yValue = d.get(this.xyInfo.yColumnName).toLocaleString();
 
-        if (this.xyInfo.yColumnName == 'watchTime') {
-            yLabel += ' (minutes)';
+        if (this.metricInfo.dataType == DataTypes.TIME_MINUTES) {
             yValue = Math.round(d.get(this.xyInfo.yColumnName)).toLocaleString();
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName));
             if (displayTime.length > 0) yValue += ' (' + displayTime + ')';
         }
-        if (this.xyInfo.yColumnName == 'averageViewDuration' || this.xyInfo.yColumnName == 'averageTimeInPlaylist') {
+        if (this.metricInfo.dataType == DataTypes.TIME_SECONDS) {
             yValue = '0 seconds';
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName) / 60); // Divide by 60 to put time in minutes
             if (displayTime.length > 0) yValue = displayTime;
         }
-        if (this.xyInfo.yColumnName == 'averageViewPercentage') {
-            yLabel = 'Average Percentage Viewed';
+        if (this.metricInfo.dataType == DataTypes.PERCENTAGE) {
             yValue = d.get(this.xyInfo.yColumnName).toFixed(1).toLocaleString() + '%';
         }
-        if (this.xyInfo.yColumnName == 'viewsPerPlaylistStart') {
+        if (this.metricInfo.dataType == DataTypes.DECIMAL) {
             yValue = d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
         }
-        if (this.xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
-            yLabel = 'Estimated YouTube Red Revenue';
-        }
-        if (this.xyInfo.yColumnName == 'estimatedRevenue' || this.xyInfo.yColumnName == 'estimatedAdRevenue' || this.xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
+        if (this.metricInfo.dataType == DataTypes.CURRENCY) {
             yValue = '$' + d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
         }
 
@@ -339,22 +330,22 @@ class LineGraph {
         // Update tooltip with correct info to display
         let yValue = d.get(this.xyInfo.yColumnName).toLocaleString();
 
-        if (this.xyInfo.yColumnName == 'watchTime') {
+        if (this.metricInfo.dataType == DataTypes.TIME_MINUTES) {
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName));
             if (displayTime.length > 0) yValue = displayTime;
         }
-        if (this.xyInfo.yColumnName == 'averageViewDuration' || this.xyInfo.yColumnName == 'averageTimeInPlaylist') {
+        if (this.metricInfo.dataType == DataTypes.TIME_SECONDS) {
             yValue = '0 seconds';
             const displayTime = this.displayTimeNicely(d.get(this.xyInfo.yColumnName) / 60); // Divide by 60 to put time in minutes
             if (displayTime.length > 0) yValue = displayTime;
         }
-        if (this.xyInfo.yColumnName == 'averageViewPercentage') {
+        if (this.metricInfo.dataType == DataTypes.PERCENTAGE) {
             yValue = d.get(this.xyInfo.yColumnName).toFixed(1).toLocaleString() + '%';
         }
-        if (this.xyInfo.yColumnName == 'viewsPerPlaylistStart') {
+        if (this.metricInfo.dataType == DataTypes.DECIMAL) {
             yValue = d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
         }
-        if (this.xyInfo.yColumnName == 'estimatedRevenue' || this.xyInfo.yColumnName == 'estimatedAdRevenue' || this.xyInfo.yColumnName == 'estimatedRedPartnerRevenue') {
+        if (this.metricInfo.dataType == DataTypes.CURRENCY) {
             yValue = '$' + d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
         }
         
@@ -468,30 +459,11 @@ class LineGraph {
     }
 
     // Create a line graph
-    drawLineGraph(container, dataInfo, xColumnName, yColumnName, size = 'large') {
-        if (
-            yColumnName == 'estimatedRevenue' || 
-            yColumnName == 'estimatedAdRevenue' || 
-            yColumnName == 'estimatedRedPartnerRevenue'
-        ) {
-            this.isMoneyMetric = true;
-        } else {
-            this.isMoneyMetric = false;
-        }
-
-        if (yColumnName == 'averageViewPercentage') {
-            this.isPercentMetric = true;
-        } else {
-            this.isPercentMetric = false;
-        }
-
-        if (
-            yColumnName == 'averageViewDuration' ||
-            yColumnName == 'averageTimeInPlaylist'
-        ) {
-            this.isTimeMetric = true;
-        } else {
-            this.isTimeMetric = false;
+    drawLineGraph(container, dataInfo, xColumnName, metricInfo, size = 'large') {
+        this.metricInfo = metricInfo;
+        let yColumnName = metricInfo.metric;
+        if (!metricInfo.shouldUseMetricForGraph) {
+            yColumnName = metricInfo.name;
         }
 
         container.style('position', 'relative');

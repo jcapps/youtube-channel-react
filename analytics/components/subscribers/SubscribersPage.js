@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import computeSubscribers from '../../helpers/computeSubscribers';
 import * as reportActions from '../../actions/reportActions';
@@ -38,7 +39,7 @@ export class SubscribersPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Subscribers";
+        document.title = `Analytics: ${Metrics.SUBSCRIBERS.displayName}`;
         window.scrollTo(0, 0);
 
         if (this.state.playlistAttempted) this.hideLoadingSpinner();
@@ -84,7 +85,10 @@ export class SubscribersPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
         
-        const metrics = ['subscribersGained', 'subscribersLost'];
+        const metrics = [
+            Metrics.SUBSCRIBERS_GAINED.metric,
+            Metrics.SUBSCRIBERS_LOST.metric
+        ];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -100,7 +104,7 @@ export class SubscribersPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={subscribersInfo}
                 xColumnName="day"
-                yColumnName="subscribers"
+                metricInfo={Metrics.SUBSCRIBERS}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -113,7 +117,7 @@ export class SubscribersPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="subscribers-page">
-                <h2>Subscribers</h2>
+                <h2>{Metrics.SUBSCRIBERS.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

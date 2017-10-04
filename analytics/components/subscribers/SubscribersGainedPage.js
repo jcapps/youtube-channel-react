@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -37,7 +38,7 @@ export class SubscribersGainedPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Subscribers Gained";
+        document.title = `Analytics: ${Metrics.SUBSCRIBERS_GAINED.displayName}`;
         window.scrollTo(0, 0);
 
         if (this.state.playlistAttempted) this.hideLoadingSpinner();
@@ -83,7 +84,10 @@ export class SubscribersGainedPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
         
-        const metrics = ['subscribersGained', 'subscribersLost'];
+        const metrics = [
+            Metrics.SUBSCRIBERS_GAINED.metric,
+            Metrics.SUBSCRIBERS_LOST.metric
+        ];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
     }
@@ -97,7 +101,7 @@ export class SubscribersGainedPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.subscribers}
                 xColumnName="day"
-                yColumnName="subscribersGained"
+                metricInfo={Metrics.SUBSCRIBERS_GAINED}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -110,7 +114,7 @@ export class SubscribersGainedPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="subscribers-gained-page">
-                <h2>Subscribers Gained</h2>
+                <h2>{Metrics.SUBSCRIBERS_GAINED.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}

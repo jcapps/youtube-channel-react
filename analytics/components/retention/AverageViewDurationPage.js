@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import Metrics from '../../globals/Metrics';
 import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -36,7 +37,7 @@ export class AverageViewDurationPage extends React.PureComponent {
     }
 
     componentDidMount() {
-        document.title = "Analytics: Average View Duration";
+        document.title = `Analytics: ${Metrics.AVERAGE_VIEW_DURATION.displayName}`;
         window.scrollTo(0, 0);
     }
 
@@ -73,9 +74,16 @@ export class AverageViewDurationPage extends React.PureComponent {
 
         this.showLoadingSpinner();
 
-        let metrics = ['averageViewDuration', 'averageViewPercentage'];
+        let metrics = [
+            Metrics.AVERAGE_VIEW_DURATION.metric,
+            Metrics.AVERAGE_VIEW_PERCENTAGE.metric
+        ];
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics = ['averageViewDuration', 'averageTimeInPlaylist', 'viewsPerPlaylistStart'];
+            metrics = [
+                Metrics.AVERAGE_VIEW_DURATION.metric,
+                Metrics.AVERAGE_TIME_IN_PLAYLISTS.metric,
+                Metrics.VIEWS_PER_PLAYLIST_START.metric
+            ];
         }
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
@@ -88,7 +96,7 @@ export class AverageViewDurationPage extends React.PureComponent {
             <LineGraphContainer
                 dataInfo={this.props.averageViewDuration}
                 xColumnName="day"
-                yColumnName="averageViewDuration"
+                metricInfo={Metrics.AVERAGE_VIEW_DURATION}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -101,7 +109,7 @@ export class AverageViewDurationPage extends React.PureComponent {
         const loadingSpinner = require('../../images/loading.gif');
         return (
             <div id="average-view-duration-page">
-                <h2>Average View Duration</h2>
+                <h2>{Metrics.AVERAGE_VIEW_DURATION.displayName}</h2>
                 <FiltersSection
                     state={this.state}
                     onChangeFilters={this.getData}
