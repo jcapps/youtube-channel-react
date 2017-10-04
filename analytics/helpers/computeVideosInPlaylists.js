@@ -1,3 +1,5 @@
+import Metrics from '../globals/Metrics';
+
 const computeVideosInPlaylists = (report) => {
     let videosInPlaylists = Object.assign({}, report);
     let videosInPlaylistsRows = Object.assign([], report.rows);
@@ -6,8 +8,8 @@ const computeVideosInPlaylists = (report) => {
     const videosInPlaylistsColumns = videosInPlaylistsColumnHeaders.map(item => {
         return item.name;
     });
-    const videosAddedToPlaylistsIndex = videosInPlaylistsColumns.indexOf('videosAddedToPlaylists');
-    const videosRemovedFromPlaylistsIndex = videosInPlaylistsColumns.indexOf('videosRemovedFromPlaylists');
+    const videosAddedToPlaylistsIndex = videosInPlaylistsColumns.indexOf(Metrics.VIDEOS_ADDED_TO_PLAYLISTS.metric);
+    const videosRemovedFromPlaylistsIndex = videosInPlaylistsColumns.indexOf(Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.metric);
 
     let newVideosInPlaylistsRows = [];
     for (let i = 0; i < videosInPlaylistsRows.length; i++) {
@@ -19,7 +21,7 @@ const computeVideosInPlaylists = (report) => {
         newVideosInPlaylistsRows.push(newRow);
     }
 
-    const newVideosInPlaylistsColumnHeader = {name: 'videosInPlaylists', columnType: 'METRIC', dataType: 'INTEGER'};
+    const newVideosInPlaylistsColumnHeader = {name: Metrics.VIDEOS_IN_PLAYLISTS.name, columnType: 'METRIC', dataType: 'INTEGER'};
     videosInPlaylistsColumnHeaders.push(newVideosInPlaylistsColumnHeader);
     
     videosInPlaylists.columnHeaders = videosInPlaylistsColumnHeaders;

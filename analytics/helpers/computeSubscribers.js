@@ -1,3 +1,5 @@
+import Metrics from '../globals/Metrics';
+
 const computeSubscribers = (report) => {
     let subscribers = Object.assign({}, report);
     let subscribersRows = Object.assign([], report.rows);
@@ -6,8 +8,8 @@ const computeSubscribers = (report) => {
     const subscribersColumns = subscribersColumnHeaders.map(item => {
         return item.name;
     });
-    const subscribersGainedIndex = subscribersColumns.indexOf('subscribersGained');
-    const subscribersLostIndex = subscribersColumns.indexOf('subscribersLost');
+    const subscribersGainedIndex = subscribersColumns.indexOf(Metrics.SUBSCRIBERS_GAINED.metric);
+    const subscribersLostIndex = subscribersColumns.indexOf(Metrics.SUBSCRIBERS_LOST.metric);
 
     let newSubscribersRows = [];
     for (let i = 0; i < subscribersRows.length; i++) {
@@ -17,7 +19,7 @@ const computeSubscribers = (report) => {
         newSubscribersRows.push(newRow);
     }
 
-    const newSubscribersColumnHeader = {name: 'subscribers', columnType: 'METRIC', dataType: 'INTEGER'};
+    const newSubscribersColumnHeader = {name: Metrics.SUBSCRIBERS.name, columnType: 'METRIC', dataType: 'INTEGER'};
     subscribersColumnHeaders.push(newSubscribersColumnHeader);
     
     subscribers.columnHeaders = subscribersColumnHeaders;
