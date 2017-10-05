@@ -23,5 +23,5 @@ circle.highlight-datum-outline {
 
 .grid-baseline line {
     stroke: $grid-baseline;
-    stroke-width: 1.5;
+    stroke-dasharray: 1;
 }

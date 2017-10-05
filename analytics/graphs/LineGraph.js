@@ -489,11 +489,13 @@ class LineGraph {
         this.createSvg();
         this.createGraphCanvas();
 
-        this.drawBaseline();
         if (size == 'large') {
             this.drawGridLines();
+            this.drawBaseline();
             this.drawXAxis();
             this.drawYAxis();
+        } else {
+            this.drawBaseline();
         }
 
         if (size == 'large' || size == 'medium') {
