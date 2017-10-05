@@ -37,6 +37,42 @@ const Metrics = {
         isVideoMetric: true,
         dataType: DataTypes.PERCENTAGE
     },
+    CARD_CLICK_RATE: {
+        name: 'cardClickRate',
+        metric: 'cardClickRate',
+        displayName: 'Card Click Rate',
+        shouldUseMetricForGraph: true,
+        isPlaylistMetric: false,
+        isVideoMetric: true,
+        dataType: DataTypes.RATIO
+    },
+    CARD_CLICKS: {
+        name: 'cardClicks',
+        metric: 'cardClicks',
+        displayName: 'Card Clicks',
+        shouldUseMetricForGraph: true,
+        isPlaylistMetric: false,
+        isVideoMetric: true,
+        dataType: DataTypes.NUMBER
+    },
+    CARD_TEASER_CLICK_RATE: {
+        name: 'cardTeaserClickRate',
+        metric: 'cardTeaserClickRate',
+        displayName: 'Card Teaser Click Rate',
+        shouldUseMetricForGraph: true,
+        isPlaylistMetric: false,
+        isVideoMetric: true,
+        dataType: DataTypes.RATIO
+    },
+    CARD_TEASER_CLICKS: {
+        name: 'cardTeaserClicks',
+        metric: 'cardTeaserClicks',
+        displayName: 'Card Teaser Clicks',
+        shouldUseMetricForGraph: true,
+        isPlaylistMetric: false,
+        isVideoMetric: true,
+        dataType: DataTypes.NUMBER
+    },
     COMMENTS: {
         name: 'comments',
         metric: 'comments',

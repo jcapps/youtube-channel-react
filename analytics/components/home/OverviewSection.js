@@ -85,6 +85,11 @@ class OverviewSection extends React.PureComponent {
                 totalValue = totalValue.toFixed(1).toLocaleString() + '%';
             }
         }
+        if (metricInfo.dataType == DataTypes.RATIO) {
+            if (totalValue != 'N/A') {
+                totalValue = (totalValue * 100).toFixed(2).toLocaleString() + '%';
+            }
+        }
         if (metricInfo.dataType == DataTypes.DECIMAL) {
             if (totalValue != 'N/A') {
                 totalValue = totalValue.toFixed(2).toLocaleString();

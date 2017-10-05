@@ -5,6 +5,10 @@ import AnalyticsHomePage from './home/AnalyticsHomePage';
 import CommentsPage from './comments/CommentsPage';
 import DislikesPage from './likes/DislikesPage';
 import LikesPage from './likes/LikesPage';
+import CardClicksPage from './cards/CardClicksPage';
+import CardTeaserClicksPage from './cards/CardTeaserClicksPage';
+import CardClickRatePage from './cards/CardClickRatePage';
+import CardTeaserClickRatePage from './cards/CardTeaserClickRatePage';
 import RevenuePage from './revenue/RevenuePage';
 import AdRevenuePage from './revenue/AdRevenuePage';
 import YouTubeRedRevenuePage from './revenue/YouTubeRedRevenuePage';
@@ -33,6 +37,10 @@ const Routes = () => {
             <Route path={`/analytics/${Metrics.AVERAGE_TIME_IN_PLAYLISTS.name}`} component={AverageTimeInPlaylistPage} />
             <Route path={`/analytics/${Metrics.AVERAGE_VIEW_DURATION.name}`} component={AverageViewDurationPage} />
             <Route path={`/analytics/${Metrics.AVERAGE_VIEW_PERCENTAGE.name}`} component={AverageViewPercentagePage} />
+            <Route path={`/analytics/${Metrics.CARD_CLICK_RATE.name}`} component={CardClickRatePage} />
+            <Route path={`/analytics/${Metrics.CARD_TEASER_CLICK_RATE.name}`} component={CardTeaserClickRatePage} />
+            <Route path={`/analytics/${Metrics.CARD_CLICKS.name}`} component={CardClicksPage} />
+            <Route path={`/analytics/${Metrics.CARD_TEASER_CLICKS.name}`} component={CardTeaserClicksPage} />
             <Route path={`/analytics/${Metrics.COMMENTS.name}`} component={CommentsPage} />
             <Route path={`/analytics/${Metrics.DISLIKES.name}`} component={DislikesPage} />
             <Route path={`/analytics/${Metrics.LIKES.name}`} component={LikesPage} />

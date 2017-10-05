@@ -95,7 +95,7 @@ class LineGraph {
         const xDomainMargin = xDomain * .02;
 
         let maxYTicks = Math.min(yMax, Math.ceil(this.height / this.yAxisLabelPadding));
-        if (this.metricInfo.dataType == DataTypes.CURRENCY) {
+        if (this.metricInfo.dataType == DataTypes.CURRENCY || this.metricInfo.dataType == DataTypes.RATIO) {
             maxYTicks = Math.min(yMax * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
 
@@ -136,7 +136,7 @@ class LineGraph {
     drawGridLines() {
         const yDomain = this.xyInfo.y.domain();
         let maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
-        if (this.metricInfo.dataType == DataTypes.CURRENCY) {
+        if (this.metricInfo.dataType == DataTypes.CURRENCY || this.metricInfo.dataType == DataTypes.RATIO) {
             maxTicks = Math.min(yDomain[1] * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
 
@@ -180,7 +180,7 @@ class LineGraph {
     drawYAxis() {
         const yDomain = this.xyInfo.y.domain();
         let maxTicks = Math.min(yDomain[1], Math.ceil(this.height / this.yAxisLabelPadding));
-        if (this.metricInfo.dataType == DataTypes.CURRENCY) {
+        if (this.metricInfo.dataType == DataTypes.CURRENCY || this.metricInfo.dataType == DataTypes.RATIO) {
             maxTicks = Math.min(yDomain[1] * 100, Math.ceil(this.height / this.yAxisLabelPadding));
         }
         
@@ -194,6 +194,9 @@ class LineGraph {
                     }
                     if (this.metricInfo.dataType == DataTypes.PERCENTAGE) {
                         return d.toFixed(1).toLocaleString() + '%';
+                    }
+                    if (this.metricInfo.dataType == DataTypes.RATIO) {
+                        return (d * 100).toFixed(2).toLocaleString() + '%';
                     }
                     if (this.metricInfo.dataType == DataTypes.TIME_SECONDS) {
                         return convertSecondsToTimestamp(d);
@@ -288,6 +291,9 @@ class LineGraph {
         if (this.metricInfo.dataType == DataTypes.PERCENTAGE) {
             yValue = d.get(this.xyInfo.yColumnName).toFixed(1).toLocaleString() + '%';
         }
+        if (this.metricInfo.dataType == DataTypes.RATIO) {
+            yValue = (d.get(this.xyInfo.yColumnName) * 100).toFixed(2).toLocaleString() + '%';
+        }
         if (this.metricInfo.dataType == DataTypes.DECIMAL) {
             yValue = d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
         }
@@ -341,6 +347,9 @@ class LineGraph {
         }
         if (this.metricInfo.dataType == DataTypes.PERCENTAGE) {
             yValue = d.get(this.xyInfo.yColumnName).toFixed(1).toLocaleString() + '%';
+        }
+        if (this.metricInfo.dataType == DataTypes.RATIO) {
+            yValue = (d.get(this.xyInfo.yColumnName) * 100).toFixed(2).toLocaleString() + '%';
         }
         if (this.metricInfo.dataType == DataTypes.DECIMAL) {
             yValue = d.get(this.xyInfo.yColumnName).toFixed(2).toLocaleString();
