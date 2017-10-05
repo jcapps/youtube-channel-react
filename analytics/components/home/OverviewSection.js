@@ -75,7 +75,7 @@ class OverviewSection extends React.PureComponent {
                 totalValue = '$' + totalValue.toFixed(2).toLocaleString();
             }
         }
-        if (metricInfo.dataType == DataTypes.TIME) {
+        if (metricInfo.dataType == DataTypes.TIME_SECONDS) {
             if (totalValue != 'N/A') {
                 totalValue = convertSecondsToTimestamp(totalValue);
             }
@@ -95,7 +95,7 @@ class OverviewSection extends React.PureComponent {
                 totalValue = totalValue.toFixed(2).toLocaleString();
             }
         }
-        if (metricInfo.dataType == DataTypes.NUMBER) {
+        if (metricInfo.dataType == DataTypes.NUMBER || metricInfo.dataType == DataTypes.TIME_MINUTES) {
             if (totalValue != 'N/A') {
                 totalValue = totalValue.toLocaleString();
             }
