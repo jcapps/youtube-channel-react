@@ -2,6 +2,7 @@ import {combineReducers} from 'redux';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 import isAuthenticated from './isAuthenticatedReducer';
 import error from './errorReducer';
+import filterState from './filterStateReducer';
 import channelInfo from './channelInfoReducer';
 import report from './reportReducer';
 import searchChannelResults from './searchChannelResultsReducer';
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     ajaxCallsInProgress,
     isAuthenticated,
     error,
+    filterState,
     channelInfo,
     report,
     searchChannelResults,

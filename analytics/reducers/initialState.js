@@ -1,3 +1,6 @@
+import ContentTypes from '../globals/ContentTypes';
+import Periods from '../globals/Periods';
+
 export default {
     channelInfo: {},
     report: {},
@@ -7,6 +10,13 @@ export default {
     totalStats: {},
     isAuthenticated: false,
     error: {},
+    filterState: {
+        contentType: ContentTypes.ALL,
+        timePeriod: Periods.TWENTY_EIGHT_DAY,
+        dateRange: null,
+        filters: [],
+        addedFilters: []
+    },
     ajaxCallsInProgress: {
         channel: 0,
         contentFilter: 0,
