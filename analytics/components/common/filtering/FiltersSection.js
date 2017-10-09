@@ -110,7 +110,11 @@ class FiltersSection extends React.Component {
         const {newFiltersArray, newAddedFiltersArray}
             = removeGraphFilter(filterInfo, this.state.filters, this.state.addedFilters);
         
-        const {contentType, timePeriod, dateRange} = this.state;
+        let {contentType, timePeriod, dateRange} = this.state;
+        if (newAddedFiltersArray.length == 0 && contentType == ContentTypes.VIDEOS) {
+            contentType = ContentTypes.ALL;
+        }
+
         this.props.onChangeFilters({
             contentType,
             timePeriod,
@@ -131,7 +135,11 @@ class FiltersSection extends React.Component {
             filtersArray = newFiltersArray;
         }
 
-        const {contentType, timePeriod, dateRange} = this.state;
+        let {contentType, timePeriod, dateRange} = this.state;
+        if (addedFiltersArray.length == 0 && contentType == ContentTypes.VIDEOS) {
+            contentType = ContentTypes.ALL;
+        }
+
         this.props.onChangeFilters({
             contentType,
             timePeriod,
