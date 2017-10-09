@@ -5,7 +5,7 @@ import ContentTypes from '../../globals/ContentTypes';
 import Metrics from '../../globals/Metrics';
 import getTotalStats from '../../helpers/getTotalStats';
 
-const ViewsMetricsSection = ({totalStats, filterState}) => {
+const ViewsMetricsSection = ({totalStats}) => {
     const totalViews = getTotalStats(totalStats, Metrics.VIEWS.metric);
     const totalWatchTime = getTotalStats(totalStats, Metrics.WATCH_TIME.metric);
 
@@ -14,7 +14,7 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
         if (totalPlaylistStarts != 'N/A') {
             return (
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.PLAYLIST_STARTS.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.PLAYLIST_STARTS.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.PLAYLIST_STARTS.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalPlaylistStarts.toLocaleString()}</div>
@@ -31,7 +31,7 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
         if (totalRedViews != 'N/A') {
             return (
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.YOUTUBE_RED_VIEWS.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.YOUTUBE_RED_VIEWS.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.YOUTUBE_RED_VIEWS.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalRedViews.toLocaleString()}</div>
@@ -48,7 +48,7 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
         if (totalRedWatchTime != 'N/A') {
             return (
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.YOUTUBE_RED_WATCH_TIME.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.YOUTUBE_RED_WATCH_TIME.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.YOUTUBE_RED_WATCH_TIME.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalRedWatchTime.toLocaleString()}</div>
@@ -65,7 +65,7 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
             <ul>
                 {renderPlaylistStarts()}
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.VIEWS.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.VIEWS.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.VIEWS.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalViews.toLocaleString()}</div>
@@ -73,7 +73,7 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
                     </Link>
                 </li>
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.WATCH_TIME.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.WATCH_TIME.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.WATCH_TIME.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalWatchTime.toLocaleString()}</div>
@@ -88,7 +88,6 @@ const ViewsMetricsSection = ({totalStats, filterState}) => {
 };
 
 ViewsMetricsSection.propTypes = {
-    filterState: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired
 };
 

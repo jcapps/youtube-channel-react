@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import Metrics from '../../globals/Metrics';
 import getTotalStats from '../../helpers/getTotalStats';
 
-const LikesMetricsSection = ({totalStats, filterState}) => {
+const LikesMetricsSection = ({totalStats}) => {
     const totalLikes = getTotalStats(totalStats, Metrics.LIKES.metric);
     const totalDislikes = getTotalStats(totalStats, Metrics.DISLIKES.metric);
 
@@ -12,7 +12,7 @@ const LikesMetricsSection = ({totalStats, filterState}) => {
         <div className="metrics-section">
             <ul>
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.LIKES.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.LIKES.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.LIKES.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalLikes.toLocaleString()}</div>
@@ -20,7 +20,7 @@ const LikesMetricsSection = ({totalStats, filterState}) => {
                     </Link>
                 </li>
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.DISLIKES.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.DISLIKES.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.DISLIKES.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalDislikes.toLocaleString()}</div>
@@ -33,7 +33,6 @@ const LikesMetricsSection = ({totalStats, filterState}) => {
 };
 
 LikesMetricsSection.propTypes = {
-    filterState: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired
 };
 

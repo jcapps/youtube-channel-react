@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import Metrics from '../../globals/Metrics';
 import getTotalStats from '../../helpers/getTotalStats';
 
-const VideosInPlaylistsMetricsSection = ({totalStats, filterState}) => {
+const VideosInPlaylistsMetricsSection = ({totalStats}) => {
     let totalVideosInPlaylists = 'N/A';
     const totalVideosAddedToPlaylists = getTotalStats(totalStats, Metrics.VIDEOS_ADDED_TO_PLAYLISTS.metric);
     const totalVideosRemovedFromPlaylists = getTotalStats(totalStats, Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.metric);
@@ -16,7 +16,7 @@ const VideosInPlaylistsMetricsSection = ({totalStats, filterState}) => {
         <div className="metrics-section">
             <ul>
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.VIDEOS_IN_PLAYLISTS.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.VIDEOS_IN_PLAYLISTS.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.VIDEOS_IN_PLAYLISTS.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalVideosInPlaylists.toLocaleString()}</div>
@@ -24,7 +24,7 @@ const VideosInPlaylistsMetricsSection = ({totalStats, filterState}) => {
                     </Link>
                 </li>
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.VIDEOS_ADDED_TO_PLAYLISTS.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.VIDEOS_ADDED_TO_PLAYLISTS.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.VIDEOS_ADDED_TO_PLAYLISTS.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalVideosAddedToPlaylists.toLocaleString()}</div>
@@ -32,7 +32,7 @@ const VideosInPlaylistsMetricsSection = ({totalStats, filterState}) => {
                     </Link>
                 </li>
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.displayName.toUpperCase()}</div>
                             <div className="metric-value">{totalVideosRemovedFromPlaylists.toLocaleString()}</div>
@@ -45,7 +45,6 @@ const VideosInPlaylistsMetricsSection = ({totalStats, filterState}) => {
 };
 
 VideosInPlaylistsMetricsSection.propTypes = {
-    filterState: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired
 };
 

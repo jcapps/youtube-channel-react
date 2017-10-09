@@ -6,9 +6,9 @@ import {withRouter} from "react-router-dom";
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Metrics from '../../globals/Metrics';
-import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
+import {setFilterState} from '../../actions/setFilterStateAction';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import ViewsMetricsSection from './ViewsMetricsSection';
@@ -16,25 +16,16 @@ import ViewsMetricsSection from './ViewsMetricsSection';
 export class PlaylistStartsPage extends React.PureComponent {
     constructor(props) {
         super(props);
-        if (props.location.state) {
-            this.state = props.location.state;
-        } else {
-            this.state = {
-                contentType: ContentTypes.ALL,
-                timePeriod: Periods.TWENTY_EIGHT_DAY,
-                dateRange: null,
-                filters: [],
-                addedFilters: []
-            };
-        }
-        this.state.isLoading = true;
+        this.state = {
+            isLoading: true
+        };
 
         this.getData = this.getData.bind(this);
         this.renderLineGraph = this.renderLineGraph.bind(this);
     }
 
     componentWillMount() {
-        this.getData(this.state);
+        this.getData(this.props.filterState);
     }
 
     componentDidMount() {
@@ -70,9 +61,9 @@ export class PlaylistStartsPage extends React.PureComponent {
     }
 
     getData(state) {
-        this.setState({...state});
         if (state.contentType != ContentTypes.PLAYLISTS) {
-            this.props.history.push({pathname: `/analytics/${Metrics.VIEWS.name}`, state: state});
+            this.props.setFilterState(state);
+            this.props.history.push(`/analytics/${Metrics.VIEWS.name}`);
             return;
         }
 
@@ -87,6 +78,7 @@ export class PlaylistStartsPage extends React.PureComponent {
         ];
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
+        this.props.setFilterState(state);
     }
 
     renderLineGraph() {
@@ -111,13 +103,10 @@ export class PlaylistStartsPage extends React.PureComponent {
             <div id="playlist-starts-page">
                 <h2>{Metrics.PLAYLIST_STARTS.displayName}</h2>
                 <FiltersSection
-                    state={this.state}
+                    state={this.props.filterState}
                     onChangeFilters={this.getData}
                 />
-                <ViewsMetricsSection
-                    totalStats={this.props.totalStats}
-                    filterState={this.state}
-                />
+                <ViewsMetricsSection totalStats={this.props.totalStats} />
                 {this.renderLineGraph()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
@@ -131,7 +120,8 @@ PlaylistStartsPage.propTypes = {
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired,
-    state: PropTypes.object,
+    filterState: PropTypes.object.isRequired,
+    setFilterState: PropTypes.func.isRequired,
     history: PropTypes.object
 };
 
@@ -139,10 +129,13 @@ export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
         = state.ajaxCallsInProgress.report
         + state.ajaxCallsInProgress.totalStats;
-        
+
+    const newFilterStateObject = JSON.parse(JSON.stringify(state.filterState));
+    
     return {
         playlistStarts: state.report,
         totalStats: state.totalStats,
+        filterState: newFilterStateObject,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }
@@ -150,7 +143,8 @@ export function mapStateToProps(state) {
 export function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(reportActions, dispatch),
-        clearActions: bindActionCreators(clearActions, dispatch)
+        clearActions: bindActionCreators(clearActions, dispatch),
+        setFilterState: bindActionCreators(setFilterState, dispatch)
     };
 }
 

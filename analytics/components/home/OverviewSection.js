@@ -39,7 +39,7 @@ class OverviewSection extends React.PureComponent {
                 metricInfo={this.props.metricInfo}
                 size={this.props.size}
                 onRenderFinish={this.props.onRenderFinish}
-                isLoading={this.props.state.isLoading}
+                isLoading={this.props.isLoading}
             />
         );
     }
@@ -102,7 +102,7 @@ class OverviewSection extends React.PureComponent {
         }
 
         return (
-            <Link to={{pathname: `/analytics/${dataName}`, state: this.props.state}}>
+            <Link to={`/analytics/${dataName}`}>
                 <div id={`${dataName}-overview-section`} className={`${this.props.size}-overview-section`}>
                     <div className="metric-title">{this.props.metricInfo.displayName.toUpperCase()}</div>
                     <div className="metric-value">{totalValue}</div>
@@ -115,11 +115,11 @@ class OverviewSection extends React.PureComponent {
 }
 
 OverviewSection.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     data: PropTypes.object.isRequired,
     metricInfo: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     size: PropTypes.string.isRequired,
-    state: PropTypes.object.isRequired,
     onRenderFinish: PropTypes.func.isRequired
 };
 

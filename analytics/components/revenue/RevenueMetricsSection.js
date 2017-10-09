@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import Metrics from '../../globals/Metrics';
 import getTotalStats from '../../helpers/getTotalStats';
 
-const RevenueMetricsSection = ({totalStats, filterState}) => {
+const RevenueMetricsSection = ({totalStats}) => {
     let totalRevenue = getTotalStats(totalStats, Metrics.REVENUE.metric);
     let totalAdRevenue = getTotalStats(totalStats, Metrics.AD_REVENUE.metric);
     let totalYoutubeRedRevenue = getTotalStats(totalStats, Metrics.YOUTUBE_RED_REVENUE.metric);
@@ -16,7 +16,7 @@ const RevenueMetricsSection = ({totalStats, filterState}) => {
         <div className="metrics-section">
             <ul>
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.REVENUE.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.REVENUE.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.REVENUE.displayName.toUpperCase()}</div>
                             <div className="metric-value">${totalRevenue.toLocaleString()}</div>
@@ -24,7 +24,7 @@ const RevenueMetricsSection = ({totalStats, filterState}) => {
                     </Link>
                 </li>
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.AD_REVENUE.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.AD_REVENUE.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.AD_REVENUE.displayName.toUpperCase()}</div>
                             <div className="metric-value">${totalAdRevenue.toLocaleString()}</div>
@@ -32,7 +32,7 @@ const RevenueMetricsSection = ({totalStats, filterState}) => {
                     </Link>
                 </li>
                 <li>
-                    <Link to={{pathname: `/analytics/${Metrics.YOUTUBE_RED_REVENUE.name}`, state: filterState}}>
+                    <Link to={`/analytics/${Metrics.YOUTUBE_RED_REVENUE.name}`}>
                         <div className="metric-tab">
                             <div className="metric-title">{Metrics.YOUTUBE_RED_REVENUE.displayName.toUpperCase()}</div>
                             <div className="metric-value">${totalYoutubeRedRevenue.toLocaleString()}</div>
@@ -45,7 +45,6 @@ const RevenueMetricsSection = ({totalStats, filterState}) => {
 };
 
 RevenueMetricsSection.propTypes = {
-    filterState: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired
 };
 

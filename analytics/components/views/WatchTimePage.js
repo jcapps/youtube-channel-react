@@ -5,10 +5,10 @@ import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Metrics from '../../globals/Metrics';
-import Periods from '../../globals/Periods';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
+import {setFilterState} from '../../actions/setFilterStateAction';
 import FiltersSection from '../common/filtering/FiltersSection';
 import LineGraphContainer from '../common/graphs/LineGraphContainer';
 import ViewsMetricsSection from './ViewsMetricsSection';
@@ -16,25 +16,16 @@ import ViewsMetricsSection from './ViewsMetricsSection';
 export class WatchTimePage extends React.PureComponent {
     constructor(props) {
         super(props);
-        if (props.location.state) {
-            this.state = props.location.state;
-        } else {
-            this.state = {
-                contentType: ContentTypes.ALL,
-                timePeriod: Periods.TWENTY_EIGHT_DAY,
-                dateRange: null,
-                filters: [],
-                addedFilters: []
-            };
-        }
-        this.state.isLoading = true;
+        this.state = {
+            isLoading: true
+        };
 
         this.getData = this.getData.bind(this);
         this.renderLineGraph = this.renderLineGraph.bind(this);
     }
 
     componentWillMount() {
-        this.getData(this.state);
+        this.getData(this.props.filterState);
     }
 
     componentDidMount() {
@@ -70,8 +61,8 @@ export class WatchTimePage extends React.PureComponent {
     }
 
     getData(state) {
-        this.setState({...state});
         this.setState({isLoading: true});
+        this.showLoadingSpinner();
 
         let metrics = [
             Metrics.VIEWS.metric,
@@ -90,6 +81,7 @@ export class WatchTimePage extends React.PureComponent {
         }
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
+        this.props.setFilterState(state);
     }
 
     renderLineGraph() {
@@ -115,13 +107,10 @@ export class WatchTimePage extends React.PureComponent {
             <div id="watch-time-page">
                 <h2>{Metrics.WATCH_TIME.displayName}</h2>
                 <FiltersSection
-                    state={this.state}
+                    state={this.props.filterState}
                     onChangeFilters={this.getData}
                 />
-                <ViewsMetricsSection
-                    totalStats={this.props.totalStats}
-                    filterState={this.state}
-                />
+                <ViewsMetricsSection totalStats={this.props.totalStats} />
                 {this.renderLineGraph()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
@@ -135,7 +124,8 @@ WatchTimePage.propTypes = {
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired,
-    state: PropTypes.object
+    filterState: PropTypes.object.isRequired,
+    setFilterState: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -143,9 +133,12 @@ export function mapStateToProps(state) {
         = state.ajaxCallsInProgress.report
         + state.ajaxCallsInProgress.totalStats;
 
+    const newFilterStateObject = JSON.parse(JSON.stringify(state.filterState));
+        
     return {
         watchTime: state.report,
         totalStats: state.totalStats,
+        filterState: newFilterStateObject,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }
@@ -153,7 +146,8 @@ export function mapStateToProps(state) {
 export function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(reportActions, dispatch),
-        clearActions: bindActionCreators(clearActions, dispatch)
+        clearActions: bindActionCreators(clearActions, dispatch),
+        setFilterState: bindActionCreators(setFilterState, dispatch)
     };
 }
 

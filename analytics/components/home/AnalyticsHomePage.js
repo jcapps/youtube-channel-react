@@ -5,30 +5,26 @@ import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import Metrics from '../../globals/Metrics';
-import Periods from '../../globals/Periods';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
+import {setFilterState} from '../../actions/setFilterStateAction';
 import FiltersSection from '../common/filtering/FiltersSection';
 import OverviewSection from './OverviewSection';
 
 export class AnalyticsHomePage extends React.PureComponent {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            contentType: ContentTypes.ALL,
-            timePeriod: Periods.TWENTY_EIGHT_DAY,
-            dateRange: null,
-            filters: [],
-            addedFilters: []
+            contentType: props.filterState.contentType,
+            isLoading: true
         };
-        this.state.isLoading = true;
 
         this.getData = this.getData.bind(this);
         this.renderOverviewSections = this.renderOverviewSections.bind(this);
     }
 
     componentWillMount() {
-        this.getData(this.state);
+        this.getData(this.props.filterState);
     }
 
     componentDidMount() {
@@ -51,7 +47,6 @@ export class AnalyticsHomePage extends React.PureComponent {
             JSON.stringify(this.state) != JSON.stringify(nextState)) {
             return true;
         }
-        this.hideAllLoadingSpinners();
         return false;
     }
 
@@ -78,8 +73,10 @@ export class AnalyticsHomePage extends React.PureComponent {
     }
 
     getData(state) {
-        this.setState({...state});
-        this.setState({isLoading: true});
+        this.setState({
+            contentType: state.contentType,
+            isLoading: true
+        });
 
         const metrics = [];
         const dataNames = [];
@@ -103,6 +100,7 @@ export class AnalyticsHomePage extends React.PureComponent {
 
         this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
+        this.props.setFilterState(state);
     }
 
     renderOverviewSections() {
@@ -127,11 +125,11 @@ export class AnalyticsHomePage extends React.PureComponent {
             sectionsArray.push(
                 <OverviewSection
                     key={metricInfo.name}
+                    isLoading={this.state.isLoading}
                     data={this.props.report}
                     metricInfo={metricInfo}
                     totalStats={this.props.totalStats}
                     size={size}
-                    state={this.state}
                     onRenderFinish={() => this.hideLoadingSpinner(metricInfo.name)}
                 />
             );
@@ -145,7 +143,7 @@ export class AnalyticsHomePage extends React.PureComponent {
             <div id="analytics-home-page">
                 <h2>YouTube Analytics Overview</h2>
                 <FiltersSection
-                    state={this.state}
+                    state={this.props.filterState}
                     onChangeFilters={this.getData}
                 />
                 <div id="overview-sections">
@@ -161,17 +159,22 @@ AnalyticsHomePage.propTypes = {
     report: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
-    clearActions: PropTypes.object.isRequired
+    clearActions: PropTypes.object.isRequired,
+    filterState: PropTypes.object.isRequired,
+    setFilterState: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
         = state.ajaxCallsInProgress.report
         + state.ajaxCallsInProgress.totalStats
-
+        
+    const newFilterStateObject = JSON.parse(JSON.stringify(state.filterState));
+        
     return {
         report: state.report,
         totalStats: state.totalStats,
+        filterState: newFilterStateObject,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }
@@ -179,7 +182,8 @@ export function mapStateToProps(state) {
 export function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(reportActions, dispatch),
-        clearActions: bindActionCreators(clearActions, dispatch)
+        clearActions: bindActionCreators(clearActions, dispatch),
+        setFilterState: bindActionCreators(setFilterState, dispatch)
     };
 }
 
