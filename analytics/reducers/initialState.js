@@ -1,4 +1,5 @@
 import ContentTypes from '../globals/ContentTypes';
+import GraphTypes from '../globals/GraphTypes';
 import Periods from '../globals/Periods';
 
 export default {
@@ -17,6 +18,7 @@ export default {
         filters: [],
         addedFilters: []
     },
+    graphType: GraphTypes.LINE,
     ajaxCallsInProgress: {
         channel: 0,
         contentFilter: 0,

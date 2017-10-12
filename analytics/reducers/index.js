@@ -3,6 +3,7 @@ import ajaxCallsInProgress from './ajaxStatusReducer';
 import isAuthenticated from './isAuthenticatedReducer';
 import error from './errorReducer';
 import filterState from './filterStateReducer';
+import graphType from './graphTypeReducer';
 import channelInfo from './channelInfoReducer';
 import report from './reportReducer';
 import searchChannelResults from './searchChannelResultsReducer';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     isAuthenticated,
     error,
     filterState,
+    graphType,
     channelInfo,
     report,
     searchChannelResults,

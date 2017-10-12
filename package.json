@@ -63,6 +63,7 @@
     "body-parser": "1.17.2",
     "bootstrap": "3.3.7",
     "d3": "4.10.0",
+    "datamaps": "0.5.8",
     "dompurify": "0.9.0",
     "downshift": "1.4.0",
     "express": "4.15.4",

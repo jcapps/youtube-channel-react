@@ -29,7 +29,8 @@ export function getReport(
     dateRange = null,
     metrics = [],
     filters = [],
-    dimensions = 'day'
+    dimensions = 'day',
+    sort = null
 ) {
     return function(dispatch) {
         const searchTerms = {
@@ -37,7 +38,8 @@ export function getReport(
             dateRange,
             metrics,
             filters,
-            dimensions
+            dimensions,
+            sort
         };
 
         const helperReportActions = bindActionCreators({prepareReport}, dispatch);
@@ -63,7 +65,8 @@ export function getTotalStats(
             dateRange,
             metrics,
             filters,
-            dimensions: null
+            dimensions: null,
+            sort: null
         };
 
         const helperReportActions = bindActionCreators({prepareReport}, dispatch);
@@ -84,7 +87,8 @@ function prepareReport(searchTerms) {
             dateRange,
             metrics,
             filters,
-            dimensions
+            dimensions,
+            sort
         } = searchTerms;
         
         metrics = metrics.join(',');
@@ -102,9 +106,12 @@ function prepareReport(searchTerms) {
 
         return helperLoginActions.isLoggedIn().then(isLoggedIn => {
             if (isLoggedIn) {
-                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters).then(report => {
-                    if (!dimensions) return report; // i.e. if getting Total Stats
-                    const reportData = zeroMissingData(report, startDate, endDate);
+                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters, sort).then(report => {
+                    let reportData = report;
+                    if (!dimensions) return reportData; // i.e. if getting Total Stats
+                    if (dimensions == 'day') {
+                        reportData = zeroMissingData(report, startDate, endDate);
+                    }
                     return reportData;
                 }).catch(error => {
                     throw(error);

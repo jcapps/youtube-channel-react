@@ -1,0 +1,26 @@
+#graph-container {
+    ul#graph-type-list {
+        display: inline-block;
+        margin: 0 0 5px 0;
+        padding: 0;
+        list-style-type: none;
+        border: 1px solid $border;
+
+        li {
+            display: inline-block;
+
+            &:hover {
+                background-color: $background-hover;
+                color: $color-hover;
+                cursor: pointer;
+            }
+
+            div {
+                padding: 5px 8px;
+                width: 100px;
+                border: 1px solid $border;
+                font-weight: bold;
+            }
+        }
+    }
+}
