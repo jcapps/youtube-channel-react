@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as d3 from 'd3';
 import GraphTypes from '../../../globals/GraphTypes';
+import Regions from '../../../globals/Regions';
 import * as reportActions from '../../../actions/reportActions';
 import {setGraphType} from '../../../actions/setGraphTypeAction';
 import GeoMapContainer from './GeoMapContainer';
@@ -25,12 +26,16 @@ class GraphContainer extends React.PureComponent {
             filters
         } = this.props.filterState;
 
-        const arrayOfSorts = [];
-        this.props.metrics.forEach(metric => {
-            arrayOfSorts.push('-' + metric);
-        });
-        const sort = arrayOfSorts.join(',');
-        this.props.actions.getReport(timePeriod, dateRange, this.props.metrics, filters, 'country', sort);
+        const sort = '-' + this.props.metricInfo.metric;
+
+        let dimensions = 'country';
+        for (let i = 0; i < filters.length; i++) {
+            if (filters[i].key == 'country' && filters[i].value == Regions.UNITED_STATES.twoLetterCountryCode) {
+                dimensions = 'province';
+            }
+        }
+
+        this.props.actions.getReport(timePeriod, dateRange, this.props.metrics, filters, dimensions, sort);
         this.props.setGraphType(GraphTypes.GEO);
     }
     
@@ -49,10 +54,18 @@ class GraphContainer extends React.PureComponent {
     renderContainer() {
         if (!this.props.dataInfo.columnHeaders) return <div/>;
 
+        let dataArea = 'country';
+        const columns = this.props.dataInfo.columnHeaders.map(item => {
+            return item.name;
+        });
+        if (columns.indexOf('province') > -1) {
+            dataArea = 'province';
+        }
+
         if (this.props.graphType == GraphTypes.GEO) {
             return (
                 <GeoMapContainer
-                    dataArea="country"
+                    dataArea={dataArea}
                     dataInfo={this.props.dataInfo}
                     metricInfo={this.props.metricInfo}
                     onRenderFinish={this.props.onRenderFinish}

@@ -1,12 +1,16 @@
 import Datamap from 'datamaps/dist/datamaps.all.hires.js';
 import * as D3 from 'd3';
 import convertCountryCodes from '../helpers/convertCountryCodes';
+import convertStateCodes from '../helpers/convertStateCodes';
 
 class GeoMap {
     constructor() {
+        this.scope;
+        this.height;
+        this.width;
         this.maxValue;
-        this.defaultCountryColor = 'lightgray';
-        this.filledCountryColor = 'green';
+        this.defaultRegionColor = 'lightgray';
+        this.filledRegionColor = 'green';
         this.highlightColor = 'red';
         this.highlightBorderColor = 'rgba(250, 0, 50, 0.2)';
     }
@@ -16,8 +20,8 @@ class GeoMap {
         return element.node().getBoundingClientRect();
     }
 
-    // Prepare data for map
-    prepareData(dataInfo, metricInfo, dataArea) {
+    // Prepare data for world map
+    prepareWorldData(dataInfo, metricInfo, dataArea) {
         const columns = dataInfo.columnHeaders.map(item => {
             return item.name;
         });
@@ -32,7 +36,30 @@ class GeoMap {
             if (i == 0) this.maxValue = value;
             const colorScale = D3.scaleLinear()
                 .domain([0, this.maxValue])
-                .range([this.defaultCountryColor, this.filledCountryColor]);
+                .range([this.defaultRegionColor, this.filledRegionColor]);
+            
+            data[iso] = {value: value, fillColor: colorScale(value)};
+        });
+        return data;
+    }
+
+    // Prepare data for USA map
+    prepareUsaData(dataInfo, metricInfo, dataArea) {
+        const columns = dataInfo.columnHeaders.map(item => {
+            return item.name;
+        });
+        const countryColumnIndex = columns.indexOf(dataArea);
+        const metricColumnIndex = columns.indexOf(metricInfo.metric);
+
+        let data = {};
+        dataInfo.rows.forEach((item, i) => {
+            const iso = convertStateCodes(item[countryColumnIndex]);
+            const value = item[metricColumnIndex];
+
+            if (i == 0) this.maxValue = value;
+            const colorScale = D3.scaleLinear()
+                .domain([0, this.maxValue])
+                .range([this.defaultRegionColor, this.filledRegionColor]);
             
             data[iso] = {value: value, fillColor: colorScale(value)};
         });
@@ -41,20 +68,33 @@ class GeoMap {
 
     // Draw the map
     drawMap(container, dataInfo, metricInfo, dataArea) {
-        const data = this.prepareData(dataInfo, metricInfo, dataArea);
-
-        let scope;
-        if (dataArea == 'country') scope = 'world';
-        if (dataArea == 'province') scope = 'usa';
+        if (dataArea == 'country') {
+            this.scope = 'world';
+            this.height = 650;
+            this.width = 960;
+        }
+        if (dataArea == 'province') {
+            this.scope = 'usa';
+            this.height = 480;
+            this.width = 960;
+        }
+        
+        let data = {};
+        if (this.scope == 'world') {
+            data = this.prepareWorldData(dataInfo, metricInfo, dataArea);
+        }
+        if (this.scope == 'usa') {
+            data = this.prepareUsaData(dataInfo, metricInfo, dataArea);
+        }
 
         const map = new Datamap({
             element: container,
-            scope: scope,
+            scope: this.scope,
             projection: 'mercator',
-            height: 650,
-            width: 960,
+            height: this.height,
+            width: this.width,
             fills: {
-                defaultFill: this.defaultCountryColor
+                defaultFill: this.defaultRegionColor
             },
             data: data,
             geographyConfig: {

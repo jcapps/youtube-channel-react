@@ -1,13 +1,14 @@
 import ContentTypes from '../globals/ContentTypes';
 import filterArrayIncludes from './filterArrayIncludes';
+import removeGraphFilter from './removeGraphFilter';
 
-const addGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
+const addGraphFilter = (filterInfo, currentContentType, filtersArray, addedFiltersArray) => {
     let newFiltersArray = Object.assign([], filtersArray);
     let newAddedFiltersArray = Object.assign([], addedFiltersArray);  
 
     let filterKey = '';
     let itemId = '';
-    let newContentType = ContentTypes.ALL;
+    let newContentType = currentContentType;
     const kind = filterInfo.id.kind;
 
     if (kind == 'youtube#channel') {
@@ -25,7 +26,11 @@ const addGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
         itemId = filterInfo.id.videoId;
         newContentType = ContentTypes.VIDEOS;
     }
-    if (kind == 'youtube#channel' || kind == 'youtube#playlist' || kind == 'youtube#video') {
+    if (
+        kind == 'youtube#channel' || 
+        kind == 'youtube#playlist' || 
+        kind == 'youtube#video'
+    ) {
         const newFilter = {key: filterKey, value: itemId};
         if (!filterArrayIncludes(filtersArray, newFilter)) {
             let containsFilter = false;
@@ -48,6 +53,16 @@ const addGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
         if (!filterArrayIncludes(filtersArray, newFilter)) {
             newFiltersArray.push(newFilter);
         }
+    }
+    if (kind == 'region#country') {
+        const newFilter = {key: 'country', value: filterInfo.id.countryCode};
+        if (filterArrayIncludes(filtersArray, newFilter)) {
+            const updatedFilters = removeGraphFilter(filterInfo, filtersArray, addedFiltersArray);
+            newFiltersArray = updatedFilters.newFiltersArray;
+            newAddedFiltersArray = updatedFilters.newAddedFiltersArray;
+        }
+        newFiltersArray.push(newFilter);
+        newAddedFiltersArray.push(filterInfo);
     }
 
     return {newFiltersArray, newAddedFiltersArray, newContentType};

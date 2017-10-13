@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class FilterResult extends React.PureComponent {
+class ContentFilterResult extends React.PureComponent {
     render() {
         const result = this.props.result;
         let width = '40';
@@ -25,8 +25,8 @@ class FilterResult extends React.PureComponent {
     }
 }
 
-FilterResult.propTypes = {
+ContentFilterResult.propTypes = {
     result: PropTypes.object.isRequired
 };
 
-export default FilterResult;
+export default ContentFilterResult;

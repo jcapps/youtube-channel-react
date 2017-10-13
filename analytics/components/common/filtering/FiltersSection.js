@@ -7,6 +7,7 @@ import removeGraphFilter from '../../../helpers/removeGraphFilter';
 import filterArrayIncludes from '../../../helpers/filterArrayIncludes';
 import ContentFilter from './ContentFilter';
 import ContentTypeFilter from './ContentTypeFilter';
+import GeoFilter from './GeoFilter';
 import TimePeriodFilter from './TimePeriodFilter';
 
 class FiltersSection extends React.Component {
@@ -88,7 +89,7 @@ class FiltersSection extends React.Component {
 
     addFilter(searchResult) {
         const {newFiltersArray, newAddedFiltersArray, newContentType}
-            = addGraphFilter(searchResult, this.state.filters, this.state.addedFilters);
+            = addGraphFilter(searchResult, this.state.contentType, this.state.filters, this.state.addedFilters);
 
         const {timePeriod, dateRange} = this.state;
         this.props.onChangeFilters({
@@ -126,11 +127,11 @@ class FiltersSection extends React.Component {
 
     clearFilters() {
         let addedFiltersArray = Object.assign([], this.state.addedFilters);
-        let filtersArray = [];
+        let filtersArray = Object.assign([], this.state.filters);
 
         while (addedFiltersArray.length > 0) {
             const {newFiltersArray, newAddedFiltersArray}
-                = removeGraphFilter(addedFiltersArray[0], this.state.filters, addedFiltersArray);
+                = removeGraphFilter(addedFiltersArray[0], filtersArray, addedFiltersArray);
             addedFiltersArray = newAddedFiltersArray;
             filtersArray = newFiltersArray;
         }
@@ -199,6 +200,7 @@ class FiltersSection extends React.Component {
                         contentType={this.state.contentType}
                     />
                     {this.renderContentTypeFilter()}
+                    <GeoFilter addFilter={this.addFilter}/>
                     <TimePeriodFilter
                         changeTimePeriod={this.changeTimePeriod}
                         timePeriod={this.state.timePeriod}

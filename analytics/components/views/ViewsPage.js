@@ -6,6 +6,7 @@ import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import GraphTypes from '../../globals/GraphTypes';
 import Metrics from '../../globals/Metrics';
+import Regions from '../../globals/Regions';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import {setFilterState} from '../../actions/setFilterStateAction';
@@ -88,12 +89,14 @@ export class ViewsPage extends React.PureComponent {
             this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         }
         if (this.props.graphType == GraphTypes.GEO) {
-            const arrayOfSorts = [];
-            metrics.forEach(metric => {
-                arrayOfSorts.push('-' + metric);
-            });
-            const sort = arrayOfSorts.join(',');
-            this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters, 'country', sort);
+            const sort = '-' + Metrics.VIEWS.metric;
+            let dimensions = 'country';
+            for (let i = 0; i < state.filters.length; i++) {
+                if (state.filters[i].key == 'country' && state.filters[i].value == Regions.UNITED_STATES.twoLetterCountryCode) {
+                    dimensions = 'province';
+                }
+            }
+            this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters, dimensions, sort);
         }
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.setFilterState(state);

@@ -7,7 +7,7 @@ import ContentTypes from '../../../globals/ContentTypes';
 import * as channelActions from '../../../actions/channelActions';
 import {clearSearchResults} from '../../../actions/clearActions';
 import DownshiftSectioned from './DownshiftSectioned';
-import FilterResult from './FilterResult';
+import ContentFilterResult from './ContentFilterResult';
 
 class ContentFilter extends React.PureComponent {
     constructor(props) {
@@ -107,7 +107,8 @@ class ContentFilter extends React.PureComponent {
                 <DownshiftSectioned
                     items={this.state.resultsArray}
                     itemToString={this.computeResultValue}
-                    Result={FilterResult}
+                    placeholder="Search channel content..."
+                    Result={ContentFilterResult}
                     onFocus={this.onSearchFocus}
                     isOpen={this.state.isDropdownOpen}
                     onChange={this.onDownshiftChange}

@@ -2,8 +2,12 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
     let newFiltersArray = Object.assign([], filtersArray);
     let newAddedFiltersArray = Object.assign([], addedFiltersArray);
 
+    const kind = filterInfo.id.kind;
     for (let i = 0; i < newAddedFiltersArray.length; i++) {
-        if (newAddedFiltersArray[i].etag == filterInfo.etag) {
+        if (
+            newAddedFiltersArray[i].etag == filterInfo.etag ||
+            newAddedFiltersArray[i].id.kind == 'region#country' && kind == 'region#country'
+        ) {
             newAddedFiltersArray.splice(i, 1);
             break;
         }
@@ -11,7 +15,6 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
 
     let filterKey = '';
     let itemId = '';
-    const kind = filterInfo.id.kind;
     
     if (kind == 'youtube#channel') {
         filterKey = 'channel';
@@ -25,7 +28,15 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
         filterKey = 'video';
         itemId = filterInfo.id.videoId;
     }
-    if (kind == 'youtube#channel' || kind == 'youtube#playlist' || kind == 'youtube#video') {
+    if (kind == 'region#country') {
+        filterKey = 'country';
+        itemId = filterInfo.id.countryCode;
+    }
+    if (
+        kind == 'youtube#channel' || 
+        kind == 'youtube#playlist' || 
+        kind == 'youtube#video'
+    ) {
         for (let i = 0; i < newFiltersArray.length; i++) {
             if (newFiltersArray[i].key == filterKey) {
                 for (let j = 0; j < newFiltersArray[i].value.length; j++) {
@@ -37,6 +48,14 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
                         break;
                     }
                 }
+                break;
+            }
+        }
+    }
+    if (kind == 'region#country') {
+        for (let i = 0; i < newFiltersArray.length; i++) {
+            if (newFiltersArray[i].key == filterKey) {
+                newFiltersArray.splice(i, 1);
                 break;
             }
         }

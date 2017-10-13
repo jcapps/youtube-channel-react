@@ -9,6 +9,9 @@ const filterArrayIncludes = (filtersArray, filter) => {
                     return true;
             }
         }
+        if (filterItem.key == 'country' && filter.key == 'country') {
+            return true;
+        }
     }
     return false;
 };
