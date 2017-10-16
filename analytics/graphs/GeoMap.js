@@ -1,10 +1,12 @@
 import Datamap from 'datamaps/dist/datamaps.all.hires.js';
 import * as D3 from 'd3';
+import DataTypes from '../globals/DataTypes';
 import convertCountryCodes from '../helpers/convertCountryCodes';
 import convertStateCodes from '../helpers/convertStateCodes';
 
 class GeoMap {
     constructor() {
+        this.metricInfo;
         this.scope;
         this.height;
         this.width;
@@ -21,9 +23,9 @@ class GeoMap {
     }
 
     // Prepare data for world map
-    prepareWorldData(dataInfo, metricInfo, dataArea) {
-        let metric = metricInfo.metric;
-        if (!metric) metric = metricInfo.name;
+    prepareWorldData(dataInfo, dataArea) {
+        let metric = this.metricInfo.metric;
+        if (!metric) metric = this.metricInfo.name;
         
         const columns = dataInfo.columnHeaders.map(item => {
             return item.name;
@@ -49,9 +51,9 @@ class GeoMap {
     }
 
     // Prepare data for USA map
-    prepareUsaData(dataInfo, metricInfo, dataArea) {
-        let metric = metricInfo.metric;
-        if (!metric) metric = metricInfo.name;
+    prepareUsaData(dataInfo, dataArea) {
+        let metric = this.metricInfo.metric;
+        if (!metric) metric = this.metricInfo.name;
 
         const columns = dataInfo.columnHeaders.map(item => {
             return item.name;
@@ -76,8 +78,59 @@ class GeoMap {
         return data;
     }
 
+    // Calculate time from minutes
+    displayTimeNicely(totalTimeInMinutes) {
+        let value = '';
+
+        const days = Math.floor(totalTimeInMinutes / (60 * 24));
+        const hours = Math.floor((totalTimeInMinutes - (days * 24 * 60)) / 60);
+        const minutes = Math.floor(totalTimeInMinutes - (days * 24 * 60) - (hours * 60));
+        const seconds = Math.round((totalTimeInMinutes - (days * 24 * 60) - (hours * 60) - minutes) * 60);
+
+        if (days > 0 && days != 1) value += days + ' days ';
+        if (days == 1) value += days + ' day ';
+        if (hours > 0 && hours != 1) value += hours + ' hours ';
+        if (hours == 1) value += hours + ' hour ';
+        if (minutes > 0 && minutes != 1) value += minutes + ' minutes ';
+        if (minutes == 1) value += minutes + ' minute ';
+        if (seconds > 0 && seconds != 1) value += seconds + ' seconds ';
+        if (seconds == 1) value += seconds + ' second ';
+        return value.trim();
+    };
+
+    // Prepare tooltip value for display
+    prepareTooltipValue(d) {
+        let displayValue = d.value.toLocaleString();
+
+        if (this.metricInfo.dataType == DataTypes.TIME_MINUTES) {
+            displayValue = Math.round(d.value).toLocaleString();
+            const displayTime = this.displayTimeNicely(d.value);
+            if (displayTime.length > 0) displayValue += ' (' + displayTime + ')';
+        }
+        if (this.metricInfo.dataType == DataTypes.TIME_SECONDS) {
+            displayValue = '0 seconds';
+            const displayTime = this.displayTimeNicely(d.value / 60); // Divide by 60 to put time in minutes
+            if (displayTime.length > 0) displayValue = displayTime;
+        }
+        if (this.metricInfo.dataType == DataTypes.PERCENTAGE) {
+            displayValue = d.value.toFixed(1).toLocaleString() + '%';
+        }
+        if (this.metricInfo.dataType == DataTypes.RATIO) {
+            displayValue = (d.value * 100).toFixed(2).toLocaleString() + '%';
+        }
+        if (this.metricInfo.dataType == DataTypes.DECIMAL) {
+            displayValue = d.value.toFixed(2).toLocaleString();
+        }
+        if (this.metricInfo.dataType == DataTypes.CURRENCY) {
+            displayValue = '$' + d.value.toFixed(2).toLocaleString();
+        }
+
+        return displayValue;
+    }
+
     // Draw the map
     drawMap(container, dataInfo, metricInfo, dataArea) {
+        this.metricInfo = metricInfo;
         if (dataArea == 'country') {
             this.scope = 'world';
             this.height = 650;
@@ -91,10 +144,10 @@ class GeoMap {
         
         let data = {};
         if (this.scope == 'world') {
-            data = this.prepareWorldData(dataInfo, metricInfo, dataArea);
+            data = this.prepareWorldData(dataInfo, dataArea);
         }
         if (this.scope == 'usa') {
-            data = this.prepareUsaData(dataInfo, metricInfo, dataArea);
+            data = this.prepareUsaData(dataInfo, dataArea);
         }
 
         const map = new Datamap({
@@ -112,10 +165,12 @@ class GeoMap {
                 highlightBorderColor: this.highlightBorderColor,
                 popupTemplate: (geo, d) => {
                     if (!d) return;
+
+                    const tooltipValue = this.prepareTooltipValue(d);
                     return [
                         '<div class="tooltip geo-tooltip">',
                         '<div>', geo.properties.name, '</div>',
-                        '<div>', metricInfo.displayName, ': ', d.value.toLocaleString(), '</div>',
+                        '<div>', this.metricInfo.displayName, ': ', tooltipValue, '</div>',
                         '</div>' 
                     ].join('');
                 }
