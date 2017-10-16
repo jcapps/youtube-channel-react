@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as d3 from 'd3';
 import GraphTypes from '../../../globals/GraphTypes';
 import Regions from '../../../globals/Regions';
+import sortDataByCustomColumn from '../../../helpers/sortDataByCustomColumn';
 import * as reportActions from '../../../actions/reportActions';
 import {setGraphType} from '../../../actions/setGraphTypeAction';
 import GeoMapContainer from './GeoMapContainer';
@@ -14,11 +15,11 @@ class GraphContainer extends React.PureComponent {
     constructor() {
         super();
 
-        this.renderGeoMapContainer = this.renderGeoMapContainer.bind(this);
-        this.renderLineGraphContainer = this.renderLineGraphContainer.bind(this);
+        this.switchToGeoMapContainer = this.switchToGeoMapContainer.bind(this);
+        this.switchToLineGraphContainer = this.switchToLineGraphContainer.bind(this);
     }
 
-    renderGeoMapContainer() {
+    switchToGeoMapContainer() {
         this.props.onRenderStart();
         const {
             timePeriod,
@@ -26,11 +27,18 @@ class GraphContainer extends React.PureComponent {
             filters
         } = this.props.filterState;
 
-        const sort = '-' + this.props.metricInfo.metric;
+        let sort = null;
+        if (this.props.metricInfo.metric) {
+            sort = '-' + this.props.metricInfo.metric;
+        }
 
         let dimensions = 'country';
         for (let i = 0; i < filters.length; i++) {
-            if (filters[i].key == 'country' && filters[i].value == Regions.UNITED_STATES.twoLetterCountryCode) {
+            if (
+                filters[i].key == 'country' && 
+                filters[i].value == Regions.UNITED_STATES.twoLetterCountryCode &&
+                this.props.metricInfo.canShowUSStates
+            ) {
                 dimensions = 'province';
             }
         }
@@ -39,7 +47,7 @@ class GraphContainer extends React.PureComponent {
         this.props.setGraphType(GraphTypes.GEO);
     }
     
-    renderLineGraphContainer() {
+    switchToLineGraphContainer() {
         this.props.onRenderStart();
         const {
             timePeriod,
@@ -52,10 +60,11 @@ class GraphContainer extends React.PureComponent {
     }
 
     renderContainer() {
-        if (!this.props.dataInfo.columnHeaders) return <div/>;
+        let dataInfo = this.props.dataInfo;
+        if (!dataInfo.columnHeaders) return <div/>;
 
         let dataArea = 'country';
-        const columns = this.props.dataInfo.columnHeaders.map(item => {
+        const columns = dataInfo.columnHeaders.map(item => {
             return item.name;
         });
         if (columns.indexOf('province') > -1) {
@@ -63,10 +72,14 @@ class GraphContainer extends React.PureComponent {
         }
 
         if (this.props.graphType == GraphTypes.GEO) {
+            if (!this.props.metricInfo.metric) {
+                dataInfo = sortDataByCustomColumn(dataInfo, this.props.metricInfo.name);
+            }
+
             return (
                 <GeoMapContainer
                     dataArea={dataArea}
-                    dataInfo={this.props.dataInfo}
+                    dataInfo={dataInfo}
                     metricInfo={this.props.metricInfo}
                     onRenderFinish={this.props.onRenderFinish}
                     isLoading={this.props.isLoading}
@@ -77,7 +90,7 @@ class GraphContainer extends React.PureComponent {
         if (this.props.graphType == GraphTypes.LINE) {
             return (
                 <LineGraphContainer
-                    dataInfo={this.props.dataInfo}
+                    dataInfo={dataInfo}
                     xColumnName="day"
                     metricInfo={this.props.metricInfo}
                     onRenderFinish={this.props.onRenderFinish}
@@ -92,10 +105,10 @@ class GraphContainer extends React.PureComponent {
             <div id="graph-container">
                 <ul id="graph-type-list">
                     <li>
-                        <div onClick={this.renderLineGraphContainer}>Line Graph</div>
+                        <div onClick={this.switchToLineGraphContainer}>Line Graph</div>
                     </li>
                     <li>
-                        <div onClick={this.renderGeoMapContainer}>Geo Map</div>
+                        <div onClick={this.switchToGeoMapContainer}>Geo Map</div>
                     </li>
                 </ul>
                 {this.renderContainer()}

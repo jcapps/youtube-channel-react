@@ -22,46 +22,56 @@ class GeoMap {
 
     // Prepare data for world map
     prepareWorldData(dataInfo, metricInfo, dataArea) {
+        let metric = metricInfo.metric;
+        if (!metric) metric = metricInfo.name;
+        
         const columns = dataInfo.columnHeaders.map(item => {
             return item.name;
         });
         const countryColumnIndex = columns.indexOf(dataArea);
-        const metricColumnIndex = columns.indexOf(metricInfo.metric);
+        const metricColumnIndex = columns.indexOf(metric);
 
         let data = {};
         dataInfo.rows.forEach((item, i) => {
             const iso = convertCountryCodes(item[countryColumnIndex]);
             const value = item[metricColumnIndex];
+            let colorValue = value;
+            if (value < 0) colorValue = 0;
 
             if (i == 0) this.maxValue = value;
             const colorScale = D3.scaleLinear()
                 .domain([0, this.maxValue])
                 .range([this.defaultRegionColor, this.filledRegionColor]);
             
-            data[iso] = {value: value, fillColor: colorScale(value)};
+            data[iso] = {value: value, fillColor: colorScale(colorValue)};
         });
         return data;
     }
 
     // Prepare data for USA map
     prepareUsaData(dataInfo, metricInfo, dataArea) {
+        let metric = metricInfo.metric;
+        if (!metric) metric = metricInfo.name;
+
         const columns = dataInfo.columnHeaders.map(item => {
             return item.name;
         });
         const countryColumnIndex = columns.indexOf(dataArea);
-        const metricColumnIndex = columns.indexOf(metricInfo.metric);
+        const metricColumnIndex = columns.indexOf(metric);
 
         let data = {};
         dataInfo.rows.forEach((item, i) => {
             const iso = convertStateCodes(item[countryColumnIndex]);
             const value = item[metricColumnIndex];
+            let colorValue = value;
+            if (value < 0) colorValue = 0;
 
             if (i == 0) this.maxValue = value;
             const colorScale = D3.scaleLinear()
                 .domain([0, this.maxValue])
                 .range([this.defaultRegionColor, this.filledRegionColor]);
             
-            data[iso] = {value: value, fillColor: colorScale(value)};
+            data[iso] = {value: value, fillColor: colorScale(colorValue)};
         });
         return data;
     }

@@ -4,24 +4,30 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import GraphTypes from '../../globals/GraphTypes';
 import Metrics from '../../globals/Metrics';
+import Regions from '../../globals/Regions';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import {setFilterState} from '../../actions/setFilterStateAction';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraphContainer from '../common/graphs/LineGraphContainer';
+import GraphContainer from '../common/graphs/GraphContainer';
 import VideosInPlaylistsMetricsSection from './VideosInPlaylistsMetricsSection';
 
 export class VideosAddedToPlaylistsPage extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            metrics: [
+                Metrics.VIDEOS_ADDED_TO_PLAYLISTS.metric,
+                Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.metric
+            ],
             playlistAttempted: props.filterState.contentType == ContentTypes.PLAYLISTS,
             isLoading: true
         };
 
         this.getData = this.getData.bind(this);
-        this.renderLineGraph = this.renderLineGraph.bind(this);
+        this.renderGraphContainer = this.renderGraphContainer.bind(this);
     }
 
     componentWillMount() {
@@ -75,25 +81,30 @@ export class VideosAddedToPlaylistsPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
         
-        const metrics = [
-            Metrics.VIDEOS_ADDED_TO_PLAYLISTS.metric,
-            Metrics.VIDEOS_REMOVED_FROM_PLAYLISTS.metric
-        ];
-        this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        const metrics = this.state.metrics;
+        if (this.props.graphType == GraphTypes.LINE) {
+            this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        }
+        if (this.props.graphType == GraphTypes.GEO) {
+            const sort = '-' + Metrics.VIDEOS_ADDED_TO_PLAYLISTS.metric;
+            const dimensions = 'country';
+            this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters, dimensions, sort);
+        }
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.setFilterState(state);
     }
 
-    renderLineGraph() {
+    renderGraphContainer() {
         if (this.state.playlistAttempted)
             return <div className="error-message">The videos added to playlists metric does not allow filtering by playlist.</div>;
         if (!this.props.videosAddedToPlaylists.columnHeaders) return <div/>;
 
         return (
-            <LineGraphContainer
+            <GraphContainer
                 dataInfo={this.props.videosAddedToPlaylists}
-                xColumnName="day"
+                metrics={this.state.metrics}
                 metricInfo={Metrics.VIDEOS_ADDED_TO_PLAYLISTS}
+                onRenderStart={this.showLoadingSpinner}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -112,7 +123,7 @@ export class VideosAddedToPlaylistsPage extends React.PureComponent {
                     onChangeFilters={this.getData}
                 />
                 <VideosInPlaylistsMetricsSection totalStats={this.props.totalStats} />
-                {this.renderLineGraph()}
+                {this.renderGraphContainer()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
         );
@@ -126,7 +137,8 @@ VideosAddedToPlaylistsPage.propTypes = {
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired,
     filterState: PropTypes.object.isRequired,
-    setFilterState: PropTypes.func.isRequired
+    setFilterState: PropTypes.func.isRequired,
+    graphType: PropTypes.string.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -140,6 +152,7 @@ export function mapStateToProps(state) {
         videosAddedToPlaylists: state.report,
         totalStats: state.totalStats,
         filterState: newFilterStateObject,
+        graphType: state.graphType,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }

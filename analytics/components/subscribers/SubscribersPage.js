@@ -4,25 +4,31 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import GraphTypes from '../../globals/GraphTypes';
 import Metrics from '../../globals/Metrics';
+import Regions from '../../globals/Regions';
 import computeSubscribers from '../../helpers/computeSubscribers';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import {setFilterState} from '../../actions/setFilterStateAction';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraphContainer from '../common/graphs/LineGraphContainer';
+import GraphContainer from '../common/graphs/GraphContainer';
 import SubscribersMetricsSection from './SubscribersMetricsSection';
 
 export class SubscribersPage extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            metrics: [
+                Metrics.SUBSCRIBERS_GAINED.metric,
+                Metrics.SUBSCRIBERS_LOST.metric
+            ],
             playlistAttempted: props.filterState.contentType == ContentTypes.PLAYLISTS,
             isLoading: true
         };
 
         this.getData = this.getData.bind(this);
-        this.renderLineGraph = this.renderLineGraph.bind(this);
+        this.renderGraphContainer = this.renderGraphContainer.bind(this);
     }
 
     componentWillMount() {
@@ -76,16 +82,20 @@ export class SubscribersPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
         
-        const metrics = [
-            Metrics.SUBSCRIBERS_GAINED.metric,
-            Metrics.SUBSCRIBERS_LOST.metric
-        ];
-        this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        const metrics = this.state.metrics;
+        if (this.props.graphType == GraphTypes.LINE) {
+            this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        }
+        if (this.props.graphType == GraphTypes.GEO) {
+            const sort = null;
+            const dimensions = 'country';
+            this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters, dimensions, sort);
+        }
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.setFilterState(state);
     }
 
-    renderLineGraph() {
+    renderGraphContainer() {
         if (this.state.playlistAttempted)
             return <div className="error-message">The subscribers metric does not allow filtering by playlist.</div>;
         if (!this.props.subscribers.columnHeaders)
@@ -93,10 +103,11 @@ export class SubscribersPage extends React.PureComponent {
 
         const subscribersInfo = computeSubscribers(this.props.subscribers);
         return (
-            <LineGraphContainer
+            <GraphContainer
                 dataInfo={subscribersInfo}
-                xColumnName="day"
+                metrics={this.state.metrics}
                 metricInfo={Metrics.SUBSCRIBERS}
+                onRenderStart={this.showLoadingSpinner}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -115,7 +126,7 @@ export class SubscribersPage extends React.PureComponent {
                     onChangeFilters={this.getData}
                 />
                 <SubscribersMetricsSection totalStats={this.props.totalStats} />
-                {this.renderLineGraph()}
+                {this.renderGraphContainer()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
         );
@@ -129,7 +140,8 @@ SubscribersPage.propTypes = {
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired,
     filterState: PropTypes.object.isRequired,
-    setFilterState: PropTypes.func.isRequired
+    setFilterState: PropTypes.func.isRequired,
+    graphType: PropTypes.string.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -143,6 +155,7 @@ export function mapStateToProps(state) {
         subscribers: state.report,
         totalStats: state.totalStats,
         filterState: newFilterStateObject,
+        graphType: state.graphType,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }

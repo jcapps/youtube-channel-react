@@ -4,23 +4,35 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
+import GraphTypes from '../../globals/GraphTypes';
 import Metrics from '../../globals/Metrics';
+import Regions from '../../globals/Regions';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import {setFilterState} from '../../actions/setFilterStateAction';
 import FiltersSection from '../common/filtering/FiltersSection';
-import LineGraphContainer from '../common/graphs/LineGraphContainer';
+import GraphContainer from '../common/graphs/GraphContainer';
 import RetentionMetricsSection from './RetentionMetricsSection';
 
 export class AverageViewDurationPage extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            metrics: [],
+            nonPlaylistMetrics: [
+                Metrics.AVERAGE_VIEW_DURATION.metric,
+                Metrics.AVERAGE_VIEW_PERCENTAGE.metric
+            ],
+            playlistMetrics: [
+                Metrics.AVERAGE_VIEW_DURATION.metric,
+                Metrics.AVERAGE_TIME_IN_PLAYLISTS.metric,
+                Metrics.VIEWS_PER_PLAYLIST_START.metric
+            ],
             isLoading: true
         };
 
         this.getData = this.getData.bind(this);
-        this.renderLineGraph = this.renderLineGraph.bind(this);
+        this.renderGraphContainer = this.renderGraphContainer.bind(this);
     }
 
     componentWillMount() {
@@ -63,30 +75,38 @@ export class AverageViewDurationPage extends React.PureComponent {
         this.setState({isLoading: true});
         this.showLoadingSpinner();
 
-        let metrics = [
-            Metrics.AVERAGE_VIEW_DURATION.metric,
-            Metrics.AVERAGE_VIEW_PERCENTAGE.metric
-        ];
+        let metrics = this.state.nonPlaylistMetrics;
         if (state.contentType == ContentTypes.PLAYLISTS) {
-            metrics = [
-                Metrics.AVERAGE_VIEW_DURATION.metric,
-                Metrics.AVERAGE_TIME_IN_PLAYLISTS.metric,
-                Metrics.VIEWS_PER_PLAYLIST_START.metric
-            ];
+            metrics = this.state.playlistMetrics;
         }
-        this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        this.setState({metrics: metrics});
+
+        if (this.props.graphType == GraphTypes.LINE) {
+            this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+        }
+        if (this.props.graphType == GraphTypes.GEO) {
+            const sort = '-' + Metrics.AVERAGE_VIEW_DURATION.metric;
+            let dimensions = 'country';
+            for (let i = 0; i < state.filters.length; i++) {
+                if (state.filters[i].key == 'country' && state.filters[i].value == Regions.UNITED_STATES.twoLetterCountryCode) {
+                    dimensions = 'province';
+                }
+            }
+            this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters, dimensions, sort);
+        }
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.setFilterState(state);
     }
 
-    renderLineGraph() {
+    renderGraphContainer() {
         if (!this.props.averageViewDuration.columnHeaders) return <div/>;
 
         return (
-            <LineGraphContainer
+            <GraphContainer
                 dataInfo={this.props.averageViewDuration}
-                xColumnName="day"
+                metrics={this.state.metrics}
                 metricInfo={Metrics.AVERAGE_VIEW_DURATION}
+                onRenderStart={this.showLoadingSpinner}
                 onRenderFinish={this.hideLoadingSpinner}
                 isLoading={this.state.isLoading}
             />
@@ -105,7 +125,7 @@ export class AverageViewDurationPage extends React.PureComponent {
                     onChangeFilters={this.getData}
                 />
                 <RetentionMetricsSection totalStats={this.props.totalStats} />
-                {this.renderLineGraph()}
+                {this.renderGraphContainer()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
         );
@@ -119,7 +139,8 @@ AverageViewDurationPage.propTypes = {
     actions: PropTypes.object.isRequired,
     clearActions: PropTypes.object.isRequired,
     filterState: PropTypes.object.isRequired,
-    setFilterState: PropTypes.func.isRequired
+    setFilterState: PropTypes.func.isRequired,
+    graphType: PropTypes.string.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -133,6 +154,7 @@ export function mapStateToProps(state) {
         averageViewDuration: state.report,
         totalStats: state.totalStats,
         filterState: newFilterStateObject,
+        graphType: state.graphType,
         isLoading: totalAjaxCallsInProgress > 0
     };
 }

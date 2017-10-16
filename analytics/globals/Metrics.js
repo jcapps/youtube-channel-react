@@ -8,6 +8,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.CURRENCY
     },
     AVERAGE_TIME_IN_PLAYLISTS: {
@@ -17,6 +18,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: true,
         isVideoMetric: false,
+        canShowUSStates: true,
         dataType: DataTypes.TIME_SECONDS
     },
     AVERAGE_VIEW_DURATION: {
@@ -26,6 +28,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: true,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.TIME_SECONDS
     },
     AVERAGE_VIEW_PERCENTAGE: {
@@ -35,6 +38,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.PERCENTAGE
     },
     CARD_CLICK_RATE: {
@@ -44,6 +48,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.RATIO
     },
     CARD_CLICKS: {
@@ -53,6 +58,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.NUMBER
     },
     CARD_TEASER_CLICK_RATE: {
@@ -62,6 +68,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.RATIO
     },
     CARD_TEASER_CLICKS: {
@@ -71,6 +78,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.NUMBER
     },
     COMMENTS: {
@@ -80,6 +88,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     DISLIKES: {
@@ -89,6 +98,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     LIKES: {
@@ -98,6 +108,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     PLAYLIST_STARTS: {
@@ -107,6 +118,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: true,
         isVideoMetric: false,
+        canShowUSStates: true,
         dataType: DataTypes.NUMBER
     },
     REVENUE: {
@@ -116,6 +128,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.CURRENCY
     },
     SHARES: {
@@ -125,6 +138,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     SUBSCRIBERS: {
@@ -134,6 +148,7 @@ const Metrics = {
         shouldUseMetricForGraph: false,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     SUBSCRIBERS_GAINED: {
@@ -143,6 +158,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     SUBSCRIBERS_LOST: {
@@ -152,6 +168,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     VIDEOS_ADDED_TO_PLAYLISTS: {
@@ -161,6 +178,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     VIDEOS_IN_PLAYLISTS: {
@@ -170,6 +188,7 @@ const Metrics = {
         shouldUseMetricForGraph: false,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     VIDEOS_REMOVED_FROM_PLAYLISTS: {
@@ -179,6 +198,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.NUMBER
     },
     VIEWS: {
@@ -188,6 +208,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: true,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.NUMBER
     },
     VIEWS_PER_PLAYLIST_START: {
@@ -197,6 +218,7 @@ const Metrics = {
         shouldUseMetricForGraph: true,
         isPlaylistMetric: true,
         isVideoMetric: false,
+        canShowUSStates: true,
         dataType: DataTypes.DECIMAL
     },
     WATCH_TIME: {
@@ -206,6 +228,7 @@ const Metrics = {
         shouldUseMetricForGraph: false,
         isPlaylistMetric: true,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.TIME_MINUTES
     },
     YOUTUBE_RED_REVENUE: {
@@ -215,6 +238,7 @@ const Metrics = {
         displayName: 'Estimated YouTube Red Revenue',
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: false,
         dataType: DataTypes.CURRENCY
     },
     YOUTUBE_RED_VIEWS: {
@@ -224,6 +248,7 @@ const Metrics = {
         displayName: 'YouTube Red Views',
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.NUMBER
     },
     YOUTUBE_RED_WATCH_TIME: {
@@ -233,6 +258,7 @@ const Metrics = {
         shouldUseMetricForGraph: false,
         isPlaylistMetric: false,
         isVideoMetric: true,
+        canShowUSStates: true,
         dataType: DataTypes.TIME_MINUTES
     }
 };
