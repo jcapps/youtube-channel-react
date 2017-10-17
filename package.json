@@ -82,6 +82,7 @@
     "redux-thunk": "2.2.0",
     "sinon": "3.2.0",
     "toastr": "2.1.2",
+    "world-countries": "1.8.1",
     "youtube-player": "5.4.0"
   },
   "repository": {

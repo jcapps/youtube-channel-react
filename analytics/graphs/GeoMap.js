@@ -1,8 +1,9 @@
 import Datamap from 'datamaps/dist/datamaps.all.hires.js';
 import * as D3 from 'd3';
+import $ from 'jquery';
 import DataTypes from '../globals/DataTypes';
-import convertCountryCodes from '../helpers/convertCountryCodes';
 import convertStateCodes from '../helpers/convertStateCodes';
+import retrieveCountryInfo from '../helpers/retrieveCountryInfo';
 
 class GeoMap {
     constructor() {
@@ -34,8 +35,9 @@ class GeoMap {
         const metricColumnIndex = columns.indexOf(metric);
 
         let data = {};
+        if (!dataInfo.rows) return data;
         dataInfo.rows.forEach((item, i) => {
-            const iso = convertCountryCodes(item[countryColumnIndex]);
+            const iso = retrieveCountryInfo(item[countryColumnIndex]).cca3;
             const value = item[metricColumnIndex];
             let colorValue = value;
             if (value < 0) colorValue = 0;
@@ -129,7 +131,7 @@ class GeoMap {
     }
 
     // Draw the map
-    drawMap(container, dataInfo, metricInfo, dataArea) {
+    drawMap(container, dataInfo, metricInfo, dataArea, region) {
         this.metricInfo = metricInfo;
         if (dataArea == 'country') {
             this.scope = 'world';
@@ -141,19 +143,48 @@ class GeoMap {
             this.height = 480;
             this.width = 960;
         }
+
+        let latlng = [0, 0];
+        let zoom = 1;
+        if (region.name.common != 'World') {
+            latlng = Object.assign([], region.latlng).reverse();
+            zoom = 1000000 / (Math.sqrt(region.area / Math.PI) * 2);
+        }
         
         let data = {};
-        if (this.scope == 'world') {
-            data = this.prepareWorldData(dataInfo, dataArea);
-        }
+        let setProjection = null;
+        let projection = 'mercator';
         if (this.scope == 'usa') {
             data = this.prepareUsaData(dataInfo, dataArea);
+        } else {
+            data = this.prepareWorldData(dataInfo, dataArea);
+            if (region.name.common != 'World') {
+                projection = null;
+                setProjection = (element) => {
+                    const svg = d3.select(element).select('svg');
+                    const proj = D3.geoMercator()
+                        .center(latlng)
+                        .scale(zoom)
+                        .translate([this.getD3ElementPosition(svg).width / 2, this.getD3ElementPosition(svg).height / 2]);
+                    const path = D3.geoPath()
+                        .projection(proj);
+                    return {path: path, projection: proj};
+                }
+            }
+        }
+
+        if ($.isEmptyObject(data)) {
+            D3.select(container).append('div')
+                .attr('class', 'error-message')
+                .style('margin-bottom', '5px')
+                .text('No data found for this time period and filter');
         }
 
         const map = new Datamap({
             element: container,
             scope: this.scope,
-            projection: 'mercator',
+            projection: projection,
+            setProjection: setProjection,
             height: this.height,
             width: this.width,
             fills: {

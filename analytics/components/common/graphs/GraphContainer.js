@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as d3 from 'd3';
+import countries from 'world-countries';
 import GraphTypes from '../../../globals/GraphTypes';
-import Regions from '../../../globals/Regions';
+import retrieveCountryInfo from '../../../helpers/retrieveCountryInfo';
 import sortDataByCustomColumn from '../../../helpers/sortDataByCustomColumn';
 import * as reportActions from '../../../actions/reportActions';
 import {setGraphType} from '../../../actions/setGraphTypeAction';
@@ -36,7 +37,7 @@ class GraphContainer extends React.PureComponent {
         for (let i = 0; i < filters.length; i++) {
             if (
                 filters[i].key == 'country' && 
-                filters[i].value == Regions.UNITED_STATES.twoLetterCountryCode &&
+                filters[i].value == 'US' &&
                 this.props.metricInfo.canShowUSStates
             ) {
                 dimensions = 'province';
@@ -70,6 +71,16 @@ class GraphContainer extends React.PureComponent {
         if (columns.indexOf('province') > -1) {
             dataArea = 'province';
         }
+        
+        let region = {name: {common: 'World'}};
+        const filters = this.props.filterState.filters;
+        for (let i = 0; i < filters.length; i++) {
+            if (filters[i].key == 'country') {
+                if (filters[i].value != '') {
+                    region = retrieveCountryInfo(filters[i].value);
+                }
+            }
+        }
 
         if (this.props.graphType == GraphTypes.GEO) {
             if (!this.props.metricInfo.metric) {
@@ -81,6 +92,7 @@ class GraphContainer extends React.PureComponent {
                     dataArea={dataArea}
                     dataInfo={dataInfo}
                     metricInfo={this.props.metricInfo}
+                    region={region}
                     onRenderFinish={this.props.onRenderFinish}
                     isLoading={this.props.isLoading}
                 />

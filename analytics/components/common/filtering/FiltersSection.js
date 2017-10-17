@@ -172,11 +172,18 @@ class FiltersSection extends React.Component {
     renderAddedFilters() {
         const filters = this.state.addedFilters;
         return filters.map((filter, i) => {
+            let displayName = '';
+            if (filter.snippet) {
+                displayName = filter.snippet.title;
+            } else {
+                displayName = filter.name.common;
+            }
+
             return (
-                <div key={i} className="added-filter" title={filter.snippet.title}>
+                <div key={i} className="added-filter" title={displayName}>
                     <input className="hidden" value={JSON.stringify(filter)} readOnly="readOnly" />
                     <div className="added-filter-title">
-                        {filter.snippet.title}
+                        {displayName}
                     </div>
                     <button className="remove-filter" onClick={this.removeFilter}>×</button>
                 </div>

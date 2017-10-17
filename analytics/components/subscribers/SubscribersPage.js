@@ -6,7 +6,6 @@ import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import GraphTypes from '../../globals/GraphTypes';
 import Metrics from '../../globals/Metrics';
-import Regions from '../../globals/Regions';
 import computeSubscribers from '../../helpers/computeSubscribers';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';

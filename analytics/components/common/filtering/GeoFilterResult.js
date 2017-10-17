@@ -8,7 +8,7 @@ class GeoFilterResult extends React.PureComponent {
         return (
             <div className="result-thumbnail">
                 <div>
-                    <p>{result.snippet.title}</p>
+                    <p>{result.name.common}</p>
                 </div>
             </div>
         );

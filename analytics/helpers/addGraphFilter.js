@@ -9,7 +9,10 @@ const addGraphFilter = (filterInfo, currentContentType, filtersArray, addedFilte
     let filterKey = '';
     let itemId = '';
     let newContentType = currentContentType;
-    const kind = filterInfo.id.kind;
+    let kind = 'region#country';
+    if (filterInfo.id && filterInfo.id.kind) {
+        kind = filterInfo.id.kind;
+    }
 
     if (kind == 'youtube#channel') {
         filterKey = 'channel';
@@ -55,7 +58,7 @@ const addGraphFilter = (filterInfo, currentContentType, filtersArray, addedFilte
         }
     }
     if (kind == 'region#country') {
-        const newFilter = {key: 'country', value: filterInfo.id.countryCode};
+        const newFilter = {key: 'country', value: filterInfo.cca2};
         if (filterArrayIncludes(filtersArray, newFilter)) {
             const updatedFilters = removeGraphFilter(filterInfo, filtersArray, addedFiltersArray);
             newFiltersArray = updatedFilters.newFiltersArray;

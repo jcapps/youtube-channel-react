@@ -2,11 +2,15 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
     let newFiltersArray = Object.assign([], filtersArray);
     let newAddedFiltersArray = Object.assign([], addedFiltersArray);
 
-    const kind = filterInfo.id.kind;
+    let kind = 'region#country';
+    if (filterInfo.id && filterInfo.id.kind) {
+        kind = filterInfo.id.kind;
+    }
+
     for (let i = 0; i < newAddedFiltersArray.length; i++) {
         if (
             newAddedFiltersArray[i].etag == filterInfo.etag ||
-            newAddedFiltersArray[i].id.kind == 'region#country' && kind == 'region#country'
+            newAddedFiltersArray[i].cca2 && kind == 'region#country'
         ) {
             newAddedFiltersArray.splice(i, 1);
             break;
@@ -30,7 +34,7 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
     }
     if (kind == 'region#country') {
         filterKey = 'country';
-        itemId = filterInfo.id.countryCode;
+        itemId = filterInfo.cca2;
     }
     if (
         kind == 'youtube#channel' || 

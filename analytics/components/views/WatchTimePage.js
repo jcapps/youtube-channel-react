@@ -6,7 +6,6 @@ import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import GraphTypes from '../../globals/GraphTypes';
 import Metrics from '../../globals/Metrics';
-import Regions from '../../globals/Regions';
 import computeWatchTimes from '../../helpers/computeWatchTimes';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
@@ -93,7 +92,7 @@ export class WatchTimePage extends React.PureComponent {
             const sort = '-' + Metrics.WATCH_TIME.metric;
             let dimensions = 'country';
             for (let i = 0; i < state.filters.length; i++) {
-                if (state.filters[i].key == 'country' && state.filters[i].value == Regions.UNITED_STATES.twoLetterCountryCode) {
+                if (state.filters[i].key == 'country' && state.filters[i].value == 'US') {
                     dimensions = 'province';
                 }
             }

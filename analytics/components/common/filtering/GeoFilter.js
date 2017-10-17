@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
-import Regions from '../../../globals/Regions';
+import countries from 'world-countries';
+import retrieveCountryInfo from '../../../helpers/retrieveCountryInfo';
 import DownshiftSectioned from './DownshiftSectioned';
 import GeoFilterResult from './GeoFilterResult';
 
@@ -52,21 +53,20 @@ class GeoFilter extends React.PureComponent {
 
     search(query) {
         const regionsArray = [];
-        Object.keys(Regions).forEach(key => {
-            const region = Regions[key];
-            if (region.displayName.toUpperCase().indexOf(query.toUpperCase()) > -1) {
-                const foundRegion = {
-                    id: {
-                        kind: 'region#country',
-                        countryCode: region.twoLetterCountryCode
-                    },
-                    snippet: {
-                        title: region.displayName
-                    }
+        query = query.toUpperCase();
+        if (query == '') {
+
+        } else {
+            for (let country of countries) {
+                if (
+                    country.name.common.toUpperCase().indexOf(query) > -1 ||
+                    country.name.official.toUpperCase().indexOf(query) > -1
+                ) {
+                    let newCountry = Object.assign({}, country);
+                    regionsArray.push(newCountry);
                 }
-                regionsArray.push(foundRegion);
             }
-        });
+        }
 
         const foundResultsArray = [
             {

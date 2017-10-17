@@ -7,7 +7,6 @@ import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import GraphTypes from '../../globals/GraphTypes';
 import Metrics from '../../globals/Metrics';
-import Regions from '../../globals/Regions';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import {setFilterState} from '../../actions/setFilterStateAction';
@@ -85,7 +84,7 @@ export class ViewsPerPlaylistStartPage extends React.PureComponent {
             const sort = '-' + Metrics.VIEWS_PER_PLAYLIST_START.metric;
             let dimensions = 'country';
             for (let i = 0; i < state.filters.length; i++) {
-                if (state.filters[i].key == 'country' && state.filters[i].value == Regions.UNITED_STATES.twoLetterCountryCode) {
+                if (state.filters[i].key == 'country' && state.filters[i].value == 'US') {
                     dimensions = 'province';
                 }
             }

@@ -21,6 +21,7 @@ class GeoMapContainer extends React.PureComponent {
             dataArea,
             dataInfo,
             metricInfo,
+            region,
             onRenderFinish
         } = props;
 
@@ -28,7 +29,7 @@ class GeoMapContainer extends React.PureComponent {
         container.html('');
 
         const GM = new GeoMap();
-        GM.drawMap(container.node(), dataInfo, metricInfo, dataArea);
+        GM.drawMap(container.node(), dataInfo, metricInfo, dataArea, region);
         onRenderFinish();
     }
 
@@ -43,6 +44,7 @@ GeoMapContainer.propTypes = {
     dataArea: PropTypes.string.isRequired,
     dataInfo: PropTypes.object.isRequired,
     metricInfo: PropTypes.object.isRequired,
+    region: PropTypes.object.isRequired,
     onRenderFinish: PropTypes.func.isRequired
 };
 
