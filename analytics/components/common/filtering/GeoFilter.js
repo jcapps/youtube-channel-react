@@ -55,7 +55,22 @@ class GeoFilter extends React.PureComponent {
         const regionsArray = [];
         query = query.toUpperCase();
         if (query == '') {
-
+            const suggestedCountries = [
+                'United States',
+                'United Kingdom',
+                'Germany',
+                'France',
+                'Canada'
+            ];
+            for (let suggestedCountry of suggestedCountries) {
+                for (let country of countries) {
+                    if (country.name.common == suggestedCountry) {
+                        let newCountry = Object.assign({}, country);
+                        regionsArray.push(newCountry);
+                        break;
+                    }
+                }
+            }
         } else {
             for (let country of countries) {
                 if (
