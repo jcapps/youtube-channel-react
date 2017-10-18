@@ -64,6 +64,13 @@
                 max-width: 206px;
             }
 
+            div.result-flag {
+                display: inline-block;
+                max-height: 22.5px;
+                max-width: 40px;
+                padding: 0;
+            }
+
             p {
                 overflow: hidden;
                 white-space: nowrap;

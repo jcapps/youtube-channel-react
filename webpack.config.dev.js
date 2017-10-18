@@ -42,10 +42,11 @@ export default {
                 include: [path.join(__dirname, 'src'), path.join(__dirname,'analytics')],
                 use: 'babel-loader'
             },
-            {test: /(\.css)$/, use: ['style-loader', 'css-loader']},
-            {test: /(\.scss)$/, use: ['style-loader', 'css-loader', 'sass-loader']},
+            {test: /\.css$/, use: ['style-loader', 'css-loader']},
+            {test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']},
+            {test: /\.svg$/, use: ['html-loader']},
             {
-                test: /\.(jpe?g|ico|gif|png|svg|eot|woff|woff2|ttf)$/,
+                test: /\.(jpe?g|ico|gif|png|eot|woff|woff2|ttf)$/,
                 use: [{
                     loader: 'file-loader',
                     options: {name: '[path][name].[hash].[ext]'}

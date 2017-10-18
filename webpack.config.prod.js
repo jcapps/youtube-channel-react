@@ -45,19 +45,23 @@ export default {
                 use: 'babel-loader'
             },
             {
-                test: /(\.css)$/, use: ExtractTextPlugin.extract({
+                test: /\.css$/, use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: 'css-loader'
                 })
             },
             {
-                test: /(\.scss)$/, use: ExtractTextPlugin.extract({
+                test: /\.scss$/, use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: ['css-loader', 'sass-loader']
                 })
             },
             {
-                test: /\.(jpe?g|ico|gif|png|svg|eot|woff|woff2|ttf)$/,
+                test: /\.svg$/,
+                use: 'html-loader'
+            },
+            {
+                test: /\.(jpe?g|ico|gif|png|eot|woff|woff2|ttf)$/,
                 use: [{
                     loader: 'file-loader',
                     options: {name: '[path][name].[hash].[ext]'}
