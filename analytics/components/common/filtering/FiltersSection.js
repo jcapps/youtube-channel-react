@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import $ from 'jquery';
 import ContentTypes from '../../../globals/ContentTypes';
 import Periods from '../../../globals/Periods';
 import addGraphFilter from '../../../helpers/addGraphFilter';
@@ -25,6 +26,10 @@ class FiltersSection extends React.Component {
         this.renderClearAllFilters = this.renderClearAllFilters.bind(this);
     }
 
+    componentDidMount() {
+        this.renderFlag();
+    }
+
     componentWillReceiveProps(nextProps) {
         if (this.state !== nextProps.state) {
             this.setState({...nextProps.state});
@@ -38,6 +43,10 @@ class FiltersSection extends React.Component {
         return false;
     }
     
+    componentDidUpdate() {
+        this.renderFlag();
+    }
+
     changeContentType(contentType) {
         let playlistFilter = {key: 'isCurated', value: '1'};
         let newFiltersArray = Object.assign([], this.state.filters);
@@ -169,20 +178,54 @@ class FiltersSection extends React.Component {
         );
     }
 
+    renderFlag() {
+        const div = this.refs.flag;
+        if (!div) return;
+        if (div.children.length > 0) {
+            div.innerHTML = '';
+        }
+
+        const countryObject = JSON.parse($(div).closest('div.added-filter').find('input').val());
+
+        const iso = countryObject.cca3.toLowerCase();
+        const flagHtmlString = require(`world-countries/data/${iso}.svg`);
+        const nodes = $.parseHTML(flagHtmlString);
+        let flagSvg;
+        for (let node of nodes) {
+            if (node.tagName && node.tagName == 'svg') {
+                flagSvg = node;
+                break;
+            }
+        }
+
+        if (!flagSvg.getAttribute('viewBox')) {
+            const currentHeight = flagSvg.getAttribute('height');
+            const currentWidth = flagSvg.getAttribute('width');
+            flagSvg.setAttribute('viewBox', `0 0 ${currentWidth} ${currentHeight}`);
+        }
+        flagSvg.setAttribute('height', '22.5');
+        flagSvg.setAttribute('width', '40');
+
+        div.appendChild(flagSvg);
+    }
+
     renderAddedFilters() {
         const filters = this.state.addedFilters;
         return filters.map((filter, i) => {
             let displayName = '';
+            let flagContainer = '';
             if (filter.snippet) {
                 displayName = filter.snippet.title;
             } else {
                 displayName = filter.name.common;
+                flagContainer = <div ref="flag" className="country-flag"/>;
             }
 
             return (
                 <div key={i} className="added-filter" title={displayName}>
                     <input className="hidden" value={JSON.stringify(filter)} readOnly="readOnly" />
                     <div className="added-filter-title">
+                        {flagContainer}
                         {displayName}
                     </div>
                     <button className="remove-filter" onClick={this.removeFilter}>×</button>

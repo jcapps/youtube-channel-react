@@ -64,13 +64,6 @@
                 max-width: 206px;
             }
 
-            div.result-flag {
-                display: inline-block;
-                max-height: 22.5px;
-                max-width: 40px;
-                padding: 0;
-            }
-
             p {
                 overflow: hidden;
                 white-space: nowrap;
@@ -105,6 +98,18 @@
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
+
+                & > * {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+                
+                div.country-flag {
+                    max-height: 22.5px;
+                    max-width: 40px;
+                    padding: 0;
+                    margin-right: 5px;
+                }
             }
 
             button.remove-filter {
