@@ -119,7 +119,10 @@ export class AnalyticsDisplayPage extends React.PureComponent {
             this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
         }
         if (this.props.graphType == GraphTypes.GEO) {
-            const sort = '-' + this.props.metricInfo.metric;
+            let sort = null;
+            if (this.props.metricInfo.metric) {
+                sort = '-' + this.props.metricInfo.metric;
+            }
             let dimensions = 'country';
             for (let i = 0; i < state.filters.length; i++) {
                 if (state.filters[i].key == 'country' && state.filters[i].value == 'US') {
