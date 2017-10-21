@@ -67,7 +67,7 @@ export function getSearchResults(query, searchType) {
                     dispatch(getSearchResultsError(error));
                 });
             } else {
-                dispatch(getSearchResultsError(error));
+                dispatch(getSearchResultsError({}));
             }
         });
     };
