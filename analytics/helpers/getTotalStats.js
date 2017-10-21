@@ -7,6 +7,8 @@ const getTotalStats = (totalStats, columnName) => {
         if (totalStats.rows) {
             if (totalStatsColumns.indexOf(columnName) >= 0)
             totalValue = totalStats.rows[0][totalStatsColumns.indexOf(columnName)];
+        } else {
+            totalValue = 0;
         }
     }
     return totalValue;
