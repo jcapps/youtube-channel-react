@@ -52,6 +52,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (JSON.stringify(this.props.data) != JSON.stringify(nextProps.data) || 
+            JSON.stringify(this.props.filterState) != JSON.stringify(nextProps.filterState) || 
             JSON.stringify(this.state) != JSON.stringify(nextState)) {
             return true;
         }
