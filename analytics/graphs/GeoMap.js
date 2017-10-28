@@ -1,9 +1,11 @@
-import Datamap from 'datamaps/dist/datamaps.all.hires.js';
+import WorldMap from 'datamaps/dist/datamaps.all.hires.min.js';
 import * as D3 from 'd3';
+import * as topojson from 'topojson';
 import $ from 'jquery';
 import DataTypes from '../globals/DataTypes';
 import convertStateCodes from '../helpers/convertStateCodes';
 import retrieveCountryInfo from '../helpers/retrieveCountryInfo';
+import ManipulateGeoMap from './ManipulateGeoMap';
 
 class GeoMap {
     constructor() {
@@ -23,63 +25,8 @@ class GeoMap {
         return element.node().getBoundingClientRect();
     }
 
-    // Get the height, width, max/min longitude, max/min latitude
-    getRegionBoundingBox(regionJson) {
-        let coordinatesArray = [];
-        let height = null;
-        let width = null;
-        let minLong = null;
-        let maxLong = null;
-        let minLat = null;
-        let maxLat = null;
-
-        const featuresArray = regionJson.features;
-        for (let feature of featuresArray) {
-            if (feature.properties.type_en == 'Overseas department') continue;
-
-            let geometry = feature.geometry;
-            if (geometry.type == 'Polygon') {
-                coordinatesArray = geometry.coordinates[0];
-                if (!minLong) minLong = coordinatesArray[0][0];
-                if (!maxLong) maxLong = coordinatesArray[0][0];
-                if (!minLat) minLat = coordinatesArray[0][1];
-                if (!maxLat) maxLat = coordinatesArray[0][1];
-        
-                coordinatesArray.forEach(coordinate => {
-                    if (coordinate[0] < minLong) minLong = coordinate[0];
-                    if (coordinate[0] > maxLong) maxLong = coordinate[0];
-                    if (coordinate[1] < minLat) minLat = coordinate[1];
-                    if (coordinate[1] > maxLat) maxLat = coordinate[1];
-                });
-            }
-            if (geometry.type == 'MultiPolygon') {
-                coordinatesArray = geometry.coordinates[0];
-                if (!minLong) minLong = coordinatesArray[0][0][0];
-                if (!maxLong) maxLong = coordinatesArray[0][0][0];
-                if (!minLat) minLat = coordinatesArray[0][0][1];
-                if (!maxLat) maxLat = coordinatesArray[0][0][1];
-
-                geometry.coordinates.forEach(arrayOfCoordinates => {
-                    coordinatesArray = arrayOfCoordinates[0];
-            
-                    coordinatesArray.forEach(coordinate => {
-                        if (coordinate[0] < minLong) minLong = coordinate[0];
-                        if (coordinate[0] > maxLong) maxLong = coordinate[0];
-                        if (coordinate[1] < minLat) minLat = coordinate[1];
-                        if (coordinate[1] > maxLat) maxLat = coordinate[1];
-                    });
-                });
-            }
-        };
-
-        height = maxLat - minLat;
-        width = maxLong - minLong;
-
-        return {height, width, minLong, maxLong, minLat, maxLat};
-    }
-
-    // Prepare data for world map
-    prepareWorldData(dataInfo, dataArea) {
+    // Prepare data for map
+    prepareData(dataInfo, dataArea, isUsa) {
         let metric = this.metricInfo.metric;
         if (!metric) metric = this.metricInfo.name;
         
@@ -92,35 +39,12 @@ class GeoMap {
         let data = {};
         if (!dataInfo.rows) return data;
         dataInfo.rows.forEach((item, i) => {
-            const iso = retrieveCountryInfo(item[countryColumnIndex]).cca3;
-            const value = item[metricColumnIndex];
-            let colorValue = value;
-            if (value < 0) colorValue = 0;
-
-            if (i == 0) this.maxValue = value;
-            const colorScale = D3.scaleLinear()
-                .domain([0, this.maxValue])
-                .range([this.defaultRegionColor, this.filledRegionColor]);
-            
-            data[iso] = {value: value, fillColor: colorScale(colorValue)};
-        });
-        return data;
-    }
-
-    // Prepare data for USA map
-    prepareUsaData(dataInfo, dataArea) {
-        let metric = this.metricInfo.metric;
-        if (!metric) metric = this.metricInfo.name;
-
-        const columns = dataInfo.columnHeaders.map(item => {
-            return item.name;
-        });
-        const countryColumnIndex = columns.indexOf(dataArea);
-        const metricColumnIndex = columns.indexOf(metric);
-
-        let data = {};
-        dataInfo.rows.forEach((item, i) => {
-            const iso = convertStateCodes(item[countryColumnIndex]);
+            let iso;
+            if (isUsa) {
+                iso = convertStateCodes(item[countryColumnIndex]);
+            } else {
+                iso = retrieveCountryInfo(item[countryColumnIndex]).cca3;
+            }
             const value = item[metricColumnIndex];
             let colorValue = value;
             if (value < 0) colorValue = 0;
@@ -201,43 +125,37 @@ class GeoMap {
 
         const zoomMin = this.width / 2 / Math.PI;
         const zoomMax = 300000;
+        let Datamap = WorldMap;
         let latlng = [0, 0];
         let zoom = zoomMin;
-        if (region.name.common != 'World') {
+        if (region.name.common != 'World' && region.cca3 != 'USA') {
+            const GeoMapHelper = new ManipulateGeoMap;
             let iso = region.cca3.toLowerCase();
-            if (iso == 'ssd') iso = 'sds'; // Adjust for bug in datamaps & world-countries libraries
-            let regionJson;
-            let regionSize;
-            try {
-                if (iso == 'mar') throw(new Error); // Use datamaps, which bundles Western Sahara with Morocco
-                regionJson = require(`world-countries/data/${iso}.geo.json`);
-                regionSize = this.getRegionBoundingBox(regionJson);
-            } catch (error) {
-                regionJson = require(`datamaps/src/js/data/${iso}.json`);
-                regionSize = this.getRegionBoundingBox(regionJson);
+            let {CountryMap, countryData} = GeoMapHelper.getCountryMap(iso);
+            
+            if (countryData.objects[iso].geometries.length > 1) {
+                countryData = GeoMapHelper.prepareCountryData(countryData, iso);
+                CountryMap.prototype[iso + 'Topo'] = countryData;
             }
-            const longitude = regionSize.maxLong - (regionSize.width / 2);
-            const latitude = regionSize.maxLat - (regionSize.height / 2);
-            const middleScale = ((1 / Math.cos(regionSize.minLat * (Math.PI / 180))) + (1 / Math.cos(regionSize.maxLat * (Math.PI / 180)))) / 2;
-            const scaledLatitude = Math.acos(1 / middleScale) * (180 / Math.PI) * (latitude / Math.abs(latitude));
-            const scaledCenterLatitude = (latitude + scaledLatitude) / 2
-            latlng = [longitude, scaledCenterLatitude];
-            if ((regionSize.width / regionSize.height) < 2) { // 2 = 360 / 180 (total degrees of longitude / total degrees of latitude)
-                zoom = 20000 / ((1 + (Math.pow(middleScale, 5) * 0.01)) * regionSize.height);
-            } else {
-                zoom = 40000 / ((1 + (middleScale * 0.2)) * regionSize.width);
-            }
+            const countryObjects = countryData.objects[iso];
+            const geoJson = topojson.feature(countryData, countryObjects);
+            Datamap = CountryMap;
+            this.scope = iso;
+
+            const {position, scale} = GeoMapHelper.getPositionAndScale(geoJson);
+            latlng = position;
+            zoom = scale;
             if (zoom < zoomMin) zoom = zoomMin;
             if (zoom > zoomMax) zoom = zoomMax;
         }
-        
+
         let data = {};
         let setProjection = null;
         let projection = 'mercator';
         if (this.scope == 'usa') {
-            data = this.prepareUsaData(dataInfo, dataArea);
+            data = this.prepareData(dataInfo, dataArea, true);
         } else {
-            data = this.prepareWorldData(dataInfo, dataArea);
+            data = this.prepareData(dataInfo, dataArea, false);
             if (region.name.common != 'World') {
                 projection = null;
                 setProjection = (element) => {
@@ -272,19 +190,31 @@ class GeoMap {
             },
             data: data,
             geographyConfig: {
+                hideAntarctica: false,
                 highlightFillColor: this.highlightColor,
                 highlightBorderColor: this.highlightBorderColor,
                 popupTemplate: (geo, d) => {
                     if (!d) return;
 
                     const tooltipValue = this.prepareTooltipValue(d);
+                    let regionName = geo.properties.name;
+                    if (this.scope != 'usa') {
+                        const geoRegion = retrieveCountryInfo(geo.properties.iso);
+                        regionName = geoRegion.name.common;
+                    }
+
                     return [
                         '<div class="tooltip geo-tooltip">',
-                        '<div>', geo.properties.name, '</div>',
+                        '<div>', regionName, '</div>',
                         '<div>', this.metricInfo.displayName, ': ', tooltipValue, '</div>',
                         '</div>' 
                     ].join('');
                 }
+            },
+            done: (datamap) => {
+                datamap.svg.selectAll('.datamaps-subunit').on('click', geography => {
+                    console.log(geography.properties);
+                });
             }
         });
 

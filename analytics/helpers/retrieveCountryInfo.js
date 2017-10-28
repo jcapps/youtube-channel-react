@@ -1,13 +1,24 @@
 import countries from 'world-countries';
 
-const retrieveCountryInfo = (twoLetterCode) => {
+const retrieveCountryInfo = (letterCode) => {
+    letterCode = letterCode.toUpperCase();
+    
     let foundCountry = {
-        cca3: 'XXX'
+        cca2: 'XX',
+        cca3: 'XXX',
+        name: {common: 'Unknown Region'}
     };
 
     for (let country of countries) {
-        if (country.cca2 == twoLetterCode) {
-            foundCountry = country;
+        if (letterCode.length == 2) {
+            if (country.cca2 == letterCode) {
+                foundCountry = country;
+            }
+        }
+        if (letterCode.length == 3) {
+            if (country.cca3 == letterCode) {
+                foundCountry = country;
+            }
         }
     }
 
