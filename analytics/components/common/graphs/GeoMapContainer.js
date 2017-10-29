@@ -22,14 +22,24 @@ class GeoMapContainer extends React.PureComponent {
             dataInfo,
             metricInfo,
             region,
-            onRenderFinish
+            onRenderFinish,
+            onChangeFilters,
+            filterState
         } = props;
 
         const container = d3.select(`.${metricInfo.name}-geo-map-container`);
         container.html('');
 
         const GM = new GeoMap();
-        GM.drawMap(container.node(), dataInfo, metricInfo, dataArea, region);
+        GM.drawMap(
+            container.node(),
+            dataInfo,
+            metricInfo,
+            dataArea,
+            region,
+            onChangeFilters,
+            filterState
+        );
         onRenderFinish();
     }
 
@@ -45,7 +55,9 @@ GeoMapContainer.propTypes = {
     dataInfo: PropTypes.object.isRequired,
     metricInfo: PropTypes.object.isRequired,
     region: PropTypes.object.isRequired,
-    onRenderFinish: PropTypes.func.isRequired
+    onRenderFinish: PropTypes.func.isRequired,
+    onChangeFilters: PropTypes.func.isRequired,
+    filterState: PropTypes.object.isRequired
 };
 
 export default GeoMapContainer;

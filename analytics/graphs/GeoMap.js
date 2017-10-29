@@ -3,6 +3,7 @@ import * as D3 from 'd3';
 import * as topojson from 'topojson';
 import $ from 'jquery';
 import DataTypes from '../globals/DataTypes';
+import addGraphFilter from '../helpers/addGraphFilter';
 import convertStateCodes from '../helpers/convertStateCodes';
 import retrieveCountryInfo from '../helpers/retrieveCountryInfo';
 import ManipulateGeoMap from './ManipulateGeoMap';
@@ -10,6 +11,8 @@ import ManipulateGeoMap from './ManipulateGeoMap';
 class GeoMap {
     constructor() {
         this.metricInfo;
+        this.filterState;
+        this.setFilterState;
         this.scope;
         this.height;
         this.width;
@@ -23,6 +26,21 @@ class GeoMap {
     // Get the page position of the d3 element
     getD3ElementPosition(element) {
         return element.node().getBoundingClientRect();
+    }
+
+    // Filter by country
+    addGeoFilter(geoFilter) {
+        const {newFiltersArray, newAddedFiltersArray, newContentType}
+            = addGraphFilter(geoFilter, this.filterState.contentType, this.filterState.filters, this.filterState.addedFilters);
+
+        const {timePeriod, dateRange} = this.filterState;
+        this.onChangeFilters({
+            contentType: newContentType,
+            timePeriod,
+            dateRange,
+            filters: newFiltersArray,
+            addedFilters: newAddedFiltersArray
+        });
     }
 
     // Prepare data for map
@@ -110,8 +128,19 @@ class GeoMap {
     }
 
     // Draw the map
-    drawMap(container, dataInfo, metricInfo, dataArea, region) {
+    drawMap(
+        container,
+        dataInfo,
+        metricInfo,
+        dataArea,
+        region,
+        onChangeFilters,
+        filterState
+    ) {
         this.metricInfo = metricInfo;
+        this.filterState = filterState;
+        this.onChangeFilters = onChangeFilters;
+
         if (dataArea == 'country') {
             this.scope = 'world';
             this.height = 650;
@@ -213,7 +242,9 @@ class GeoMap {
             },
             done: (datamap) => {
                 datamap.svg.selectAll('.datamaps-subunit').on('click', geography => {
-                    console.log(geography.properties);
+                    if (geography.properties.iso) {
+                        this.addGeoFilter(retrieveCountryInfo(geography.properties.iso));
+                    }
                 });
             }
         });

@@ -94,6 +94,8 @@ class GraphContainer extends React.PureComponent {
                     metricInfo={this.props.metricInfo}
                     region={region}
                     onRenderFinish={this.props.onRenderFinish}
+                    onChangeFilters={this.props.onChangeFilters}
+                    filterState={this.props.filterState}
                     isLoading={this.props.isLoading}
                 />
             );
@@ -136,6 +138,7 @@ GraphContainer.propTypes = {
     metricInfo: PropTypes.object.isRequired,
     onRenderStart: PropTypes.func.isRequired,
     onRenderFinish: PropTypes.func.isRequired,
+    onChangeFilters: PropTypes.func.isRequired,
     filterState: PropTypes.object.isRequired,
     graphType: PropTypes.string.isRequired,
     setGraphType: PropTypes.func.isRequired,

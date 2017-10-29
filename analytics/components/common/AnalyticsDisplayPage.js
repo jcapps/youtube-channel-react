@@ -51,9 +51,11 @@ export class AnalyticsDisplayPage extends React.PureComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (JSON.stringify(this.props.data) != JSON.stringify(nextProps.data) || 
+        if (
+            JSON.stringify(this.props.data) != JSON.stringify(nextProps.data) || 
             JSON.stringify(this.props.filterState) != JSON.stringify(nextProps.filterState) || 
-            JSON.stringify(this.state) != JSON.stringify(nextState)) {
+            JSON.stringify(this.state) != JSON.stringify(nextState)
+        ) {
             return true;
         }
         this.hideLoadingSpinner();
@@ -107,14 +109,16 @@ export class AnalyticsDisplayPage extends React.PureComponent {
             }
         }
 
-        this.setState({isLoading: true});
-        this.showLoadingSpinner();
-
         let metrics = this.state.nonPlaylistMetrics;
         if (state.contentType == ContentTypes.PLAYLISTS) {
             metrics = this.state.playlistMetrics;
         }
-        this.setState({metrics: metrics});
+
+        this.setState({
+            metrics: metrics,
+            isLoading: true
+        });
+        this.showLoadingSpinner();
 
         if (this.props.graphType == GraphTypes.LINE) {
             this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
@@ -167,6 +171,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
                 metricInfo={this.props.metricInfo}
                 onRenderStart={this.showLoadingSpinner}
                 onRenderFinish={this.hideLoadingSpinner}
+                onChangeFilters={this.getData}
                 isLoading={this.state.isLoading}
             />
         );
