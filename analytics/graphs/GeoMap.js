@@ -166,6 +166,13 @@ class GeoMap {
                 countryData = GeoMapHelper.prepareCountryData(countryData, iso);
                 CountryMap.prototype[iso + 'Topo'] = countryData;
             }
+            if (!countryData.objects[iso].geometries[0].id != iso.toUpperCase()) {
+                countryData.objects[iso].geometries[0].id = iso.toUpperCase();
+                countryData.objects[iso].geometries[0].properties
+                    = {name: retrieveCountryInfo(iso).name.common, iso: iso.toUpperCase()};
+                CountryMap.prototype[iso + 'Topo'] = countryData;
+            }
+
             const countryObjects = countryData.objects[iso];
             const geoJson = topojson.feature(countryData, countryObjects);
             Datamap = CountryMap;
@@ -227,7 +234,7 @@ class GeoMap {
 
                     const tooltipValue = this.prepareTooltipValue(d);
                     let regionName = geo.properties.name;
-                    if (this.scope != 'usa') {
+                    if (geo.properties.iso) {
                         const geoRegion = retrieveCountryInfo(geo.properties.iso);
                         regionName = geoRegion.name.common;
                     }
