@@ -13,7 +13,7 @@ class GeoFilter extends React.PureComponent {
             isDropdownOpen: false,
             resultsArray: []
         };
-        this.addContentFilter = this.addContentFilter.bind(this);
+        this.addGeoFilter = this.addGeoFilter.bind(this);
         this.onSearchFocus = this.onSearchFocus.bind(this);
         this.onSearchBlur = this.onSearchBlur.bind(this);
         this.search = this.search.bind(this);
@@ -34,7 +34,7 @@ class GeoFilter extends React.PureComponent {
         $(document).off('click');
     }
 
-    addContentFilter(searchResult) {
+    addGeoFilter(searchResult) {
         this.setState({resultsArray: []});
         this.props.addFilter(searchResult);
     }
@@ -97,7 +97,7 @@ class GeoFilter extends React.PureComponent {
     }
 
     onDownshiftChange(selectedItem) {
-        this.addContentFilter(selectedItem);
+        this.addGeoFilter(selectedItem);
     }
 
     onDownshiftStateChange(changes) {
