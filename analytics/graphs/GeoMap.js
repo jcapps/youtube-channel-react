@@ -152,11 +152,8 @@ class GeoMap {
             this.width = 960;
         }
 
-        const zoomMin = this.width / 2 / Math.PI;
-        const zoomMax = 300000;
         let Datamap = WorldMap;
-        let latlng = [0, 0];
-        let zoom = zoomMin;
+        let geoJson;
         if (region.name.common != 'World' && region.cca3 != 'USA') {
             const GeoMapHelper = new ManipulateGeoMap;
             let iso = region.cca3.toLowerCase();
@@ -174,20 +171,15 @@ class GeoMap {
             }
 
             const countryObjects = countryData.objects[iso];
-            const geoJson = topojson.feature(countryData, countryObjects);
+            geoJson = topojson.feature(countryData, countryObjects);
             Datamap = CountryMap;
             this.scope = iso;
-
-            const {position, scale} = GeoMapHelper.getPositionAndScale(geoJson);
-            latlng = position;
-            zoom = scale;
-            if (zoom < zoomMin) zoom = zoomMin;
-            if (zoom > zoomMax) zoom = zoomMax;
         }
 
         let data = {};
         let setProjection = null;
         let projection = 'mercator';
+        const projectionMargin = 100;
         if (this.scope == 'usa') {
             data = this.prepareData(dataInfo, dataArea, true);
         } else {
@@ -197,9 +189,13 @@ class GeoMap {
                 setProjection = (element) => {
                     const svg = d3.select(element).select('svg');
                     const proj = D3.geoMercator()
-                        .center(latlng)
-                        .scale(zoom)
-                        .translate([this.getD3ElementPosition(svg).width / 2, this.getD3ElementPosition(svg).height / 2]);
+                        .fitExtent(
+                            [
+                                [projectionMargin, projectionMargin],
+                                [this.width - projectionMargin, this.height - projectionMargin]
+                            ],
+                            geoJson
+                        );
                     const path = D3.geoPath()
                         .projection(proj);
                     return {path: path, projection: proj};
