@@ -249,8 +249,15 @@ class GeoMap {
             },
             done: (datamap) => {
                 datamap.svg.selectAll('.datamaps-subunit').on('click', geography => {
-                    if (geography.properties.iso) {
-                        this.addGeoFilter(retrieveCountryInfo(geography.properties.iso));
+                    let iso = geography.properties.iso;
+                    if (geography.properties.name == 'Somaliland') {
+                        iso = 'SOM';
+                    }
+                    if (geography.properties.name == 'Kosovo') {
+                        iso = 'UNK';
+                    }
+                    if (iso) {
+                        this.addGeoFilter(retrieveCountryInfo(iso));
                     }
                 });
             }

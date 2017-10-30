@@ -412,19 +412,21 @@ class ManipulateGeoMap {
             }
             countryData = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
         }
-        
+
         // Everything else
         else {
             if (iso == 'ala') iso = 'ald'; // Adjust for difference in datamaps library
             if (iso == 'pse') iso = 'psx'; // Adjust for difference in datamaps library
             if (iso == 'esh') iso = 'sah'; // Adjust for difference in datamaps library
             if (iso == 'ssd') iso = 'sds'; // Adjust for difference in datamaps library
+            if (iso == 'unk') iso = 'kos'; // Adjust for difference in datamaps library
             CountryMap = require(`datamaps/dist/datamaps.${iso}.min.js`);
             countryData = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
             if (iso == 'ald') iso = 'ala'; // Adjust for difference in datamaps library
             if (iso == 'psx') iso = 'pse'; // Adjust for difference in datamaps library
             if (iso == 'sah') iso = 'esh'; // Adjust for difference in datamaps library
             if (iso == 'sds') iso = 'ssd'; // Adjust for difference in datamaps library
+            if (iso == 'kos') iso = 'unk'; // Adjust for difference in datamaps library
         }
         const objectIso = Object.keys(countryData.objects)[0];
         if (objectIso != iso) {
