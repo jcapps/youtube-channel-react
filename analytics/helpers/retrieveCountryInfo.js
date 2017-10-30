@@ -4,8 +4,8 @@ const retrieveCountryInfo = (letterCode) => {
     letterCode = letterCode.toUpperCase();
     
     let foundCountry = {
-        cca2: 'XX',
-        cca3: 'XXX',
+        cca2: 'ZZ',
+        cca3: 'ZZZ',
         name: {common: 'Unknown Region'}
     };
 
