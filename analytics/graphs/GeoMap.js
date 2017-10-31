@@ -184,11 +184,12 @@ class GeoMap {
             data = this.prepareData(dataInfo, dataArea, true);
         } else {
             data = this.prepareData(dataInfo, dataArea, false);
-            if (region.name.common != 'World') {
-                projection = null;
-                setProjection = (element) => {
-                    const svg = d3.select(element).select('svg');
-                    const proj = D3.geoMercator()
+            projection = null;
+            setProjection = (element) => {
+                const svg = d3.select(element).select('svg');
+                let proj = D3.geoOrthographic();
+                if (region.name.common != 'World') {
+                    proj.rotate([-region.latlng[1], -region.latlng[0]])
                         .fitExtent(
                             [
                                 [projectionMargin, projectionMargin],
@@ -196,10 +197,13 @@ class GeoMap {
                             ],
                             geoJson
                         );
-                    const path = D3.geoPath()
-                        .projection(proj);
-                    return {path: path, projection: proj};
+                } else {
+                    proj.rotate([0, 0])
+                        .translate([this.width / 2, this.height / 2]);
                 }
+                const path = D3.geoPath()
+                    .projection(proj);
+                return {path: path, projection: proj};
             }
         }
 
@@ -266,7 +270,7 @@ class GeoMap {
 
         // Overwrite the Datamap prototype function "updatePopup" with 
         // customized popup set and display
-        map.updatePopup = (element, d, options) => {
+        const createCustomPopup = (element, d, options) => {
             element.on('mousemove', null);
             element.on('mousemove', () => {
                 const tooltipContainer = D3.select(map.svg.node().parentNode).select('.datamaps-hoverover')
@@ -299,6 +303,35 @@ class GeoMap {
                 }
             });
         };
+        map.updatePopup = createCustomPopup;
+        
+        // Get rotation around vertical axis
+        const lambda = D3.scaleLinear()
+            .domain([0, this.width])
+            .range([-360, 360]);
+
+        // Get rotation around horizontal axis
+        const phi = D3.scaleLinear()
+            .domain([0, this.height])
+            .range([180, -180]);
+
+        // Spin earth on drag
+        map.svg.on('mousedown', downEvent => {
+            map.svg.on('mousemove', moveEvent => {
+                map.updatePopup = () => {};
+                const position = d3.mouse(map.svg.node()); // Using the global d3 version used by datamaps module. This avoids overwriting the event listener.
+                const proj = D3.geoOrthographic()
+                    .translate([this.width / 2, this.height / 2])
+                    .rotate([lambda(position[0]), phi(position[1])]);
+                const path = D3.geoPath()
+                    .projection(proj);
+                map.svg.selectAll('path').attr('d', path);
+            });
+        });
+        map.svg.on('mouseup', upEvent => {
+            map.svg.on('mousemove', null);
+            map.updatePopup = createCustomPopup;
+        });
     }
 }
 
