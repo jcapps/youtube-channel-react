@@ -315,23 +315,25 @@ class GeoMap {
             .domain([0, this.height])
             .range([180, -180]);
 
-        // Spin earth on drag
-        map.svg.on('mousedown', downEvent => {
-            map.svg.on('mousemove', moveEvent => {
-                map.updatePopup = () => {};
-                const position = d3.mouse(map.svg.node()); // Using the global d3 version used by datamaps module. This avoids overwriting the event listener.
-                const proj = D3.geoOrthographic()
-                    .translate([this.width / 2, this.height / 2])
-                    .rotate([lambda(position[0]), phi(position[1])]);
-                const path = D3.geoPath()
-                    .projection(proj);
-                map.svg.selectAll('path').attr('d', path);
+        // Spin globe on drag
+        if (this.scope == 'world') {
+            map.svg.on('mousedown', downEvent => {
+                map.svg.on('mousemove', moveEvent => {
+                    map.updatePopup = () => {};
+                    const position = d3.mouse(map.svg.node()); // Using the global d3 version used by datamaps module. This avoids overwriting the event listener.
+                    const proj = D3.geoOrthographic()
+                        .translate([this.width / 2, this.height / 2])
+                        .rotate([lambda(position[0]), phi(position[1])]);
+                    const path = D3.geoPath()
+                        .projection(proj);
+                    map.svg.selectAll('path').attr('d', path);
+                });
             });
-        });
-        map.svg.on('mouseup', upEvent => {
-            map.svg.on('mousemove', null);
-            map.updatePopup = createCustomPopup;
-        });
+            $(document).on('mouseup', upEvent => {
+                map.svg.on('mousemove', null);
+                map.updatePopup = createCustomPopup;
+            });
+        }
     }
 }
 
