@@ -1,6 +1,5 @@
 import WorldMap from 'datamaps/dist/datamaps.all.hires.min.js';
 import * as D3 from 'd3';
-import * as topojson from 'topojson';
 import $ from 'jquery';
 import DataTypes from '../globals/DataTypes';
 import addGraphFilter from '../helpers/addGraphFilter';
@@ -156,24 +155,11 @@ class GeoMap {
         let geoJson;
         if (region.name.common != 'World' && region.cca3 != 'USA') {
             const GeoMapHelper = new ManipulateGeoMap;
-            let iso = region.cca3.toLowerCase();
-            let {CountryMap, countryData} = GeoMapHelper.getCountryMap(iso);
+            let {CountryMap, countryGeoJson} = GeoMapHelper.getCountryMap(region);
             
-            if (countryData.objects[iso].geometries.length > 1) {
-                countryData = GeoMapHelper.prepareCountryData(countryData, iso);
-                CountryMap.prototype[iso + 'Topo'] = countryData;
-            }
-            if (!countryData.objects[iso].geometries[0].id != iso.toUpperCase()) {
-                countryData.objects[iso].geometries[0].id = iso.toUpperCase();
-                countryData.objects[iso].geometries[0].properties
-                    = {name: retrieveCountryInfo(iso).name.common, iso: iso.toUpperCase()};
-                CountryMap.prototype[iso + 'Topo'] = countryData;
-            }
-
-            const countryObjects = countryData.objects[iso];
-            geoJson = topojson.feature(countryData, countryObjects);
+            geoJson = countryGeoJson;
             Datamap = CountryMap;
-            this.scope = iso;
+            this.scope = region.cca3.toLowerCase();
         }
 
         let data = {};

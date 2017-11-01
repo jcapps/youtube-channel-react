@@ -1,194 +1,8 @@
+import * as topojson from 'topojson';
 import $ from 'jquery';
 import retrieveCountryInfo from '../helpers/retrieveCountryInfo';
 
 class ManipulateGeoMap {
-    // Remove arc from arcArray
-    removeArcFromArray(arc, arcArray) {
-        const removeIndex = arcArray.findIndex(item => {
-            return item.edgeArc == arc.edgeArc;
-        });
-        arcArray.splice(removeIndex, 1);
-    }
-
-    // Handle cases where two edge boundaries and 2+ inner boundaries meet
-    patchCornerConnections(currentArc, edgeArcs, allArcs) {
-        let nextArc = currentArc;
-        let index = edgeArcs.findIndex(item => {
-            return item.edgeArc == nextArc.rightArc;
-        });
-
-        while (index < 0) {
-            nextArc = allArcs.find(arc => {
-                return nextArc.rightArc == ~arc.edgeArc;
-            });
-            index = edgeArcs.findIndex(item => {
-                return item.edgeArc == nextArc.rightArc;
-            });
-        }
-
-        return edgeArcs[index];
-    }
-
-    // Compare arcs to see if share boundary
-    compareArcs(compareArc, arcs) {
-        for (let arcsArray of arcs) {
-            for (let arc of arcsArray) {
-                if (compareArc == ~arc) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    // Check if arc is written twice (boundary is shared by two regions)
-    arcSharesBoundary(geometries, compareArc, geometryType) {
-        for (let geometry of geometries) {
-            if (geometry.type == 'Polygon') {
-                if (this.compareArcs(compareArc, geometry.arcs)) return true;
-            }
-            if (geometry.type == 'MultiPolygon') {
-                for (let multiArcArray of geometry.arcs) {
-                    if (this.compareArcs(compareArc, multiArcArray)) return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    // Sort arcs into clockwise order
-    sortArcs(edgeArcs, allArcs) {
-        const arcsInNeedOfSorting = [];
-        edgeArcs.forEach(arc => {
-            arcsInNeedOfSorting.push(Object.assign({}, arc));
-        });
-
-        const sortedArcs = [];
-        while (arcsInNeedOfSorting.length > 0) {
-            sortedArcs.push([]);
-            let currentSortedArcs = sortedArcs[sortedArcs.length - 1];
-            let currentArc = arcsInNeedOfSorting[0];
-            currentSortedArcs.push(currentArc.edgeArc);
-            this.removeArcFromArray(currentArc, arcsInNeedOfSorting);
-
-            const targetLeftArc = currentArc.leftArc;
-            while (
-                currentArc.rightArc != null && 
-                currentArc.rightArc != ~targetLeftArc
-            ) {
-                let arcFound = false;
-                for (let arc of arcsInNeedOfSorting) {
-                    if (currentArc.rightArc == ~arc.leftArc) {
-                        currentSortedArcs.push(arc.edgeArc);
-                        this.removeArcFromArray(arc, arcsInNeedOfSorting);
-                        currentArc = arc;
-                        arcFound = true;
-                        break;
-                    }
-                }
-
-                if (!arcFound) {
-                    const nextArc = this.patchCornerConnections(currentArc, edgeArcs, allArcs);
-                    currentSortedArcs.push(nextArc.edgeArc);
-                    this.removeArcFromArray(nextArc, arcsInNeedOfSorting);
-                    currentArc = nextArc;
-                }
-            }
-        }
-
-        return sortedArcs;
-    }
-
-    // Gather arc information and prepare for sorting
-    prepareArcArraysForSorting(arcsArray, edgeArcs, allArcs, geometries) {
-        arcsArray.forEach((arc, i) => {
-            const edgeArc = arc;
-            let leftArc = null;
-            let rightArc = null;
-
-            if (arcsArray.length == 2) {
-                if (i == 0) {
-                    leftArc = arcsArray[1];
-                    rightArc = arcsArray[1];
-                }
-                if (i == 1) {
-                    leftArc = arcsArray[0];
-                    rightArc = arcsArray[0];
-                }
-            }
-            if (arcsArray.length > 2) {
-                if (i == 0) {
-                    leftArc = arcsArray[arcsArray.length - 1];
-                    rightArc = arcsArray[i + 1];
-                }
-                if (i == arcsArray.length - 1) {
-                    leftArc = arcsArray[i - 1];
-                    rightArc = arcsArray[0];
-                }
-                if (i > 0 && i < arcsArray.length - 1) {
-                    leftArc = arcsArray[i - 1];
-                    rightArc = arcsArray[i + 1];
-                }
-            }
-
-            allArcs.push({edgeArc, leftArc, rightArc});
-            if (!this.arcSharesBoundary(geometries, arc)) {
-                edgeArcs.push({edgeArc, leftArc, rightArc});
-            }
-        });
-    }
-
-    // Remove provinces/counties within countries
-    prepareCountryData(countryData, iso) {
-        // Make deep object copies so don't overwrite original data
-        const topojson = Object.assign({}, countryData);
-        topojson.objects = Object.assign({}, countryData.objects);
-        topojson.objects[iso] = Object.assign({}, countryData.objects[iso]);
-        topojson.objects[iso].geometries = Object.assign([], countryData.objects[iso].geometries);
-
-        const newGeometry = {
-            type: 'Polygon',
-            properties: {name: retrieveCountryInfo(iso).name.common, iso: iso.toUpperCase()},
-            id: iso.toUpperCase(),
-            arcs: []
-        };
-        
-        const allArcs = [];
-        const edgeArcs = [];
-        const geometries = topojson.objects[iso].geometries;
-        geometries.forEach(geometry => {
-            if (geometry.type == 'Polygon') {
-                geometry.arcs.forEach(arcsArray => {
-                    this.prepareArcArraysForSorting(arcsArray, edgeArcs, allArcs, geometries);
-                });
-            }
-            if (geometry.type == 'MultiPolygon') {
-                geometry.arcs.forEach(multiArcArray => {
-                    multiArcArray.forEach(arcsArray => {
-                        this.prepareArcArraysForSorting(arcsArray, edgeArcs, allArcs, geometries);
-                    });
-                });
-            }
-        });
-
-        if (iso == 'kaz') {
-            const removeIndex = edgeArcs.findIndex(item => {
-                return item.edgeArc == 17; // Remove Baikonur from Kazakhstan
-            });
-            edgeArcs.splice(removeIndex, 1);
-        }
-        const sortedArcs = this.sortArcs(edgeArcs, allArcs);
-        if (sortedArcs.length > 1) {
-            newGeometry.type = 'MultiPolygon';
-            newGeometry.arcs = [sortedArcs];
-        } else {
-            newGeometry.arcs = sortedArcs;
-        }
-
-        topojson.objects[iso].geometries = [newGeometry];
-        return topojson;
-    }
-
     // Create topojson for iso that's currently a 'territory' of another country
     createMissingTopojson(CountryMap, isoTerritory, isoCountry) {
         let territoryInfo;
@@ -199,8 +13,8 @@ class ManipulateGeoMap {
         }
 
         // Add territory's topojson
-        let countryData = JSON.parse(JSON.stringify(CountryMap.prototype[isoCountry + 'Topo']));
-        let geometries = countryData.objects[isoCountry].geometries;
+        let countryTopo = JSON.parse(JSON.stringify(CountryMap.prototype[isoCountry + 'Topo']));
+        let geometries = countryTopo.objects[isoCountry].geometries;
         geometries = geometries.filter(geometry => {
             const territoryInfoString = JSON.stringify(territoryInfo);
             return territoryInfoString.indexOf(geometry.properties.name) >= 0;
@@ -219,12 +33,12 @@ class ManipulateGeoMap {
             }
         }
 
-        countryData.objects[isoCountry].geometries = geometries;
-        CountryMap.prototype[isoTerritory + 'Topo'] = countryData;
+        countryTopo.objects[isoCountry].geometries = geometries;
+        CountryMap.prototype[isoTerritory + 'Topo'] = countryTopo;
 
         // Remove territory from country's topojson
-        countryData = CountryMap.prototype[isoCountry + 'Topo'];
-        geometries = countryData.objects[isoCountry].geometries;
+        countryTopo = CountryMap.prototype[isoCountry + 'Topo'];
+        geometries = countryTopo.objects[isoCountry].geometries;
         geometries = geometries.filter(geometry => {
             const territoryInfoString = JSON.stringify(territoryInfo);
             return territoryInfoString.indexOf(geometry.properties.name) < 0;
@@ -244,15 +58,59 @@ class ManipulateGeoMap {
             }
         }
         
-        countryData.objects[isoCountry].geometries = geometries;
-        CountryMap.prototype[isoCountry + 'Topo'] = countryData;
+        countryTopo.objects[isoCountry].geometries = geometries;
+        CountryMap.prototype[isoCountry + 'Topo'] = countryTopo;
+    }
+
+    // Prepare country's topojson
+    prepareCountryTopo(region, countryTopo) {
+        const iso = region.cca3.toLowerCase();
+        const countryGeometries = countryTopo.objects[iso].geometries;
+        const customGeoJsonObj = {
+            type: 'FeatureCollection',
+            features: [
+                {
+                    type: 'Feature',
+                    id: iso.toUpperCase(),
+                    properties: {name: region.name.common, iso: iso.toUpperCase()},
+                    geometry: topojson.merge(countryTopo, countryGeometries)
+                }
+            ]
+        }
+
+        countryTopo = topojson.topology([customGeoJsonObj]);
+        const objectIso = Object.keys(countryTopo.objects)[0];
+        if (objectIso != iso) {
+            Object.defineProperty(
+                countryTopo.objects,
+                iso,
+                Object.getOwnPropertyDescriptor(countryTopo.objects, objectIso)
+            );
+            delete countryTopo.objects[objectIso];
+        }
+
+        // Remove Baikonur outline from Kazakhstan
+        if (iso == 'kaz') {
+            const kazArcs = countryTopo.objects.kaz.geometries[0].arcs;
+            if (kazArcs.length == 8) {
+                const arcArrayWithBaikonur = kazArcs.find(arcArray => {
+                    return arcArray.length == 2;
+                });
+                const indexToRemove = arcArrayWithBaikonur.findIndex(arc => {
+                    return arc[0] == 3;
+                });
+                arcArrayWithBaikonur.splice(indexToRemove, 1);
+            }
+        }
+
+        return countryTopo;
     }
 
     // Get a country's map and topojson data. Handle exceptions.
-    getCountryMap(iso) {
-        iso = iso.toLowerCase();
+    getCountryMap(region) {
+        let iso = region.cca3.toLowerCase();
         let CountryMap;
-        let countryData;
+        let countryTopo;
 
         // Exception: Cocos (Keeling) Islands & Christmas Island
         if (iso == 'cck' || iso == 'cxr') {
@@ -265,7 +123,7 @@ class ManipulateGeoMap {
             if ($.isEmptyObject(cxrTopo)) {
                 this.createMissingTopojson(CountryMap, 'cxr', 'ioa');
             }
-            countryData = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
+            countryTopo = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
         }
 
         // Exception: France
@@ -292,7 +150,7 @@ class ManipulateGeoMap {
             if ($.isEmptyObject(reuTopo)) {
                 this.createMissingTopojson(CountryMap, 'reu', 'fra');
             }
-            countryData = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
+            countryTopo = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
         }
         
         // Exception: Netherlands
@@ -303,7 +161,7 @@ class ManipulateGeoMap {
             if ($.isEmptyObject(besTopo)) {
                 this.createMissingTopojson(CountryMap, 'bes', 'nld');
             }
-            countryData = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
+            countryTopo = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
         }
         
         // Exception: Norway
@@ -318,7 +176,7 @@ class ManipulateGeoMap {
             if ($.isEmptyObject(sjmTopo)) {
                 this.createMissingTopojson(CountryMap, 'sjm', 'nor');
             }
-            countryData = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
+            countryTopo = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
         }
         
         // Exception: New Zealand
@@ -329,7 +187,7 @@ class ManipulateGeoMap {
             if ($.isEmptyObject(tlkTopo)) {
                 this.createMissingTopojson(CountryMap, 'tkl', 'nzl');
             }
-            countryData = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
+            countryTopo = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
         }
 
         // Everything else
@@ -340,24 +198,37 @@ class ManipulateGeoMap {
             if (iso == 'ssd') iso = 'sds'; // Adjust for difference in datamaps library
             if (iso == 'unk') iso = 'kos'; // Adjust for difference in datamaps library
             CountryMap = require(`datamaps/dist/datamaps.${iso}.min.js`);
-            countryData = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
+            countryTopo = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
             if (iso == 'ald') iso = 'ala'; // Adjust for difference in datamaps library
             if (iso == 'psx') iso = 'pse'; // Adjust for difference in datamaps library
             if (iso == 'sah') iso = 'esh'; // Adjust for difference in datamaps library
             if (iso == 'sds') iso = 'ssd'; // Adjust for difference in datamaps library
             if (iso == 'kos') iso = 'unk'; // Adjust for difference in datamaps library
         }
-        const objectIso = Object.keys(countryData.objects)[0];
+        // Make sure the topojson's object exactly matches the iso
+        const objectIso = Object.keys(countryTopo.objects)[0];
         if (objectIso != iso) {
             Object.defineProperty(
-                countryData.objects,
+                countryTopo.objects,
                 iso,
-                Object.getOwnPropertyDescriptor(countryData.objects, objectIso)
+                Object.getOwnPropertyDescriptor(countryTopo.objects, objectIso)
             );
-            delete countryData.objects[objectIso];
+            delete countryTopo.objects[objectIso];
+        }
+        // Make sure country's ID and properties are correct
+        if (countryTopo.objects[iso].geometries[0].id != iso.toUpperCase()) {
+            countryTopo.objects[iso].geometries[0].id = iso.toUpperCase();
+            countryTopo.objects[iso].geometries[0].properties
+                = {name: retrieveCountryInfo(iso).name.common, iso: iso.toUpperCase()};
+            CountryMap.prototype[iso + 'Topo'] = countryTopo;
         }
 
-        return {CountryMap, countryData};
+        countryTopo = this.prepareCountryTopo(region, countryTopo);
+        const countryObjects = countryTopo.objects[iso];
+        const countryGeoJson = topojson.feature(countryTopo, countryObjects);
+        CountryMap.prototype[iso + 'Topo'] = countryTopo;
+
+        return {CountryMap, countryGeoJson};
     }
 }
 
