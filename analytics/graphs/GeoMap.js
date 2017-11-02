@@ -43,7 +43,7 @@ class GeoMap {
     }
 
     // Prepare data for map
-    prepareData(dataInfo, dataArea, isUsa) {
+    prepareData(dataInfo, dataArea, shouldShowStates) {
         let metric = this.metricInfo.metric;
         if (!metric) metric = this.metricInfo.name;
         
@@ -57,7 +57,7 @@ class GeoMap {
         if (!dataInfo.rows) return data;
         dataInfo.rows.forEach((item, i) => {
             let iso;
-            if (isUsa) {
+            if (shouldShowStates) {
                 iso = convertStateCodes(item[countryColumnIndex]);
             } else {
                 iso = retrieveCountryInfo(item[countryColumnIndex]).cca3;
@@ -140,20 +140,17 @@ class GeoMap {
         this.filterState = filterState;
         this.onChangeFilters = onChangeFilters;
 
-        if (dataArea == 'country') {
-            this.scope = 'world';
-            this.height = 650;
-            this.width = 960;
-        }
+        this.height = 650;
+        this.width = 960;
+
+        this.scope = 'world';
         if (dataArea == 'province') {
-            this.scope = 'usa';
-            this.height = 480;
-            this.width = 960;
+            this.scope = 'usa'; // Specifically, USA subdivided into states
         }
 
         let Datamap = WorldMap;
         let geoJson;
-        if (region.cca3 != 'USA') {
+        if (this.scope != 'usa') {
             const GeoMapHelper = new ManipulateGeoMap;
             let {RegionMap, regionGeoJson} = GeoMapHelper.getRegionMap(region);
             
@@ -169,7 +166,9 @@ class GeoMap {
         let projection = 'mercator';
         const projectionMargin = 100;
         if (this.scope == 'usa') {
-            data = this.prepareData(dataInfo, dataArea, true);
+            let shouldShowStates = false;
+            if (dataArea == 'province') shouldShowStates = true;
+            data = this.prepareData(dataInfo, dataArea, shouldShowStates);
         } else {
             data = this.prepareData(dataInfo, dataArea, false);
             setProjection = () => {

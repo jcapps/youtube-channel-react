@@ -130,7 +130,11 @@ export class AnalyticsDisplayPage extends React.PureComponent {
             }
             let dimensions = 'country';
             for (let i = 0; i < state.filters.length; i++) {
-                if (state.filters[i].key == 'country' && state.filters[i].value == 'US') {
+                if (
+                    state.filters[i].key == 'country' && 
+                    state.filters[i].value == 'US' &&
+                    this.props.metricInfo.canShowUSStates
+                ) {
                     dimensions = 'province';
                 }
             }
