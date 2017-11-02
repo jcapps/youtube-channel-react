@@ -106,8 +106,17 @@ class ManipulateGeoMap {
         return countryTopo;
     }
 
-    // Get a country's map and topojson data. Handle exceptions.
-    getCountryMap(region) {
+    // Get a region's map and topojson data. Handle exceptions.
+    getRegionMap(region) {
+        if (region.name.common == 'World') {
+            const WorldMap = require(`datamaps/dist/datamaps.all.hires.min.js`);
+            const worldTopo = WorldMap.prototype.worldTopo;
+            const worldObjects = worldTopo.objects.world;
+            const worldGeoJson = topojson.feature(worldTopo, worldObjects);
+    
+            return {RegionMap: WorldMap, regionGeoJson: worldGeoJson};
+        }
+
         let iso = region.cca3.toLowerCase();
         let CountryMap;
         let countryTopo;
@@ -228,7 +237,7 @@ class ManipulateGeoMap {
         const countryGeoJson = topojson.feature(countryTopo, countryObjects);
         CountryMap.prototype[iso + 'Topo'] = countryTopo;
 
-        return {CountryMap, countryGeoJson};
+        return {RegionMap: CountryMap, regionGeoJson: countryGeoJson};
     }
 }
 

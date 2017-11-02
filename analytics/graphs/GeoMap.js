@@ -153,13 +153,15 @@ class GeoMap {
 
         let Datamap = WorldMap;
         let geoJson;
-        if (region.name.common != 'World' && region.cca3 != 'USA') {
+        if (region.cca3 != 'USA') {
             const GeoMapHelper = new ManipulateGeoMap;
-            let {CountryMap, countryGeoJson} = GeoMapHelper.getCountryMap(region);
+            let {RegionMap, regionGeoJson} = GeoMapHelper.getRegionMap(region);
             
-            geoJson = countryGeoJson;
-            Datamap = CountryMap;
-            this.scope = region.cca3.toLowerCase();
+            geoJson = regionGeoJson;
+            Datamap = RegionMap;
+            if (region.name.common != 'World') {
+                this.scope = region.cca3.toLowerCase();
+            }
         }
 
         let data = {};
@@ -170,26 +172,23 @@ class GeoMap {
             data = this.prepareData(dataInfo, dataArea, true);
         } else {
             data = this.prepareData(dataInfo, dataArea, false);
-            projection = null;
-            setProjection = (element) => {
-                const svg = d3.select(element).select('svg');
-                let proj = D3.geoOrthographic();
-                if (region.name.common != 'World') {
-                    proj.rotate([-region.latlng[1], -region.latlng[0]])
-                        .fitExtent(
-                            [
-                                [projectionMargin, projectionMargin],
-                                [this.width - projectionMargin, this.height - projectionMargin]
-                            ],
-                            geoJson
-                        );
+            setProjection = () => {
+                projection = D3.geoOrthographic();
+                if (region.name.common == 'World') {
+                    projection.rotate([0, 0]);
                 } else {
-                    proj.rotate([0, 0])
-                        .translate([this.width / 2, this.height / 2]);
+                    projection.rotate([-region.latlng[1], -region.latlng[0]]);
                 }
+                projection.fitExtent(
+                    [
+                        [projectionMargin, projectionMargin],
+                        [this.width - projectionMargin, this.height - projectionMargin]
+                    ],
+                    geoJson
+                );
                 const path = D3.geoPath()
-                    .projection(proj);
-                return {path: path, projection: proj};
+                    .projection(projection);
+                return {path: path, projection: projection};
             }
         }
 
@@ -249,8 +248,19 @@ class GeoMap {
             }
         });
 
-        // Color the background (oceans) blue and add a brown border around map
-        map.svg.style('background-color', 'steelblue')
+        // If showing the globe, add a blue circle behind map (oceans)
+        if (region.name.common == 'World') {
+            const minBound = Math.min(this.width, this.height);
+            const radius = ((minBound - (projectionMargin * 2)) / 2) + 1;
+            map.svg.insert('circle', ':first-child')
+                .attr('cx', (this.width / 2) + 1.5) // Adjust circle right 1.5px; 
+                .attr('cy', (this.height / 2) - 1) // Adjust circle up 1px
+                .attr('r', radius)
+                .style('fill', 'steelblue');
+        }
+
+        // Color the background gray and add a brown border around map
+        map.svg.style('background-color', 'darkgray')
             .style('margin', '5px')
             .style('outline', 'brown solid 5px ');
 
@@ -304,14 +314,22 @@ class GeoMap {
         // Spin globe on drag
         if (this.scope == 'world') {
             map.svg.on('mousedown', downEvent => {
+                let o = projection.rotate(); // Get the current origin (long/lat) of the map
+                const p = d3.mouse(map.svg.node()); // Using the global d3 version used by datamaps module. This avoids overwriting the event listener.
                 map.svg.on('mousemove', moveEvent => {
                     map.updatePopup = () => {};
-                    const position = d3.mouse(map.svg.node()); // Using the global d3 version used by datamaps module. This avoids overwriting the event listener.
-                    const proj = D3.geoOrthographic()
-                        .translate([this.width / 2, this.height / 2])
-                        .rotate([lambda(position[0]), phi(position[1])]);
+                    const q = d3.mouse(map.svg.node()); // Using the global d3 version used by datamaps module. This avoids overwriting the event listener.
+                    projection = D3.geoOrthographic()
+                        .fitExtent(
+                            [
+                                [projectionMargin, projectionMargin],
+                                [this.width - projectionMargin, this.height - projectionMargin]
+                            ],
+                            geoJson
+                        )
+                        .rotate([o[0] + ((q[0] - p[0]) / 2), o[1] + ((p[1] - q[1]) / 2)]);
                     const path = D3.geoPath()
-                        .projection(proj);
+                        .projection(projection);
                     map.svg.selectAll('path').attr('d', path);
                 });
             });
