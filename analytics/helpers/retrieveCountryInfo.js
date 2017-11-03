@@ -1,7 +1,8 @@
-import countries from 'world-countries';
+import getAllCountries from './getAllCountries';
 
 const retrieveCountryInfo = (letterCode) => {
     letterCode = letterCode.toUpperCase();
+    const countries = getAllCountries();
     
     let foundCountry = {
         cca2: 'ZZ',

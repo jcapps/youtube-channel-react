@@ -187,8 +187,14 @@ class FiltersSection extends React.Component {
 
         const countryObject = JSON.parse($(div).closest('div.added-filter').find('input').val());
 
-        const iso = countryObject.cca3.toLowerCase();
-        const flagHtmlString = require(`world-countries/data/${iso}.svg`);
+        let iso = countryObject.cca3.toLowerCase();
+        let flagHtmlString = '';
+        if (iso == 'bes') flagHtmlString = require(`world-countries/data/nld.svg`); // Caribbean Netherlands (Netherlands)
+        else if (iso == 'clp') flagHtmlString = require(`world-countries/data/fra.svg`); // Clipperton Island (France)
+        else if (iso == 'asc') flagHtmlString = require(`../../../images/flags/asc.svg`); // Ascension Island
+        else if (iso == 'taa') flagHtmlString = require(`../../../images/flags/taa.svg`); // Tristan da Cunha
+        else flagHtmlString = require(`world-countries/data/${iso}.svg`); // Everything else can be found in 'world-countries'
+        
         const nodes = $.parseHTML(flagHtmlString);
         let flagSvg;
         for (let node of nodes) {

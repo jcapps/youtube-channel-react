@@ -172,6 +172,21 @@ class ManipulateGeoMap {
             }
             countryTopo = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
         }
+
+        // Exception: Saint Helena, Ascension, and Tristan da Cunha
+        // Territories: Saint Helena, Ascension, and Tristan da Cunha (split up)
+        else if (iso == 'shn' || iso == 'asc' || iso == 'taa') {
+            CountryMap = require(`datamaps/dist/datamaps.shn.min.js`);
+            const ascTopo = Object.assign({}, CountryMap.prototype.ascTopo);
+            const taaTopo = Object.assign({}, CountryMap.prototype.taaTopo);
+            if ($.isEmptyObject(ascTopo)) {
+                this.createMissingTopojson(CountryMap, 'asc', 'shn');
+            }
+            if ($.isEmptyObject(taaTopo)) {
+                this.createMissingTopojson(CountryMap, 'taa', 'shn');
+            }
+            countryTopo = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
+        }
         
         // Exception: Norway
         // Territories: Bouvet Island and Svalbard and Jan Mayen

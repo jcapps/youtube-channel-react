@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
-import countries from 'world-countries';
-import retrieveCountryInfo from '../../../helpers/retrieveCountryInfo';
+import getAllCountries from '../../../helpers/getAllCountries';
 import DownshiftSectioned from './DownshiftSectioned';
 import GeoFilterResult from './GeoFilterResult';
 
@@ -52,6 +51,7 @@ class GeoFilter extends React.PureComponent {
     }
 
     search(query) {
+        const countries = getAllCountries();
         const regionsArray = [];
         query = query.toUpperCase();
         if (query == '') {
