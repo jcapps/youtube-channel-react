@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as d3 from 'd3';
-import countries from 'world-countries';
 import GraphTypes from '../../../globals/GraphTypes';
 import retrieveCountryInfo from '../../../helpers/retrieveCountryInfo';
 import sortDataByCustomColumn from '../../../helpers/sortDataByCustomColumn';
