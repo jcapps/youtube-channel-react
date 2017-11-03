@@ -98,15 +98,21 @@
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
+                line-height: 0;
+                height: 20px;
 
                 & > * {
                     display: inline-block;
                     vertical-align: middle;
                 }
+
+                div.filter-title-text {
+                    line-height: 1.42857143;
+                }
                 
                 div.country-flag {
-                    max-height: 22.5px;
-                    max-width: 40px;
+                    max-height: 20px;
+                    max-width: 35.5px;
                     padding: 0;
                     margin-right: 5px;
                 }

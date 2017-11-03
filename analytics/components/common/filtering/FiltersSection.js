@@ -203,8 +203,8 @@ class FiltersSection extends React.Component {
             const currentWidth = flagSvg.getAttribute('width');
             flagSvg.setAttribute('viewBox', `0 0 ${currentWidth} ${currentHeight}`);
         }
-        flagSvg.setAttribute('height', '22.5');
-        flagSvg.setAttribute('width', '40');
+        flagSvg.setAttribute('height', '20');
+        flagSvg.setAttribute('width', '35.5');
 
         div.appendChild(flagSvg);
     }
@@ -215,9 +215,9 @@ class FiltersSection extends React.Component {
             let displayName = '';
             let flagContainer = '';
             if (filter.snippet) {
-                displayName = filter.snippet.title;
+                displayName = <div className="filter-title-text"><span>{filter.snippet.title}</span></div>;
             } else {
-                displayName = filter.name.common;
+                displayName = <div className="filter-title-text"><span>{filter.name.common}</span></div>;
                 flagContainer = <div ref="flag" className="country-flag"/>;
             }
 
