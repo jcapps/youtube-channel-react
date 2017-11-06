@@ -221,9 +221,9 @@ class FiltersSection extends React.Component {
             let displayName = '';
             let flagContainer = '';
             if (filter.snippet) {
-                displayName = <div className="filter-title-text"><span>{filter.snippet.title}</span></div>;
+                displayName = filter.snippet.title;
             } else {
-                displayName = <div className="filter-title-text"><span>{filter.name.common}</span></div>;
+                displayName = filter.name.common;
                 flagContainer = <div ref="flag" className="country-flag"/>;
             }
 
@@ -232,7 +232,7 @@ class FiltersSection extends React.Component {
                     <input className="hidden" value={JSON.stringify(filter)} readOnly="readOnly" />
                     <div className="added-filter-title">
                         {flagContainer}
-                        {displayName}
+                        <div className="filter-title-text"><span>{displayName}</span></div>
                     </div>
                     <button className="remove-filter" onClick={this.removeFilter}>×</button>
                 </div>
