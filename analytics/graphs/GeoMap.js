@@ -240,6 +240,13 @@ class GeoMap {
             done: (datamap) => {
                 datamap.svg.selectAll('.datamaps-subunit').on('click', geography => {
                     let iso = geography.properties.iso;
+                    if (
+                        geography.properties.name == 'Northern Cyprus' ||
+                        geography.properties.name == 'Akrotiri' ||
+                        geography.properties.name == 'Dhekelia'
+                    ) {
+                        iso = 'CYP';
+                    }
                     if (geography.properties.name == 'Somaliland') {
                         iso = 'SOM';
                     }

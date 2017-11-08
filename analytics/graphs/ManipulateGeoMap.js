@@ -72,8 +72,7 @@ class ManipulateGeoMap {
         const neighborsArray = this.getNeighboringRegions(region, projection, mapWidth, mapHeight);
         neighborsArray.forEach(neighbor => {
             const neighborInfo = this.getRegionMapAndGeoJson(neighbor);
-            const neighborGeoJson = neighborInfo.regionGeoJson;
-            geoJson.features.push(neighborGeoJson.features[0]);
+            geoJson.features.push(neighborInfo.regionGeoJson.features[0]);
         });
 
         const newTopo = topojson.topology([geoJson]);
@@ -300,6 +299,74 @@ class ManipulateGeoMap {
                 this.createMissingTopojson(CountryMap, 'tkl', 'nzl');
             }
             countryTopo = Object.assign({}, CountryMap.prototype[iso + 'Topo']);
+        }
+
+        // Exception: Somalia
+        // Territories: Somaliland (merge with Somalia)
+        else if (iso == 'som') {
+            CountryMap = require(`datamaps/dist/datamaps.som.min.js`);
+            let somTopo = Object.assign({}, CountryMap.prototype.somTopo);
+            if (somTopo.objects.som.geometries.length > 1) { // If not already merged
+                const somGeoJson = topojson.feature(somTopo, somTopo.objects.som);
+
+                // Add Somaliland
+                const somaliland = {name: {common: 'Somaliland'}, cca3: 'SOL'};
+                const solInfo = this.getRegionMapAndGeoJson(somaliland);
+                const solFeature = solInfo.regionGeoJson.features[0];
+                somGeoJson.features.push(solFeature);
+
+                somTopo = topojson.topology([somGeoJson]);
+                const objectIso = Object.keys(somTopo.objects)[0];
+                if (objectIso != iso) {
+                    Object.defineProperty(
+                        somTopo.objects,
+                        iso,
+                        Object.getOwnPropertyDescriptor(somTopo.objects, objectIso)
+                    );
+                    delete somTopo.objects[objectIso];
+                }
+            }
+            countryTopo = somTopo;
+        }
+
+        // Exception: Cyprus
+        // Territories: Northern Cyprus, Dhekelia, Akrotiri (merge with Cyprus)
+        else if (iso == 'cyp') {
+            CountryMap = require(`datamaps/dist/datamaps.cyp.min.js`);
+            let cypTopo = Object.assign({}, CountryMap.prototype.cypTopo);
+            if (cypTopo.objects.cyp.geometries.length > 1) { // If not already merged
+                const cypGeoJson = topojson.feature(cypTopo, cypTopo.objects.cyp);
+
+                // Add Northern Cyprus
+                const northernCyprus = {name: {common: 'Northern Cyprus'}, cca3: 'CYN'};
+                const cynInfo = this.getRegionMapAndGeoJson(northernCyprus);
+                const cynFeature = cynInfo.regionGeoJson.features[0];
+                cypGeoJson.features.push(cynFeature);
+
+                // Add Dhekelia
+                const dhekelia = {name: {common: 'Dhekelia'}, cca3: 'ESB'};
+                const esbInfo = this.getRegionMapAndGeoJson(dhekelia);
+                const esbFeature = esbInfo.regionGeoJson.features[0];
+                cypGeoJson.features.push(esbFeature);
+
+                // Add Akrotiri
+                const akrotiri = {name: {common: 'Akrotiri'}, cca3: 'WSB'};
+                const wsbInfo = this.getRegionMapAndGeoJson(akrotiri);
+                const wsbFeature = wsbInfo.regionGeoJson.features[0];
+                cypGeoJson.features.push(wsbFeature);
+
+                cypTopo = topojson.topology([cypGeoJson]);
+                const objectIso = Object.keys(cypTopo.objects)[0];
+                if (objectIso != iso) {
+                    Object.defineProperty(
+                        cypTopo.objects,
+                        iso,
+                        Object.getOwnPropertyDescriptor(cypTopo.objects, objectIso)
+                    );
+                    delete cypTopo.objects[objectIso];
+                }
+            }
+            countryTopo = cypTopo;
         }
 
         // Everything else
