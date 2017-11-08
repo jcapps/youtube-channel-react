@@ -20,6 +20,10 @@ class ManipulateGeoMap {
         const regionLeftBottom = projection([regionBBox[0][0], regionBBox[0][1]]);
         const regionRightTop = projection([regionBBox[1][0], regionBBox[1][1]]);
         const regionRightBottom = projection([regionBBox[1][0], regionBBox[0][1]]);
+        const regionCenterLeft = projection([regionBBox[0][0], (regionBBox[1][1] - regionBBox[0][1]) / 2]);
+        const regionCenterBottom = projection([(regionBBox[1][0] - regionBBox[0][0]) / 2, regionBBox[0][1]]);
+        const regionCenterRight = projection([regionBBox[1][0], (regionBBox[1][1] - regionBBox[0][1]) / 2]);
+        const regionCenterTop = projection([(regionBBox[1][0] - regionBBox[0][0]) / 2, regionBBox[1][1]]);
 
         const boundDelta = 13; // Because projection is curved, delta helps to offset the bounding box's 'curvature'
         const mapLeftBound = -boundDelta;
@@ -32,7 +36,11 @@ class ManipulateGeoMap {
             regionLeftTop[0] > mapLeftBound && regionLeftTop[0] < mapRightBound && regionLeftTop[1] > mapTopBound && regionLeftTop[1] < mapBottomBound ||
             regionLeftBottom[0] > mapLeftBound && regionLeftBottom[0] < mapRightBound && regionLeftBottom[1] > mapTopBound && regionLeftBottom[1] < mapBottomBound ||
             regionRightTop[0] > mapLeftBound && regionRightTop[0] < mapRightBound && regionRightTop[1] > mapTopBound && regionRightTop[1] < mapBottomBound ||
-            regionRightBottom[0] > mapLeftBound && regionRightBottom[0] < mapRightBound && regionRightBottom[1] > mapTopBound && regionRightBottom[1] < mapBottomBound
+            regionRightBottom[0] > mapLeftBound && regionRightBottom[0] < mapRightBound && regionRightBottom[1] > mapTopBound && regionRightBottom[1] < mapBottomBound ||
+            regionCenterLeft[0] > mapLeftBound && regionCenterLeft[0] < mapRightBound && regionCenterLeft[1] > mapTopBound && regionCenterLeft[1] < mapBottomBound ||
+            regionCenterBottom[0] > mapLeftBound && regionCenterBottom[0] < mapRightBound && regionCenterBottom[1] > mapTopBound && regionCenterBottom[1] < mapBottomBound ||
+            regionCenterRight[0] > mapLeftBound && regionCenterRight[0] < mapRightBound && regionCenterRight[1] > mapTopBound && regionCenterRight[1] < mapBottomBound ||
+            regionCenterTop[0] > mapLeftBound && regionCenterTop[0] < mapRightBound && regionCenterTop[1] > mapTopBound && regionCenterTop[1] < mapBottomBound
         ) {
             return true;
         }
