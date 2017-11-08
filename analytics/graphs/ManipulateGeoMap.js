@@ -1,8 +1,88 @@
+import EmptyMap from 'datamaps/dist/datamaps.none.min.js';
 import * as topojson from 'topojson';
+import * as D3 from 'd3';
 import $ from 'jquery';
+import getAllCountries from '../helpers/getAllCountries';
 import retrieveCountryInfo from '../helpers/retrieveCountryInfo';
 
 class ManipulateGeoMap {
+    // Determine if potential country is visible on map
+    isRegionVisible(projection, regionGeoJson, mapWidth, mapHeight, region, neighbor) {
+        const iso = neighbor.cca3.toUpperCase();
+        if (iso == 'RUS') return true; // Too hard to try and calculate whether to render Russia, so just always render
+        for (let i = 0; i < region.borders.length; i++) {
+            if (iso == region.borders[i]) return true;
+        }
+        
+        const regionBBox = D3.geoBounds(regionGeoJson);
+
+        const regionLeftTop = projection([regionBBox[0][0], regionBBox[1][1]]);
+        const regionLeftBottom = projection([regionBBox[0][0], regionBBox[0][1]]);
+        const regionRightTop = projection([regionBBox[1][0], regionBBox[1][1]]);
+        const regionRightBottom = projection([regionBBox[1][0], regionBBox[0][1]]);
+
+        const boundDelta = 13; // Because projection is curved, delta helps to offset the bounding box's 'curvature'
+        const mapLeftBound = -boundDelta;
+        const mapRightBound = mapWidth + boundDelta;
+        const mapBottomBound = mapHeight + boundDelta;
+        const mapTopBound = -boundDelta;
+
+        // Check whether corners of potential country's bounding box are contained in map
+        if (
+            regionLeftTop[0] > mapLeftBound && regionLeftTop[0] < mapRightBound && regionLeftTop[1] > mapTopBound && regionLeftTop[1] < mapBottomBound ||
+            regionLeftBottom[0] > mapLeftBound && regionLeftBottom[0] < mapRightBound && regionLeftBottom[1] > mapTopBound && regionLeftBottom[1] < mapBottomBound ||
+            regionRightTop[0] > mapLeftBound && regionRightTop[0] < mapRightBound && regionRightTop[1] > mapTopBound && regionRightTop[1] < mapBottomBound ||
+            regionRightBottom[0] > mapLeftBound && regionRightBottom[0] < mapRightBound && regionRightBottom[1] > mapTopBound && regionRightBottom[1] < mapBottomBound
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    // Retrieve the surrounding regions
+    getNeighboringRegions(region, projection, mapWidth, mapHeight) {
+        const regionIso = region.cca3.toLowerCase();
+        const neighborsArray = [];
+
+        const countries = getAllCountries();
+        countries.forEach(country => {
+            const iso = country.cca3.toLowerCase();
+            if (iso == regionIso) return; // Don't count the filtered country as a neighboring country
+            const regionInfo = this.getRegionMapAndGeoJson(country);
+            if (this.isRegionVisible(projection, regionInfo.regionGeoJson, mapWidth, mapHeight, region, country)) {
+                neighborsArray.push(country);
+            }
+        });
+        return neighborsArray;
+    }
+
+    // Include the surrounding countries when zoomed-in on a region
+    addSurroundingRegions(region, RegionMap, geoJson, projection, mapWidth, mapHeight) {
+        const iso = region.cca3.toLowerCase();
+        const mainTopo = JSON.parse(JSON.stringify(RegionMap.prototype[iso + 'Topo']));
+
+        const neighborsArray = this.getNeighboringRegions(region, projection, mapWidth, mapHeight);
+        neighborsArray.forEach(neighbor => {
+            const neighborInfo = this.getRegionMapAndGeoJson(neighbor);
+            const neighborGeoJson = neighborInfo.regionGeoJson;
+            geoJson.features.push(neighborGeoJson.features[0]);
+        });
+
+        const newTopo = topojson.topology([geoJson]);
+        const objectIso = Object.keys(newTopo.objects)[0];
+        if (objectIso != iso) {
+            Object.defineProperty(
+                newTopo.objects,
+                iso,
+                Object.getOwnPropertyDescriptor(newTopo.objects, objectIso)
+            );
+            delete newTopo.objects[objectIso];
+        }
+        EmptyMap.prototype[iso + 'Topo'] = newTopo;
+
+        return EmptyMap;
+    }
+
     // Create topojson for iso that's currently a 'territory' of another country
     createMissingTopojson(CountryMap, isoTerritory, isoCountry) {
         let territoryInfo;
@@ -92,22 +172,22 @@ class ManipulateGeoMap {
         // Remove Baikonur outline from Kazakhstan
         if (iso == 'kaz') {
             const kazArcs = countryTopo.objects.kaz.geometries[0].arcs;
-            if (kazArcs.length == 8) {
-                const arcArrayWithBaikonur = kazArcs.find(arcArray => {
-                    return arcArray.length == 2;
-                });
+            const arcArrayWithBaikonur = kazArcs.find(arcArray => {
+                return arcArray.length == 2;
+            });
+            if (arcArrayWithBaikonur) {
                 const indexToRemove = arcArrayWithBaikonur.findIndex(arc => {
                     return arc[0] == 3;
                 });
                 arcArrayWithBaikonur.splice(indexToRemove, 1);
-            }
+            } 
         }
 
         return countryTopo;
     }
 
-    // Get a region's map and topojson data. Handle exceptions.
-    getRegionMap(region) {
+    // Get a region's map and geoJson. Handle exceptions.
+    getRegionMapAndGeoJson(region) {
         if (region.name.common == 'World') {
             const WorldMap = require(`datamaps/dist/datamaps.all.hires.min.js`);
             const worldTopo = WorldMap.prototype.worldTopo;

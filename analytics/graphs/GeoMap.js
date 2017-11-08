@@ -149,19 +149,21 @@ class GeoMap {
         }
 
         let Datamap = WorldMap;
-        let geoJson;
+        let RegionMap = null;
+        let geoJson = null;
+        const GeoMapHelper = new ManipulateGeoMap;
         if (this.scope != 'usa') {
-            const GeoMapHelper = new ManipulateGeoMap;
-            let {RegionMap, regionGeoJson} = GeoMapHelper.getRegionMap(region);
+            let regionInfo = GeoMapHelper.getRegionMapAndGeoJson(region);
             
-            geoJson = regionGeoJson;
-            Datamap = RegionMap;
+            geoJson = regionInfo.regionGeoJson;
+            RegionMap = regionInfo.RegionMap;
             if (region.name.common != 'World') {
                 this.scope = region.cca3.toLowerCase();
             }
         }
 
         let data = {};
+        let path = null;
         let setProjection = null;
         let projection = 'mercator';
         const projectionMargin = 100;
@@ -171,24 +173,28 @@ class GeoMap {
             data = this.prepareData(dataInfo, dataArea, shouldShowStates);
         } else {
             data = this.prepareData(dataInfo, dataArea, false);
+            projection = D3.geoOrthographic();
+            if (region.name.common == 'World') {
+                projection.rotate([0, 0]);
+            } else {
+                projection.rotate([-region.latlng[1], -region.latlng[0]]);
+            }
+            projection.fitExtent(
+                [
+                    [projectionMargin, projectionMargin],
+                    [this.width - projectionMargin, this.height - projectionMargin]
+                ],
+                geoJson
+            );
+            path = D3.geoPath().projection(projection);
+
             setProjection = () => {
-                projection = D3.geoOrthographic();
-                if (region.name.common == 'World') {
-                    projection.rotate([0, 0]);
-                } else {
-                    projection.rotate([-region.latlng[1], -region.latlng[0]]);
-                }
-                projection.fitExtent(
-                    [
-                        [projectionMargin, projectionMargin],
-                        [this.width - projectionMargin, this.height - projectionMargin]
-                    ],
-                    geoJson
-                );
-                const path = D3.geoPath()
-                    .projection(projection);
                 return {path: path, projection: projection};
             }
+        }
+
+        if (this.scope != 'usa' && region.name.common != 'World') {
+            Datamap = GeoMapHelper.addSurroundingRegions(region, RegionMap, geoJson, projection, this.width, this.height);
         }
 
         if ($.isEmptyObject(data)) {
@@ -262,6 +268,10 @@ class GeoMap {
         map.svg.style('background-color', 'darkgray')
             .style('margin', '5px')
             .style('outline', 'brown solid 5px ');
+        // TODO: Keep background gray, add blue circle that's correctly positioned according to zoom
+        if (region.name.common != 'World' && this.scope != 'usa') {
+            map.svg.style('background-color', 'steelblue');
+        }
 
         // Overwrite the Datamap prototype function "updatePopup" with 
         // customized popup set and display

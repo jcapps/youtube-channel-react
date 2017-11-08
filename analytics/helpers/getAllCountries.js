@@ -4,7 +4,7 @@ const getAllCountries = () => {
     const allCountries = Object.assign([], countries);
 
     // Add regions not included in the 'world-countries' library
-    // (Region must at least include name.common, name.official, latlng, cca2, cca3)
+    // (Region must at least include name.common, name.official, cca2, cca3, latlng, borders)
 
     // Caribbean Netherlands (Bonaire, Sint Eustatius, and Saba)
     const CaribbeanNetherlands = {
@@ -14,7 +14,8 @@ const getAllCountries = () => {
         },
         cca2: 'BQ',
         cca3: 'BES',
-        latlng: [12.183333, -68.233333]
+        latlng: [12.183333, -68.233333],
+        borders: []
     };
 
     // Clipperton Island
@@ -25,7 +26,8 @@ const getAllCountries = () => {
         },
         cca2: 'CP',
         cca3: 'CLP',
-        latlng: [10.3, -109.21666666]
+        latlng: [10.3, -109.21666666],
+        borders: []
     };
 
     // Saint Helena, Ascension and Tristan da Cunha
