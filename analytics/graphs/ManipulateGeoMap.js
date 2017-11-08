@@ -23,23 +23,40 @@ class ManipulateGeoMap {
     // Determine if potential country is visible on map
     isRegionVisible(projection, regionGeoJson, mapWidth, mapHeight, region, neighbor) {
         const iso = neighbor.cca3.toUpperCase();
-        if (iso == 'RUS') return true; // Too hard to try and calculate whether to render Russia, so just always render
         for (let i = 0; i < region.borders.length; i++) {
             if (iso == region.borders[i]) return true;
         }
-        
+        // Handle exceptions here
+        const mainIso = region.cca3.toUpperCase();
+        if (mainIso == 'ATA' && iso == 'BRA') return true; // Don't need this if set boundDelta = 4
+        if (mainIso == 'BGD' && iso == 'CHN') return true;
+        if (mainIso == 'BHS' && iso == 'USA') return true;
+        if (mainIso == 'CUB' && iso == 'USA') return true;
+        if (mainIso == 'DEU' && iso == 'RUS') return true;
+        if (mainIso == 'GGY' && iso == 'FRA') return true;
+        if (mainIso == 'GRL' && iso == 'RUS') return true;
+        if (mainIso == 'IRN' && iso == 'RUS') return true;
+        if (mainIso == 'JPN' && iso == 'RUS') return true;
+        if (mainIso == 'NLD' && iso == 'GBR') return true;
+        if (mainIso == 'SGP' && iso == 'MYS') return true;
+        if (mainIso == 'SJM' && iso == 'RUS') return true;
+        if (mainIso == 'SWE' && iso == 'RUS') return true;
+        if (mainIso == 'TTO' && iso == 'VEN') return true;
+        if (mainIso == 'TUR' && iso == 'RUS') return true;
+        if (mainIso == 'TWN' && iso == 'CHN') return true;
+
         const regionBBox = D3.geoBounds(regionGeoJson);
 
         const regionLeftTop = projection([regionBBox[0][0], regionBBox[1][1]]);
         const regionLeftBottom = projection([regionBBox[0][0], regionBBox[0][1]]);
         const regionRightTop = projection([regionBBox[1][0], regionBBox[1][1]]);
         const regionRightBottom = projection([regionBBox[1][0], regionBBox[0][1]]);
-        const regionCenterLeft = projection([regionBBox[0][0], (regionBBox[1][1] - regionBBox[0][1]) / 2]);
-        const regionCenterBottom = projection([(regionBBox[1][0] - regionBBox[0][0]) / 2, regionBBox[0][1]]);
-        const regionCenterRight = projection([regionBBox[1][0], (regionBBox[1][1] - regionBBox[0][1]) / 2]);
-        const regionCenterTop = projection([(regionBBox[1][0] - regionBBox[0][0]) / 2, regionBBox[1][1]]);
+        const regionCenterLeft = projection([regionBBox[0][0], (regionBBox[1][1] + regionBBox[0][1]) / 2]);
+        const regionCenterBottom = projection([(regionBBox[1][0] + regionBBox[0][0]) / 2, regionBBox[0][1]]);
+        const regionCenterRight = projection([regionBBox[1][0], (regionBBox[1][1] + regionBBox[0][1]) / 2]);
+        const regionCenterTop = projection([(regionBBox[1][0] + regionBBox[0][0]) / 2, regionBBox[1][1]]);
 
-        const boundDelta = 13; // Because projection is curved, delta helps to offset the bounding box's 'curvature'
+        const boundDelta = 0; // Because projection is curved, delta helps to offset the bounding box's 'curvature'
         const mapLeftBound = -boundDelta;
         const mapRightBound = mapWidth + boundDelta;
         const mapBottomBound = mapHeight + boundDelta;
@@ -368,7 +385,7 @@ class ManipulateGeoMap {
         }
         // Make sure the topojson's object exactly matches the iso
         countryTopo = this.setObjectIso(countryTopo, iso);
-        
+
         // Make sure country's ID and properties are correct
         if (countryTopo.objects[iso].geometries[0].id != iso.toUpperCase()) {
             countryTopo.objects[iso].geometries[0].id = iso.toUpperCase();
