@@ -6,6 +6,20 @@ import getAllCountries from '../helpers/getAllCountries';
 import retrieveCountryInfo from '../helpers/retrieveCountryInfo';
 
 class ManipulateGeoMap {
+    // Set object key of topojson object to be same as country's iso
+    setObjectIso(topo, iso) {
+        const objectIso = Object.keys(topo.objects)[0];
+        if (objectIso != iso) {
+            Object.defineProperty(
+                topo.objects,
+                iso,
+                Object.getOwnPropertyDescriptor(topo.objects, objectIso)
+            );
+            delete topo.objects[objectIso];
+        }
+        return topo;
+    }
+
     // Determine if potential country is visible on map
     isRegionVisible(projection, regionGeoJson, mapWidth, mapHeight, region, neighbor) {
         const iso = neighbor.cca3.toUpperCase();
@@ -75,16 +89,8 @@ class ManipulateGeoMap {
             geoJson.features.push(neighborInfo.regionGeoJson.features[0]);
         });
 
-        const newTopo = topojson.topology([geoJson]);
-        const objectIso = Object.keys(newTopo.objects)[0];
-        if (objectIso != iso) {
-            Object.defineProperty(
-                newTopo.objects,
-                iso,
-                Object.getOwnPropertyDescriptor(newTopo.objects, objectIso)
-            );
-            delete newTopo.objects[objectIso];
-        }
+        let newTopo = topojson.topology([geoJson]);
+        newTopo = this.setObjectIso(newTopo, iso);
         EmptyMap.prototype[iso + 'Topo'] = newTopo;
 
         return EmptyMap;
@@ -166,15 +172,7 @@ class ManipulateGeoMap {
         }
 
         countryTopo = topojson.topology([customGeoJsonObj]);
-        const objectIso = Object.keys(countryTopo.objects)[0];
-        if (objectIso != iso) {
-            Object.defineProperty(
-                countryTopo.objects,
-                iso,
-                Object.getOwnPropertyDescriptor(countryTopo.objects, objectIso)
-            );
-            delete countryTopo.objects[objectIso];
-        }
+        countryTopo = this.setObjectIso(countryTopo, iso);
 
         // Remove Baikonur outline from Kazakhstan
         if (iso == 'kaz') {
@@ -316,15 +314,7 @@ class ManipulateGeoMap {
                 somGeoJson.features.push(solFeature);
 
                 somTopo = topojson.topology([somGeoJson]);
-                const objectIso = Object.keys(somTopo.objects)[0];
-                if (objectIso != iso) {
-                    Object.defineProperty(
-                        somTopo.objects,
-                        iso,
-                        Object.getOwnPropertyDescriptor(somTopo.objects, objectIso)
-                    );
-                    delete somTopo.objects[objectIso];
-                }
+                somTopo = this.setObjectIso(somTopo, iso);
             }
             countryTopo = somTopo;
         }
@@ -356,15 +346,7 @@ class ManipulateGeoMap {
                 cypGeoJson.features.push(wsbFeature);
 
                 cypTopo = topojson.topology([cypGeoJson]);
-                const objectIso = Object.keys(cypTopo.objects)[0];
-                if (objectIso != iso) {
-                    Object.defineProperty(
-                        cypTopo.objects,
-                        iso,
-                        Object.getOwnPropertyDescriptor(cypTopo.objects, objectIso)
-                    );
-                    delete cypTopo.objects[objectIso];
-                }
+                cypTopo = this.setObjectIso(cypTopo, iso);
             }
             countryTopo = cypTopo;
         }
@@ -385,15 +367,8 @@ class ManipulateGeoMap {
             if (iso == 'kos') iso = 'unk'; // Adjust for difference in datamaps library
         }
         // Make sure the topojson's object exactly matches the iso
-        const objectIso = Object.keys(countryTopo.objects)[0];
-        if (objectIso != iso) {
-            Object.defineProperty(
-                countryTopo.objects,
-                iso,
-                Object.getOwnPropertyDescriptor(countryTopo.objects, objectIso)
-            );
-            delete countryTopo.objects[objectIso];
-        }
+        countryTopo = this.setObjectIso(countryTopo, iso);
+        
         // Make sure country's ID and properties are correct
         if (countryTopo.objects[iso].geometries[0].id != iso.toUpperCase()) {
             countryTopo.objects[iso].geometries[0].id = iso.toUpperCase();
