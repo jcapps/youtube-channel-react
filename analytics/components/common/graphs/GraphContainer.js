@@ -19,6 +19,13 @@ class GraphContainer extends React.PureComponent {
         this.switchToLineGraphContainer = this.switchToLineGraphContainer.bind(this);
     }
 
+    shouldComponentUpdate(nextProps) {
+        if (JSON.stringify(this.props.dataInfo) != JSON.stringify(nextProps.dataInfo)) {
+            return true;
+        }
+        return false;
+    }
+
     switchToGeoMapContainer() {
         this.props.onRenderStart();
         const {
@@ -161,4 +168,13 @@ export function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(GraphContainer);
+export const connectOptions = {
+    areStatePropsEqual: (next, prev) => {
+        return !(
+            (!next.isLoading) || 
+            (prev.dataInfo !== next.dataInfo)
+        );
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(GraphContainer);
