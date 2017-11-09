@@ -265,7 +265,9 @@ class GeoMap {
                 .attr('cx', projection.translate()[0])
                 .attr('cy', projection.translate()[1])
                 .attr('r', projection.scale())
-                .style('fill', 'steelblue');
+                .style('fill', 'steelblue')
+                .style('stroke', 'white')
+                .style('stroke-width', '1');
         }
 
         // Prepare background canvas for styling
