@@ -269,10 +269,8 @@ class GeoMap {
                 .style('fill', 'steelblue');
         }
 
-        // Color the background gray and add a brown border around map
-        map.svg.style('background-color', 'darkgray')
-            .style('margin', '5px')
-            .style('outline', 'brown solid 5px ');
+        // Prepare background canvas for styling
+        map.svg.attr('class', 'geo-canvas');
 
         // Overwrite the Datamap prototype function "updatePopup" with 
         // customized popup set and display

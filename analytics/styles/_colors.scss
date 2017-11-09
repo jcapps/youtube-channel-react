@@ -11,6 +11,7 @@ $anchor-purple: mediumpurple;
 $purple-gray: rgb(65, 58, 78);
 $steelblue: steelblue;
 $lightsteelblue: lightsteelblue;
+$outerspace: lighten($black, 10%);
 
 /* SideBar colors */
 $sidebar-primary: $purple-gray;
@@ -28,6 +29,10 @@ $line: $steelblue;
 $grid-line: $slategray;
 $grid-baseline: $darkslategray;
 $highlight: $red;
+
+/* Geo Graph colors */
+$canvas-background: $outerspace;
+$canvas-border: $gray;
 
 /* Tooltip colors */
 $tooltip-color: $white;
