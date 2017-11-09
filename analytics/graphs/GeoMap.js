@@ -149,14 +149,13 @@ class GeoMap {
         }
 
         let Datamap = WorldMap;
-        let RegionMap = null;
         let geoJson = null;
         const GeoMapHelper = new ManipulateGeoMap;
         if (this.scope != 'usa') {
             let regionInfo = GeoMapHelper.getRegionMapAndGeoJson(region);
             
             geoJson = regionInfo.regionGeoJson;
-            RegionMap = regionInfo.RegionMap;
+            Datamap = regionInfo.RegionMap;
             if (region.name.common != 'World') {
                 this.scope = region.cca3.toLowerCase();
             }
@@ -194,7 +193,7 @@ class GeoMap {
         }
 
         if (this.scope != 'usa' && region.name.common != 'World') {
-            Datamap = GeoMapHelper.addSurroundingRegions(region, RegionMap, geoJson, projection, this.width, this.height);
+            Datamap = GeoMapHelper.addSurroundingRegions(region, Datamap, geoJson, projection, this.width, this.height);
         }
 
         if ($.isEmptyObject(data)) {
