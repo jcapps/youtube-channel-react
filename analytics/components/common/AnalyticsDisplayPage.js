@@ -45,7 +45,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (JSON.stringify(this.props.data) != JSON.stringify(nextProps.data)) {
+        if (!nextProps.isLoading) {
             this.setState({isLoading: false});
         }
     }

@@ -20,7 +20,7 @@ class GraphContainer extends React.PureComponent {
     }
 
     shouldComponentUpdate(nextProps) {
-        if (JSON.stringify(this.props.dataInfo) != JSON.stringify(nextProps.dataInfo)) {
+        if (!nextProps.isLoading) {
             return true;
         }
         return false;
@@ -74,6 +74,9 @@ class GraphContainer extends React.PureComponent {
         const columns = dataInfo.columnHeaders.map(item => {
             return item.name;
         });
+        if (columns.indexOf('day') > -1 && this.props.graphType == GraphTypes.GEO) {
+            return <div/>;
+        }
         if (columns.indexOf('province') > -1) {
             dataArea = 'province';
         }
@@ -156,8 +159,7 @@ export function mapStateToProps(state) {
     
     return {
         filterState: newFilterStateObject,
-        graphType: state.graphType,
-        isLoading: state.ajaxCallsInProgress.report > 0
+        graphType: state.graphType
     };
 }
 
@@ -168,13 +170,4 @@ export function mapDispatchToProps(dispatch) {
     };
 }
 
-export const connectOptions = {
-    areStatePropsEqual: (next, prev) => {
-        return !(
-            (!next.isLoading) || 
-            (prev.dataInfo !== next.dataInfo)
-        );
-    }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(GraphContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(GraphContainer);
