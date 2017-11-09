@@ -260,14 +260,12 @@ class GeoMap {
             }
         });
 
-        // If showing the globe, add a blue circle behind map (oceans)
-        if (region.name.common == 'World') {
-            const minBound = Math.min(this.width, this.height);
-            const radius = ((minBound - (projectionMargin * 2)) / 2) + 1;
+        // If showing the globe (i.e. not USA map), add a blue circle behind map (oceans)
+        if (this.scope != 'usa') {
             map.svg.insert('circle', ':first-child')
-                .attr('cx', (this.width / 2) + 1.5) // Adjust circle right 1.5px; 
-                .attr('cy', (this.height / 2) - 1) // Adjust circle up 1px
-                .attr('r', radius)
+                .attr('cx', projection.translate()[0])
+                .attr('cy', projection.translate()[1])
+                .attr('r', projection.scale())
                 .style('fill', 'steelblue');
         }
 
@@ -275,10 +273,6 @@ class GeoMap {
         map.svg.style('background-color', 'darkgray')
             .style('margin', '5px')
             .style('outline', 'brown solid 5px ');
-        // TODO: Keep background gray, add blue circle that's correctly positioned according to zoom
-        if (region.name.common != 'World' && this.scope != 'usa') {
-            map.svg.style('background-color', 'steelblue');
-        }
 
         // Overwrite the Datamap prototype function "updatePopup" with 
         // customized popup set and display
