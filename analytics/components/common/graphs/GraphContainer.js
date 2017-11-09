@@ -74,11 +74,16 @@ class GraphContainer extends React.PureComponent {
         const columns = dataInfo.columnHeaders.map(item => {
             return item.name;
         });
-        if (columns.indexOf('day') > -1 && this.props.graphType == GraphTypes.GEO) {
-            return <div/>;
-        }
         if (columns.indexOf('province') > -1) {
             dataArea = 'province';
+        }
+
+        if ( // Data hasn't been retrieved yet after switching graphs
+            (columns.indexOf('day') > -1 && this.props.graphType == GraphTypes.GEO) ||
+            (columns.indexOf('country') > -1 && this.props.graphType == GraphTypes.LINE) ||
+            (columns.indexOf('province') > -1 && this.props.graphType == GraphTypes.LINE)
+        ) {
+            return <div/>;
         }
         
         let region = {name: {common: 'World'}};
