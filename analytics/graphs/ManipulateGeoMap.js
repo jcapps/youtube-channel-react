@@ -28,11 +28,12 @@ class ManipulateGeoMap {
         }
         // Handle exceptions here
         const mainIso = region.cca3.toUpperCase();
-        if (mainIso == 'ATA' && iso == 'BRA') return true; // Don't need this if set boundDelta = 4
+        if (mainIso == 'ATA' && iso == 'BRA') return true; // Don't need this if set boundDelta = 4+
         if (mainIso == 'BGD' && iso == 'CHN') return true;
         if (mainIso == 'BHS' && iso == 'USA') return true;
         if (mainIso == 'CUB' && iso == 'USA') return true;
         if (mainIso == 'DEU' && iso == 'RUS') return true;
+        if (mainIso == 'GBR' && iso == 'ITA') return true; // Don't need this if set boundDelta = 5+
         if (mainIso == 'GGY' && iso == 'FRA') return true;
         if (mainIso == 'GRL' && iso == 'RUS') return true;
         if (mainIso == 'IRN' && iso == 'RUS') return true;
