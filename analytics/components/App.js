@@ -27,7 +27,7 @@ class App extends React.PureComponent {
                     <div className="jumbotron">
                         <h2>YouTube Analytics</h2>
                         <p>You need to login as James Capps to view the channel's analytics.</p>
-                        <button onClick={this.login}>Login</button>
+                        <button id="analytics-login-button" onClick={this.login}>Login</button>
                     </div>
                 </div>
             );

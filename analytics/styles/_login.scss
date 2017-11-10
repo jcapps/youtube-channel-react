@@ -1,0 +1,17 @@
+div.jumbotron {
+    button#analytics-login-button {
+        padding: 7px 14px;
+        background-color: $login-button-primary;
+        color: $login-button-contrast;
+        font-weight: bold;
+        border: 0;
+
+        &:hover {
+            background-color: $login-button-alternate;
+        }
+
+        &:active {
+            background-color: $login-button-primary;
+        }
+    }
+}

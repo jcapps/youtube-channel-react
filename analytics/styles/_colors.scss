@@ -13,6 +13,11 @@ $steelblue: steelblue;
 $lightsteelblue: lightsteelblue;
 $outerspace: lighten($black, 10%);
 
+/* Login colors */
+$login-button-primary: $purple-gray;
+$login-button-contrast: $white;
+$login-button-alternate: lighten($purple-gray, 15%);
+
 /* SideBar colors */
 $sidebar-primary: $purple-gray;
 $sidebar-contrast: $white;
