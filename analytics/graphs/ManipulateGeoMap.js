@@ -90,7 +90,7 @@ class ManipulateGeoMap {
             if (iso == regionIso) return; // Don't count the filtered country as a neighboring country
             const regionInfo = this.getRegionMapAndGeoJson(country);
             if (this.isRegionVisible(projection, regionInfo.regionGeoJson, mapWidth, mapHeight, region, country)) {
-                neighborsArray.push(country);
+                neighborsArray.push(regionInfo.regionGeoJson);
             }
         });
         return neighborsArray;
@@ -102,9 +102,8 @@ class ManipulateGeoMap {
         const mainTopo = JSON.parse(JSON.stringify(RegionMap.prototype[iso + 'Topo']));
 
         const neighborsArray = this.getNeighboringRegions(region, projection, mapWidth, mapHeight);
-        neighborsArray.forEach(neighbor => {
-            const neighborInfo = this.getRegionMapAndGeoJson(neighbor);
-            geoJson.features.push(neighborInfo.regionGeoJson.features[0]);
+        neighborsArray.forEach(neighborGeoJson => {
+            geoJson.features.push(neighborGeoJson.features[0]);
         });
 
         let newTopo = topojson.topology([geoJson]);
@@ -177,6 +176,10 @@ class ManipulateGeoMap {
     prepareCountryTopo(region, countryTopo) {
         const iso = region.cca3.toLowerCase();
         const countryGeometries = countryTopo.objects[iso].geometries;
+        if (countryGeometries.length == 1) { // Don't waste time doing an unnecessary merge call
+            return countryTopo;
+        }
+
         const customGeoJsonObj = {
             type: 'FeatureCollection',
             features: [
