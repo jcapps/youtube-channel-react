@@ -9,6 +9,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.CURRENCY
     },
     AVERAGE_TIME_IN_PLAYLISTS: {
@@ -19,6 +20,7 @@ const Metrics = {
         isPlaylistMetric: true,
         isVideoMetric: false,
         canShowUSStates: true,
+        canSortTopResults: false,
         dataType: DataTypes.TIME_SECONDS
     },
     AVERAGE_VIEW_DURATION: {
@@ -29,6 +31,7 @@ const Metrics = {
         isPlaylistMetric: true,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: false,
         dataType: DataTypes.TIME_SECONDS
     },
     AVERAGE_VIEW_PERCENTAGE: {
@@ -39,6 +42,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: false,
         dataType: DataTypes.PERCENTAGE
     },
     CARD_CLICK_RATE: {
@@ -49,6 +53,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: false,
         dataType: DataTypes.RATIO
     },
     CARD_CLICKS: {
@@ -59,6 +64,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     CARD_TEASER_CLICK_RATE: {
@@ -69,6 +75,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: false,
         dataType: DataTypes.RATIO
     },
     CARD_TEASER_CLICKS: {
@@ -79,6 +86,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     COMMENTS: {
@@ -89,6 +97,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     DISLIKES: {
@@ -99,6 +108,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     LIKES: {
@@ -109,6 +119,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     PLAYLIST_STARTS: {
@@ -119,6 +130,7 @@ const Metrics = {
         isPlaylistMetric: true,
         isVideoMetric: false,
         canShowUSStates: true,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     REVENUE: {
@@ -129,6 +141,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.CURRENCY
     },
     SHARES: {
@@ -139,6 +152,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     SUBSCRIBERS: {
@@ -149,6 +163,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     SUBSCRIBERS_GAINED: {
@@ -159,6 +174,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     SUBSCRIBERS_LOST: {
@@ -169,6 +185,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     VIDEOS_ADDED_TO_PLAYLISTS: {
@@ -179,6 +196,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     VIDEOS_IN_PLAYLISTS: {
@@ -189,6 +207,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     VIDEOS_REMOVED_FROM_PLAYLISTS: {
@@ -199,6 +218,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.NUMBER
     },
     VIEWS: {
@@ -209,6 +229,7 @@ const Metrics = {
         isPlaylistMetric: true,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: true,
         dataType: DataTypes.NUMBER
     },
     VIEWS_PER_PLAYLIST_START: {
@@ -219,6 +240,7 @@ const Metrics = {
         isPlaylistMetric: true,
         isVideoMetric: false,
         canShowUSStates: true,
+        canSortTopResults: false,
         dataType: DataTypes.DECIMAL
     },
     WATCH_TIME: {
@@ -229,6 +251,7 @@ const Metrics = {
         isPlaylistMetric: true,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: true,
         dataType: DataTypes.TIME_MINUTES
     },
     YOUTUBE_RED_REVENUE: {
@@ -239,6 +262,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: false,
+        canSortTopResults: false,
         dataType: DataTypes.CURRENCY
     },
     YOUTUBE_RED_VIEWS: {
@@ -249,6 +273,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: true,
         dataType: DataTypes.NUMBER
     },
     YOUTUBE_RED_WATCH_TIME: {
@@ -259,6 +284,7 @@ const Metrics = {
         isPlaylistMetric: false,
         isVideoMetric: true,
         canShowUSStates: true,
+        canSortTopResults: true,
         dataType: DataTypes.TIME_MINUTES
     }
 };

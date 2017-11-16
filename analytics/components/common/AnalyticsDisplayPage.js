@@ -142,7 +142,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
             }
             this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters, dimensions, sort);
         }
-        if (sort == '-views') {
+        if (this.props.metricInfo.canSortTopResults) {
             this.props.actions.getTopResultsReport(state.timePeriod, state.dateRange, metrics, state.filters, 'video', sort);
         }
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
@@ -187,7 +187,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
     }
 
     renderTopResultsTable() {
-        if (this.props.metricInfo == Metrics.VIEWS) {
+        if (this.props.metricInfo.canSortTopResults) {
             return <TopResultsTable data={this.props.topResultsData} />;
         }
         return <div/>;
