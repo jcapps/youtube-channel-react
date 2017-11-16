@@ -13,6 +13,17 @@ export function getChannelInfo() {
 }
 
 /**
+ * Retrieve video information given its ID
+ */
+export function getVideo(videoId) {
+    return YouTubeApi.getVideo(videoId).then(video => {
+        return video;
+    }).catch(error => {
+        throw(error);
+    });
+}
+
+/**
  * Search channel for playlists/videos given a search query and searchType
  */
 export function searchChannel(query, searchType, pageToken = "") {

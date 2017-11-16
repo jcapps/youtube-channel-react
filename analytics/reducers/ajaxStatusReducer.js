@@ -69,6 +69,24 @@ function isReportActionErrorType(type) {
     );
 }
 
+function isTopResultsReportActionStartingType(type) {
+    return (
+        type == types.GETTING_TOP_RESULTS_REPORT
+    );
+}
+
+function isTopResultsReportActionSuccessType(type) {
+    return (
+        type == types.GET_TOP_RESULTS_REPORT_SUCCESS
+    );
+}
+
+function isTopResultsReportActionErrorType(type) {
+    return (
+        type == types.GET_TOP_RESULTS_REPORT_ERROR
+    );
+}
+
 function isTotalStatsActionStartingType(type) {
     return (
         type == types.GETTING_TOTAL_STATS
@@ -84,6 +102,24 @@ function isTotalStatsActionSuccessType(type) {
 function isTotalStatsActionErrorType(type) {
     return (
         type == types.GET_TOTAL_STATS_ERROR
+    );
+}
+
+function isVideoActionStartingType(type) {
+    return (
+        type == types.GETTING_VIDEO
+    );
+}
+
+function isVideoActionSuccessType(type) {
+    return (
+        type == types.GET_VIDEO_SUCCESS
+    );
+}
+
+function isVideoActionErrorType(type) {
+    return (
+        type == types.GET_VIDEO_ERROR
     );
 }
 
@@ -123,6 +159,15 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     if (isReportActionErrorType(action.type)) {
         currentState.report -= 1;
     }
+    if (isTopResultsReportActionStartingType(action.type)) {
+        currentState.topResultsReport += 1;
+    }
+    if (isTopResultsReportActionSuccessType(action.type)) {
+        currentState.topResultsReport -= 1;
+    }
+    if (isTopResultsReportActionErrorType(action.type)) {
+        currentState.topResultsReport -= 1;
+    }
     if (isTotalStatsActionStartingType(action.type)) {
         currentState.totalStats += 1;
     }
@@ -131,6 +176,15 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isTotalStatsActionErrorType(action.type)) {
         currentState.totalStats -= 1;
+    }
+    if (isVideoActionStartingType(action.type)) {
+        currentState.video += 1;
+    }
+    if (isVideoActionSuccessType(action.type)) {
+        currentState.video -= 1;
+    }
+    if (isVideoActionErrorType(action.type)) {
+        currentState.video -= 1;
     }
 
     return currentState;

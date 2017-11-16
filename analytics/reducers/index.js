@@ -9,7 +9,9 @@ import report from './reportReducer';
 import searchChannelResults from './searchChannelResultsReducer';
 import searchPlaylistResults from './searchPlaylistResultsReducer';
 import searchVideoResults from './searchVideoResultsReducer';
+import topResultsReport from './topResultsReportReducer';
 import totalStats from './totalStatsReducer';
+import video from './videoReducer';
 
 const rootReducer = combineReducers({
     ajaxCallsInProgress,
@@ -22,7 +24,9 @@ const rootReducer = combineReducers({
     searchChannelResults,
     searchPlaylistResults,
     searchVideoResults,
-    totalStats
+    topResultsReport,
+    totalStats,
+    video
 });
 
 export default rootReducer;

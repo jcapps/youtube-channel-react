@@ -7,7 +7,9 @@ export default function errorReducer(state = initialState.error, action) {
         case types.LOGIN_ERROR:
         case types.GET_IS_LOGGED_IN_ERROR:
         case types.GET_REPORT_ERROR:
+        case types.GET_TOP_RESULTS_REPORT_ERROR:
         case types.GET_TOTAL_STATS_ERROR:
+        case types.GET_VIDEO_ERROR:
         case types.GET_SEARCH_RESULTS_ERROR:
             return action.error;
         default:

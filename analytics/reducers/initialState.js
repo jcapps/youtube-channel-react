@@ -8,7 +8,9 @@ export default {
     searchChannelResults: [],
     searchPlaylistResults: [],
     searchVideoResults: [],
+    topResultsReport: {},
     totalStats: {},
+    video: {},
     isAuthenticated: false,
     error: {},
     filterState: {
@@ -25,6 +27,8 @@ export default {
         isLoggedIn: 0,
         login: 0,
         report: 0,
-        totalStats: 0
+        topResultsReport: 0,
+        totalStats: 0,
+        video: 0
     }
 };

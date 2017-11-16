@@ -16,6 +16,14 @@ export function getReportError(error) {
     return { type: types.GET_REPORT_ERROR, error };
 }
 
+export function getTopResultsReportSuccess(report) {
+    return { type: types.GET_TOP_RESULTS_REPORT_SUCCESS, report };
+}
+
+export function getTopResultsReportError(error) {
+    return { type: types.GET_TOP_RESULTS_REPORT_ERROR, error };
+}
+
 export function getTotalStatsSuccess(report) {
     return { type: types.GET_TOTAL_STATS_SUCCESS, report };
 }
@@ -39,7 +47,8 @@ export function getReport(
             metrics,
             filters,
             dimensions,
-            sort
+            sort,
+            maxResults: null
         };
 
         const helperReportActions = bindActionCreators({prepareReport}, dispatch);
@@ -49,6 +58,37 @@ export function getReport(
             dispatch(getReportSuccess(report));
         }).catch(error => {
             dispatch(getReportError(error));
+        });
+    };
+}
+
+export function getTopResultsReport(
+    period = Periods.TWENTY_EIGHT_DAY,
+    dateRange = null,
+    metrics = [],
+    filters = [],
+    dimensions = 'video',
+    sort = '-views',
+    maxResults = 15
+) {
+    return function(dispatch) {
+        const searchTerms = {
+            period,
+            dateRange,
+            metrics,
+            filters,
+            dimensions,
+            sort,
+            maxResults
+        };
+
+        const helperReportActions = bindActionCreators({prepareReport}, dispatch);
+
+        dispatch(ajax.gettingTopResultsReport());
+        return helperReportActions.prepareReport(searchTerms).then(report => {
+            dispatch(getTopResultsReportSuccess(report));
+        }).catch(error => {
+            dispatch(getTopResultsReportError(error));
         });
     };
 }
@@ -66,7 +106,8 @@ export function getTotalStats(
             metrics,
             filters,
             dimensions: null,
-            sort: null
+            sort: null,
+            maxResults: null
         };
 
         const helperReportActions = bindActionCreators({prepareReport}, dispatch);
@@ -88,7 +129,8 @@ function prepareReport(searchTerms) {
             metrics,
             filters,
             dimensions,
-            sort
+            sort,
+            maxResults
         } = searchTerms;
         
         metrics = metrics.join(',');
@@ -106,7 +148,7 @@ function prepareReport(searchTerms) {
 
         return helperLoginActions.isLoggedIn().then(isLoggedIn => {
             if (isLoggedIn) {
-                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters, sort).then(report => {
+                return analyticsActions.getReport(startDate, endDate, metrics, dimensions, filters, sort, maxResults).then(report => {
                     let reportData = report;
                     if (!dimensions) return reportData; // i.e. if getting Total Stats
                     if (dimensions == 'day') {

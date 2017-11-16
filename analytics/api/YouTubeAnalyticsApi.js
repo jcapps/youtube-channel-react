@@ -89,7 +89,7 @@ class YouTubeAnalyticsApi {
         });
     }
 
-    static getReport(startDate, endDate, metrics, dimensions, filters, sort) {
+    static getReport(startDate, endDate, metrics, dimensions, filters, sort, maxResults) {
         const authHeader = {
             'Authorization': 'Bearer ' + this.getAccessToken()
         };
@@ -100,7 +100,8 @@ class YouTubeAnalyticsApi {
             'metrics': metrics,
             'dimensions': dimensions,
             'filters': filters,
-            'sort': sort
+            'sort': sort,
+            'max-results': maxResults
         };
 
         return new Promise((resolve, reject) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {withRouter} from "react-router-dom";
+import {withRouter} from 'react-router-dom';
 import $ from 'jquery';
 import ContentTypes from '../../globals/ContentTypes';
 import GraphTypes from '../../globals/GraphTypes';
@@ -13,8 +13,9 @@ import computeWatchTimes from '../../helpers/computeWatchTimes';
 import * as reportActions from '../../actions/reportActions';
 import * as clearActions from '../../actions/clearActions';
 import {setFilterState} from '../../actions/setFilterStateAction';
-import FiltersSection from '../common/filtering/FiltersSection';
-import GraphContainer from '../common/graphs/GraphContainer';
+import FiltersSection from './filtering/FiltersSection';
+import GraphContainer from './graphs/GraphContainer';
+import TopResultsTable from './topResults/TopResultsTable';
 
 export class AnalyticsDisplayPage extends React.PureComponent {
     constructor(props) {
@@ -29,6 +30,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
 
         this.getData = this.getData.bind(this);
         this.renderGraphContainer = this.renderGraphContainer.bind(this);
+        this.renderTopResultsTable = this.renderTopResultsTable.bind(this);
     }
 
     componentWillMount() {
@@ -120,14 +122,17 @@ export class AnalyticsDisplayPage extends React.PureComponent {
         });
         this.showLoadingSpinner();
 
+        let sort = null;
+        if (this.props.metricInfo.metric) {
+            sort = '-' + this.props.metricInfo.metric;
+        }
         if (this.props.graphType == GraphTypes.LINE) {
             this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
+            if (sort == '-views') {
+                this.props.actions.getTopResultsReport(state.timePeriod, state.dateRange, metrics, state.filters, 'video', sort);
+            }
         }
         if (this.props.graphType == GraphTypes.GEO) {
-            let sort = null;
-            if (this.props.metricInfo.metric) {
-                sort = '-' + this.props.metricInfo.metric;
-            }
             let dimensions = 'country';
             for (let i = 0; i < state.filters.length; i++) {
                 if (
@@ -181,6 +186,13 @@ export class AnalyticsDisplayPage extends React.PureComponent {
         );
     }
 
+    renderTopResultsTable() {
+        if (this.props.metricInfo == Metrics.VIEWS) {
+            return <TopResultsTable data={this.props.topResultsData} />;
+        }
+        return <div/>;
+    }
+
     render() {
         if (this.props.isLoading) return <div/>;
 
@@ -201,6 +213,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
                 />
                 {childWithProps}
                 {this.renderGraphContainer()}
+                {this.renderTopResultsTable()}
                 <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
             </div>
         );
@@ -210,6 +223,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
 AnalyticsDisplayPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     data: PropTypes.object.isRequired,
+    topResultsData: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     metricInfo: PropTypes.object.isRequired,
     nonPlaylistMetrics: PropTypes.array.isRequired,
@@ -225,12 +239,14 @@ AnalyticsDisplayPage.propTypes = {
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
         = state.ajaxCallsInProgress.report
+        + state.ajaxCallsInProgress.topResultsReport
         + state.ajaxCallsInProgress.totalStats;
         
     const newFilterStateObject = JSON.parse(JSON.stringify(state.filterState));
     
     return {
         data: state.report,
+        topResultsData: state.topResultsReport,
         totalStats: state.totalStats,
         filterState: newFilterStateObject,
         graphType: state.graphType,
@@ -250,7 +266,11 @@ export const connectOptions = {
     areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading) || 
-            ((prev.data !== next.data) && (prev.totalStats !== next.totalStats))
+            (
+                (prev.data !== next.data) && 
+                (prev.topResultsData !== next.topResultsData) && 
+                (prev.totalStats !== next.totalStats)
+            )
         );
     }
 };
