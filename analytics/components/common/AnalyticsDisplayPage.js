@@ -128,9 +128,6 @@ export class AnalyticsDisplayPage extends React.PureComponent {
         }
         if (this.props.graphType == GraphTypes.LINE) {
             this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters);
-            if (sort == '-views') {
-                this.props.actions.getTopResultsReport(state.timePeriod, state.dateRange, metrics, state.filters, 'video', sort);
-            }
         }
         if (this.props.graphType == GraphTypes.GEO) {
             let dimensions = 'country';
@@ -144,6 +141,9 @@ export class AnalyticsDisplayPage extends React.PureComponent {
                 }
             }
             this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters, dimensions, sort);
+        }
+        if (sort == '-views') {
+            this.props.actions.getTopResultsReport(state.timePeriod, state.dateRange, metrics, state.filters, 'video', sort);
         }
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.setFilterState(state);
