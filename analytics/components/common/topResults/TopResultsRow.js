@@ -6,6 +6,13 @@ import Metrics from '../../../globals/Metrics';
 import TopResultsEntry from './TopResultsEntry';
 
 export class TopResultsRow extends React.PureComponent {
+    setSelected(metric) {
+        if (this.props.sort == metric) {
+            return 'column-selected';
+        }
+        return '';
+    }
+
     getValue(columnName) {
         const result = this.props.result;
         const columns = this.props.columns;
@@ -29,9 +36,15 @@ export class TopResultsRow extends React.PureComponent {
                         videoId={this.getValue('video')}
                         playlistId={this.getValue('playlist')}
                     />
-                    <td>{this.getValue(Metrics.PLAYLIST_STARTS.metric).toLocaleString()}</td>
-                    <td>{this.getValue(Metrics.VIEWS.metric).toLocaleString()}</td>
-                    <td>{this.getValue(Metrics.WATCH_TIME.metric).toLocaleString()}</td>
+                    <td className={this.setSelected(Metrics.PLAYLIST_STARTS.metric)}>
+                        {this.getValue(Metrics.PLAYLIST_STARTS.metric).toLocaleString()}
+                    </td>
+                    <td className={this.setSelected(Metrics.VIEWS.metric)}>
+                        {this.getValue(Metrics.VIEWS.metric).toLocaleString()}
+                    </td>
+                    <td className={this.setSelected(Metrics.WATCH_TIME.metric)}>
+                        {this.getValue(Metrics.WATCH_TIME.metric).toLocaleString()}
+                    </td>
                 </tr>
             );
         }
@@ -41,10 +54,18 @@ export class TopResultsRow extends React.PureComponent {
                     videoId={this.getValue('video')}
                     playlistId={this.getValue('playlist')}
                 />
-                <td>{this.getValue(Metrics.VIEWS.metric).toLocaleString()}</td>
-                <td>{this.getValue(Metrics.WATCH_TIME.metric).toLocaleString()}</td>
-                <td>{this.getValue(Metrics.YOUTUBE_RED_VIEWS.metric).toLocaleString()}</td>
-                <td>{this.getValue(Metrics.YOUTUBE_RED_WATCH_TIME.metric).toLocaleString()}</td>
+                <td className={this.setSelected(Metrics.VIEWS.metric)}>
+                    {this.getValue(Metrics.VIEWS.metric).toLocaleString()}
+                </td>
+                <td className={this.setSelected(Metrics.WATCH_TIME.metric)}>
+                    {this.getValue(Metrics.WATCH_TIME.metric).toLocaleString()}
+                </td>
+                <td className={this.setSelected(Metrics.YOUTUBE_RED_VIEWS.metric)}>
+                    {this.getValue(Metrics.YOUTUBE_RED_VIEWS.metric).toLocaleString()}
+                </td>
+                <td className={this.setSelected(Metrics.YOUTUBE_RED_WATCH_TIME.metric)}>
+                    {this.getValue(Metrics.YOUTUBE_RED_WATCH_TIME.metric).toLocaleString()}
+                </td>
             </tr>
         );
     }
@@ -53,6 +74,7 @@ export class TopResultsRow extends React.PureComponent {
 TopResultsRow.propTypes = {
     result: PropTypes.array.isRequired,
     columns: PropTypes.array.isRequired,
+    sort: PropTypes.string.isRequired,
     isPlaylistMetrics: PropTypes.bool.isRequired
 };
 

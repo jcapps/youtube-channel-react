@@ -195,6 +195,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
             return (
                 <TopResultsTable
                     data={this.props.topResultsData}
+                    sort={this.props.metricInfo.metric}
                     isPlaylistMetrics={this.state.playlistAttempted}
                 />
             );

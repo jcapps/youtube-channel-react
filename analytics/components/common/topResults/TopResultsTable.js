@@ -1,26 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Metrics from '../../../globals/Metrics';
 import TopResultsRow from './TopResultsRow';
 
 export class TopResultsTable extends React.PureComponent {
+    setSelected(metric) {
+        if (this.props.sort == metric) {
+            return 'column-selected';
+        }
+        return '';
+    }
+
     renderTableHeader(content) {
         if (this.props.isPlaylistMetrics) {
             return (
                 <tr>
                     <th>{content}</th>
-                    <th>Playlist Starts</th>
-                    <th>Views</th>
-                    <th>Watch Time (minutes)</th>
+                    <th className={this.setSelected(Metrics.PLAYLIST_STARTS.metric)}>
+                        {Metrics.PLAYLIST_STARTS.displayName}
+                    </th>
+                    <th className={this.setSelected(Metrics.VIEWS.metric)}>
+                        {Metrics.VIEWS.displayName}
+                    </th>
+                    <th className={this.setSelected(Metrics.WATCH_TIME.metric)}>
+                        {Metrics.WATCH_TIME.displayName}
+                    </th>
                 </tr>
             );
         }
         return (
             <tr>
                 <th>{content}</th>
-                <th>Views</th>
-                <th>Watch Time (minutes)</th>
-                <th>YouTube Red Views</th>
-                <th>YouTube Red Watch Time (minutes)</th>
+                <th className={this.setSelected(Metrics.VIEWS.metric)}>
+                    {Metrics.VIEWS.displayName}
+                </th>
+                <th className={this.setSelected(Metrics.WATCH_TIME.metric)}>
+                    {Metrics.WATCH_TIME.displayName}
+                </th>
+                <th className={this.setSelected(Metrics.YOUTUBE_RED_VIEWS.metric)}>
+                    {Metrics.YOUTUBE_RED_VIEWS.displayName}
+                </th>
+                <th className={this.setSelected(Metrics.YOUTUBE_RED_WATCH_TIME.metric)}>
+                    {Metrics.YOUTUBE_RED_WATCH_TIME.displayName}
+                </th>
             </tr>
         );
     }
@@ -50,6 +72,7 @@ export class TopResultsTable extends React.PureComponent {
                                 key={i}
                                 result={result}
                                 columns={columns}
+                                sort={this.props.sort}
                                 isPlaylistMetrics={this.props.isPlaylistMetrics}
                             />
                         );
@@ -62,6 +85,7 @@ export class TopResultsTable extends React.PureComponent {
 
 TopResultsTable.propTypes = {
     data: PropTypes.object.isRequired,
+    sort: PropTypes.string.isRequired,
     isPlaylistMetrics: PropTypes.bool.isRequired
 };
 

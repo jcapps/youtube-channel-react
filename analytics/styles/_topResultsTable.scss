@@ -3,7 +3,7 @@
 
     th, td {
         text-align: right;
-        border-bottom: 1px solid $border;
+        border-bottom: 1px solid $table-border;
 
         &:first-child {
             text-align: left;
@@ -26,5 +26,9 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+    }
+
+    .column-selected {
+        background-color: $selected-column;
     }
 }

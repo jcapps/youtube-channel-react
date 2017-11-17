@@ -72,6 +72,10 @@ $metric-color: $black;
 $metric-color-hover: $anchor-purple;
 $metric-background-hover: $white;
 
+/* Top Results Table colors */
+$table-border: $gray;
+$selected-column: lighten($anchor-purple, 15%);
+
 /* Error colors */
 $error-color: $error-red;
 $error-background: $error-lightred;
