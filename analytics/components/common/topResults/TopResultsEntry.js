@@ -43,6 +43,14 @@ export class TopResultsEntry extends React.PureComponent {
         }
     }
 
+    shouldComponentUpdate(nextProps) {
+        // Don't update render when changing filterState
+        if (JSON.stringify(this.props.filterState) != JSON.stringify(nextProps.filterState)) {
+            return false;
+        }
+        return true;
+    }
+
     addFilter(e) {
         e.preventDefault();
         const content = JSON.parse(e.target.previousSibling.value);
