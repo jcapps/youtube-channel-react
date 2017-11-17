@@ -10,25 +10,37 @@ const addGraphFilter = (filterInfo, currentContentType, filtersArray, addedFilte
     let itemId = '';
     let newContentType = currentContentType;
     let kind = 'region#country';
-    if (filterInfo.id && filterInfo.id.kind) {
+    if (filterInfo.kind == 'youtube#searchResult') {
         kind = filterInfo.id.kind;
-    }
 
-    if (kind == 'youtube#channel') {
-        filterKey = 'channel';
-        itemId = filterInfo.id.channelId;
-        newContentType = ContentTypes.CHANNELS;
+        if (kind == 'youtube#channel') {
+            filterKey = 'channel';
+            itemId = filterInfo.id.channelId;
+            newContentType = ContentTypes.CHANNELS;
+        }
+        if (kind == 'youtube#playlist') {
+            filterKey = 'playlist';
+            itemId = filterInfo.id.playlistId;
+            newContentType = ContentTypes.PLAYLISTS;
+        }
+        if (kind == 'youtube#video') {
+            filterKey = 'video';
+            itemId = filterInfo.id.videoId;
+            newContentType = ContentTypes.VIDEOS;
+        }
     }
-    if (kind == 'youtube#playlist') {
-        filterKey = 'playlist';
-        itemId = filterInfo.id.playlistId;
-        newContentType = ContentTypes.PLAYLISTS;
+    else if (filterInfo.kind == 'youtube#playlist' || filterInfo.kind == 'youtube#video') {
+        kind = filterInfo.kind;
+        itemId = filterInfo.id;
+        if (kind == 'youtube#playlist') {
+            filterKey = 'playlist';
+            newContentType = ContentTypes.PLAYLISTS;
+        } else {
+            filterKey = 'video';
+            newContentType = ContentTypes.VIDEOS;
+        }
     }
-    if (kind == 'youtube#video') {
-        filterKey = 'video';
-        itemId = filterInfo.id.videoId;
-        newContentType = ContentTypes.VIDEOS;
-    }
+    
     if (
         kind == 'youtube#channel' || 
         kind == 'youtube#playlist' || 

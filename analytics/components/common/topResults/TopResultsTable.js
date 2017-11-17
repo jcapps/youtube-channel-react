@@ -74,6 +74,7 @@ export class TopResultsTable extends React.PureComponent {
                                 columns={columns}
                                 sort={this.props.sort}
                                 isPlaylistMetrics={this.props.isPlaylistMetrics}
+                                onChangeFilters={this.props.onChangeFilters}
                             />
                         );
                     })}
@@ -86,7 +87,8 @@ export class TopResultsTable extends React.PureComponent {
 TopResultsTable.propTypes = {
     data: PropTypes.object.isRequired,
     sort: PropTypes.string.isRequired,
-    isPlaylistMetrics: PropTypes.bool.isRequired
+    isPlaylistMetrics: PropTypes.bool.isRequired,
+    onChangeFilters: PropTypes.func.isRequired
 };
 
 export default TopResultsTable;

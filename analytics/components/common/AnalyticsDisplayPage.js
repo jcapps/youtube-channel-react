@@ -197,6 +197,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
                     data={this.props.topResultsData}
                     sort={this.props.metricInfo.metric}
                     isPlaylistMetrics={this.state.playlistAttempted}
+                    onChangeFilters={this.getData}
                 />
             );
         }

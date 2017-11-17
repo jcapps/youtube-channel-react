@@ -2,9 +2,33 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
     let newFiltersArray = Object.assign([], filtersArray);
     let newAddedFiltersArray = Object.assign([], addedFiltersArray);
 
+    let filterKey = '';
+    let itemId = '';
     let kind = 'region#country';
-    if (filterInfo.id && filterInfo.id.kind) {
+    if (filterInfo.kind == 'youtube#searchResult') {
         kind = filterInfo.id.kind;
+
+        if (kind == 'youtube#channel') {
+            filterKey = 'channel';
+            itemId = filterInfo.id.channelId;
+        }
+        if (kind == 'youtube#playlist') {
+            filterKey = 'playlist';
+            itemId = filterInfo.id.playlistId;
+        }
+        if (kind == 'youtube#video') {
+            filterKey = 'video';
+            itemId = filterInfo.id.videoId;
+        }
+    }
+    else if (filterInfo.kind == 'youtube#playlist' || filterInfo.kind == 'youtube#video') {
+        kind = filterInfo.kind;
+        itemId = filterInfo.id;
+        if (kind == 'youtube#playlist') {
+            filterKey = 'playlist';
+        } else {
+            filterKey = 'video';
+        }
     }
 
     for (let i = 0; i < newAddedFiltersArray.length; i++) {
@@ -17,21 +41,6 @@ const removeGraphFilter = (filterInfo, filtersArray, addedFiltersArray) => {
         }
     }
 
-    let filterKey = '';
-    let itemId = '';
-    
-    if (kind == 'youtube#channel') {
-        filterKey = 'channel';
-        itemId = filterInfo.id.channelId;
-    }
-    if (kind == 'youtube#playlist') {
-        filterKey = 'playlist';
-        itemId = filterInfo.id.playlistId;
-    }
-    if (kind == 'youtube#video') {
-        filterKey = 'video';
-        itemId = filterInfo.id.videoId;
-    }
     if (kind == 'region#country') {
         filterKey = 'country';
         itemId = filterInfo.cca2;

@@ -24,6 +24,9 @@ export class TopResultsRow extends React.PureComponent {
         }
         if (index >= 0) {
             value = result[index];
+            if (!!value && columnName != 'video' && columnName != 'playlist') {
+                value = value.toLocaleString();
+            }
         }
         return value;
     }
@@ -35,15 +38,16 @@ export class TopResultsRow extends React.PureComponent {
                     <TopResultsEntry
                         videoId={this.getValue('video')}
                         playlistId={this.getValue('playlist')}
+                        onChangeFilters={this.props.onChangeFilters}
                     />
                     <td className={this.setSelected(Metrics.PLAYLIST_STARTS.metric)}>
-                        {this.getValue(Metrics.PLAYLIST_STARTS.metric).toLocaleString()}
+                        {this.getValue(Metrics.PLAYLIST_STARTS.metric)}
                     </td>
                     <td className={this.setSelected(Metrics.VIEWS.metric)}>
-                        {this.getValue(Metrics.VIEWS.metric).toLocaleString()}
+                        {this.getValue(Metrics.VIEWS.metric)}
                     </td>
                     <td className={this.setSelected(Metrics.WATCH_TIME.metric)}>
-                        {this.getValue(Metrics.WATCH_TIME.metric).toLocaleString()}
+                        {this.getValue(Metrics.WATCH_TIME.metric)}
                     </td>
                 </tr>
             );
@@ -53,18 +57,19 @@ export class TopResultsRow extends React.PureComponent {
                 <TopResultsEntry
                     videoId={this.getValue('video')}
                     playlistId={this.getValue('playlist')}
+                    onChangeFilters={this.props.onChangeFilters}
                 />
                 <td className={this.setSelected(Metrics.VIEWS.metric)}>
-                    {this.getValue(Metrics.VIEWS.metric).toLocaleString()}
+                    {this.getValue(Metrics.VIEWS.metric)}
                 </td>
                 <td className={this.setSelected(Metrics.WATCH_TIME.metric)}>
-                    {this.getValue(Metrics.WATCH_TIME.metric).toLocaleString()}
+                    {this.getValue(Metrics.WATCH_TIME.metric)}
                 </td>
                 <td className={this.setSelected(Metrics.YOUTUBE_RED_VIEWS.metric)}>
-                    {this.getValue(Metrics.YOUTUBE_RED_VIEWS.metric).toLocaleString()}
+                    {this.getValue(Metrics.YOUTUBE_RED_VIEWS.metric)}
                 </td>
                 <td className={this.setSelected(Metrics.YOUTUBE_RED_WATCH_TIME.metric)}>
-                    {this.getValue(Metrics.YOUTUBE_RED_WATCH_TIME.metric).toLocaleString()}
+                    {this.getValue(Metrics.YOUTUBE_RED_WATCH_TIME.metric)}
                 </td>
             </tr>
         );
@@ -75,7 +80,8 @@ TopResultsRow.propTypes = {
     result: PropTypes.array.isRequired,
     columns: PropTypes.array.isRequired,
     sort: PropTypes.string.isRequired,
-    isPlaylistMetrics: PropTypes.bool.isRequired
+    isPlaylistMetrics: PropTypes.bool.isRequired,
+    onChangeFilters: PropTypes.func.isRequired
 };
 
 export default TopResultsRow;
