@@ -130,7 +130,7 @@ const Metrics = {
         isPlaylistMetric: true,
         isVideoMetric: false,
         canShowUSStates: true,
-        canSortTopResults: false,
+        canSortTopResults: true,
         dataType: DataTypes.NUMBER
     },
     REVENUE: {

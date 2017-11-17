@@ -51,6 +51,24 @@ function isLoginActionSuccessType(type) {
     );
 }
 
+function isPlaylistInfoActionStartingType(type) {
+    return (
+        type == types.GETTING_PLAYLIST_INFO
+    );
+}
+
+function isPlaylistInfoActionSuccessType(type) {
+    return (
+        type == types.GET_PLAYLIST_INFO_SUCCESS
+    );
+}
+
+function isPlaylistInfoActionErrorType(type) {
+    return (
+        type == types.GET_PLAYLIST_INFO_ERROR
+    );
+}
+
 function isReportActionStartingType(type) {
     return (
         type == types.GETTING_REPORT
@@ -149,6 +167,15 @@ export default function ajaxStatusReducer(state = initialState.ajaxCallsInProgre
     }
     if (isLoginActionSuccessType(action.type)) {
         currentState.login -= 1;
+    }
+    if (isPlaylistInfoActionStartingType(action.type)) {
+        currentState.playlistInfo += 1;
+    }
+    if (isPlaylistInfoActionSuccessType(action.type)) {
+        currentState.playlistInfo -= 1;
+    }
+    if (isPlaylistInfoActionErrorType(action.type)) {
+        currentState.playlistInfo -= 1;
     }
     if (isReportActionStartingType(action.type)) {
         currentState.report += 1;

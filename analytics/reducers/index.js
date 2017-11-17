@@ -5,6 +5,7 @@ import error from './errorReducer';
 import filterState from './filterStateReducer';
 import graphType from './graphTypeReducer';
 import channelInfo from './channelInfoReducer';
+import playlistInfo from './playlistInfoReducer';
 import report from './reportReducer';
 import searchChannelResults from './searchChannelResultsReducer';
 import searchPlaylistResults from './searchPlaylistResultsReducer';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
     filterState,
     graphType,
     channelInfo,
+    playlistInfo,
     report,
     searchChannelResults,
     searchPlaylistResults,

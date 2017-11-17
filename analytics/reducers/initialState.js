@@ -4,6 +4,7 @@ import Periods from '../globals/Periods';
 
 export default {
     channelInfo: {},
+    playlistInfo: {},
     report: {},
     searchChannelResults: [],
     searchPlaylistResults: [],
@@ -29,6 +30,7 @@ export default {
         report: 0,
         topResultsReport: 0,
         totalStats: 0,
+        playlistInfo: 0,
         video: 0
     }
 };

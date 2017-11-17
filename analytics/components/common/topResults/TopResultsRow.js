@@ -22,9 +22,25 @@ export class TopResultsRow extends React.PureComponent {
     }
 
     render() {
+        if (this.props.isPlaylistMetrics) {
+            return (
+                <tr id="top-results-row">
+                    <TopResultsEntry
+                        videoId={this.getValue('video')}
+                        playlistId={this.getValue('playlist')}
+                    />
+                    <td>{this.getValue(Metrics.PLAYLIST_STARTS.metric).toLocaleString()}</td>
+                    <td>{this.getValue(Metrics.VIEWS.metric).toLocaleString()}</td>
+                    <td>{this.getValue(Metrics.WATCH_TIME.metric).toLocaleString()}</td>
+                </tr>
+            );
+        }
         return (
             <tr id="top-results-row">
-                <TopResultsEntry videoId={this.getValue('video')} />
+                <TopResultsEntry
+                    videoId={this.getValue('video')}
+                    playlistId={this.getValue('playlist')}
+                />
                 <td>{this.getValue(Metrics.VIEWS.metric).toLocaleString()}</td>
                 <td>{this.getValue(Metrics.WATCH_TIME.metric).toLocaleString()}</td>
                 <td>{this.getValue(Metrics.YOUTUBE_RED_VIEWS.metric).toLocaleString()}</td>
@@ -36,7 +52,8 @@ export class TopResultsRow extends React.PureComponent {
 
 TopResultsRow.propTypes = {
     result: PropTypes.array.isRequired,
-    columns: PropTypes.array.isRequired
+    columns: PropTypes.array.isRequired,
+    isPlaylistMetrics: PropTypes.bool.isRequired
 };
 
 export default TopResultsRow;

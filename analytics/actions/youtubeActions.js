@@ -13,6 +13,17 @@ export function getChannelInfo() {
 }
 
 /**
+ * Retrieve playlist information given the playlist ID
+ */
+export function getPlaylistInfo(playlistId) {
+    return YouTubeApi.getPlaylistInfo(playlistId).then(playlistInfo => {
+        return playlistInfo;
+    }).catch(error => {
+        throw(error);
+    });
+}
+
+/**
  * Retrieve video information given its ID
  */
 export function getVideo(videoId) {

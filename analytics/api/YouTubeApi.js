@@ -6,6 +6,7 @@ const CHANNEL_ID = process.env.CHANNEL_ID;
 
 const apiUrl = 'https://www.googleapis.com/youtube/v3/';
 const channelUrl = apiUrl + 'channels';
+const playlistsUrl = apiUrl + 'playlists';
 const videoUrl = apiUrl + 'videos';
 const searchUrl = apiUrl + 'search';
 
@@ -19,6 +20,20 @@ class YouTubeApi {
 
         return new Promise((resolve, reject) => {
             axios.get(channelUrl, {params: channelParams}).then(res => {
+                resolve(res.data);
+            });
+        });
+    }
+
+    static getPlaylistInfo(id) {
+        const playlistParams = {
+            key: KEY,
+            id: id,
+            part: 'snippet'
+        };
+
+        return new Promise((resolve, reject) => {
+            axios.get(playlistsUrl, {params: playlistParams}).then(res => {
                 resolve(res.data);
             });
         });
