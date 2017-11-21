@@ -65,11 +65,11 @@ export class AnalyticsDisplayPage extends React.PureComponent {
     }
 
     showLoadingSpinner() {
-        $('#analytics-display-page .loading-spinner').removeClass('hidden');
+        $('#analytics-display-page #main-loading-spinner').removeClass('hidden');
     }
 
     hideLoadingSpinner() {
-        $('#analytics-display-page .loading-spinner').addClass('hidden');
+        $('#analytics-display-page #main-loading-spinner').addClass('hidden');
     }
 
     getData(state) {
@@ -214,6 +214,10 @@ export class AnalyticsDisplayPage extends React.PureComponent {
             })
         );
         const loadingSpinner = require('../../images/loading.gif');
+        let hiddenClass = 'hidden';
+        if (this.state.isLoading) {
+            hiddenClass = '';
+        }
 
         return (
             <div id="analytics-display-page">
@@ -225,7 +229,7 @@ export class AnalyticsDisplayPage extends React.PureComponent {
                 {childWithProps}
                 {this.renderGraphContainer()}
                 {this.renderTopResultsTable()}
-                <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
+                <img id="main-loading-spinner" className={`loading-spinner ${hiddenClass}`} src={loadingSpinner} alt="Loading..." />
             </div>
         );
     }

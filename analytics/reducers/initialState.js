@@ -4,14 +4,14 @@ import Periods from '../globals/Periods';
 
 export default {
     channelInfo: {},
-    playlistInfo: {},
+    playlistList: [],
     report: {},
     searchChannelResults: [],
     searchPlaylistResults: [],
     searchVideoResults: [],
     topResultsReport: {},
     totalStats: {},
-    video: {},
+    videoList: [],
     isAuthenticated: false,
     error: {},
     filterState: {

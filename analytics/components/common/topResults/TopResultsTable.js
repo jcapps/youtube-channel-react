@@ -1,9 +1,52 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import Metrics from '../../../globals/Metrics';
 import TopResultsRow from './TopResultsRow';
+import * as playlistActions from '../../../actions/playlistActions';
+import * as videoActions from '../../../actions/videoActions';
 
 export class TopResultsTable extends React.PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: props.isLoading
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.isLoading) this.setState({isLoading: false});
+
+        const data = nextProps.data;
+        if (!data.rows) return;
+        if (JSON.stringify(this.props.data) == JSON.stringify(data)) return;
+        this.setState({isLoading: true});
+
+        const columns = data.columnHeaders.map(item => {
+            return item.name;
+        });
+
+        let content = 'Video';
+        let contentIndex = columns.indexOf('video');
+        if (columns.indexOf('playlist') >= 0) {
+            content = 'Playlist';
+            contentIndex = columns.indexOf('playlist');
+        }
+
+        let contentIds = [];
+        data.rows.forEach(row => {
+            contentIds.push(row[contentIndex]);
+        });
+        const contentIdString = contentIds.join(',');
+
+        if (content == 'Video') {
+            this.props.actions.getVideo(contentIdString);
+        } else {
+            this.props.actions.getPlaylistInfo(contentIdString);
+        }
+    }
+
     setSelected(metric) {
         if (this.props.sort == metric) {
             return 'column-selected';
@@ -49,32 +92,44 @@ export class TopResultsTable extends React.PureComponent {
 
     render() {
         const data = this.props.data;
+        const loadingSpinner = require('../../../images/loading.gif');
+        if (this.state.isLoading) {
+            return (
+                <div>
+                    <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
+                </div>
+            );
+        };
         if (!data.rows) return <div/>;
 
         const columns = data.columnHeaders.map(item => {
             return item.name;
         });
 
-        let content = 'Video';
+        let contentTitle = 'Video';
+        let content = this.props.videoList;
         if (columns.indexOf('playlist') >= 0) {
-            content = 'Playlist';
+            contentTitle = 'Playlist';
+            content = this.props.playlistList;
         }
 
         return (
             <table id="top-results-table">
                 <thead>
-                    {this.renderTableHeader(content)}
+                    {this.renderTableHeader(contentTitle)}
                 </thead>
                 <tbody>
                     {data.rows.map((result, i) => {
                         return (
                             <TopResultsRow
                                 key={i}
+                                content={content[i]}
                                 result={result}
                                 columns={columns}
                                 sort={this.props.sort}
                                 isPlaylistMetrics={this.props.isPlaylistMetrics}
                                 onChangeFilters={this.props.onChangeFilters}
+                                filterState={this.props.filterState}
                             />
                         );
                     })}
@@ -85,10 +140,48 @@ export class TopResultsTable extends React.PureComponent {
 }
 
 TopResultsTable.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
     data: PropTypes.object.isRequired,
     sort: PropTypes.string.isRequired,
+    playlistList: PropTypes.array.isRequired,
+    videoList: PropTypes.array.isRequired,
     isPlaylistMetrics: PropTypes.bool.isRequired,
-    onChangeFilters: PropTypes.func.isRequired
+    onChangeFilters: PropTypes.func.isRequired,
+    filterState: PropTypes.object.isRequired
 };
 
-export default TopResultsTable;
+export function mapStateToProps(state, props) {
+    const totalAjaxCallsInProgress
+        = state.ajaxCallsInProgress.video
+        + state.ajaxCallsInProgress.playlistInfo;
+    
+
+    return {
+        playlistList: state.playlistList,
+        videoList: state.videoList,
+        filterState: state.filterState,
+        isLoading: totalAjaxCallsInProgress > 0
+    };
+}
+
+export function mapDispatchToProps(dispatch) {
+    const combinedActions = Object.assign({}, videoActions, playlistActions);
+    return {
+        actions: bindActionCreators(combinedActions, dispatch)
+    };
+}
+
+export const connectOptions = {
+    areStatePropsEqual: (next, prev) => {
+        return !(
+            (!next.isLoading) || 
+            (
+                (prev.data !== next.data) ||
+                (prev.videoList !== next.videoList) ||
+                (prev.playlistList !== next.playlistList)
+            )
+        );
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(TopResultsTable);

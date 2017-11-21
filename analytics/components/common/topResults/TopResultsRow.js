@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import Metrics from '../../../globals/Metrics';
-import TopResultsEntry from './TopResultsEntry';
+import addGraphFilter from '../../../helpers/addGraphFilter';
 
 export class TopResultsRow extends React.PureComponent {
+    constructor() {
+        super();
+        this.addFilter = this.addFilter.bind(this);
+    }
+
     setSelected(metric) {
         if (this.props.sort == metric) {
             return 'column-selected';
@@ -31,15 +34,36 @@ export class TopResultsRow extends React.PureComponent {
         return value;
     }
 
+    addFilter(e) {
+        e.preventDefault();
+        const content = JSON.parse(e.target.previousSibling.value);
+        const state = this.props.filterState;
+
+        const {newFiltersArray, newAddedFiltersArray, newContentType}
+            = addGraphFilter(content, state.contentType, state.filters, state.addedFilters);
+
+        const {timePeriod, dateRange} = state;
+        this.props.onChangeFilters({
+            contentType: newContentType,
+            timePeriod,
+            dateRange,
+            filters: newFiltersArray,
+            addedFilters: newAddedFiltersArray
+        });
+    }
+
     render() {
+        const content = this.props.content;
+
         if (this.props.isPlaylistMetrics) {
             return (
-                <tr id="top-results-row">
-                    <TopResultsEntry
-                        videoId={this.getValue('video')}
-                        playlistId={this.getValue('playlist')}
-                        onChangeFilters={this.props.onChangeFilters}
-                    />
+                <tr className="top-results-row">
+                    <td>
+                        <div className="content-title">
+                            <input className="hidden" value={JSON.stringify(content)} readOnly="readOnly" />
+                            <a onClick={this.addFilter}>{content.snippet.title}</a>
+                        </div>
+                    </td>
                     <td className={this.setSelected(Metrics.PLAYLIST_STARTS.metric)}>
                         {this.getValue(Metrics.PLAYLIST_STARTS.metric)}
                     </td>
@@ -53,12 +77,13 @@ export class TopResultsRow extends React.PureComponent {
             );
         }
         return (
-            <tr id="top-results-row">
-                <TopResultsEntry
-                    videoId={this.getValue('video')}
-                    playlistId={this.getValue('playlist')}
-                    onChangeFilters={this.props.onChangeFilters}
-                />
+            <tr className="top-results-row">
+                <td>
+                    <div className="content-title">
+                        <input className="hidden" value={JSON.stringify(content)} readOnly="readOnly" />
+                        <a onClick={this.addFilter}>{content.snippet.title}</a>
+                    </div>
+                </td>
                 <td className={this.setSelected(Metrics.VIEWS.metric)}>
                     {this.getValue(Metrics.VIEWS.metric)}
                 </td>
@@ -77,11 +102,13 @@ export class TopResultsRow extends React.PureComponent {
 }
 
 TopResultsRow.propTypes = {
+    content: PropTypes.object.isRequired,
     result: PropTypes.array.isRequired,
     columns: PropTypes.array.isRequired,
     sort: PropTypes.string.isRequired,
     isPlaylistMetrics: PropTypes.bool.isRequired,
-    onChangeFilters: PropTypes.func.isRequired
+    onChangeFilters: PropTypes.func.isRequired,
+    filterState: PropTypes.object.isRequired
 };
 
 export default TopResultsRow;

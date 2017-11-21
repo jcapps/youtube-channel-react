@@ -5,14 +5,14 @@ import error from './errorReducer';
 import filterState from './filterStateReducer';
 import graphType from './graphTypeReducer';
 import channelInfo from './channelInfoReducer';
-import playlistInfo from './playlistInfoReducer';
+import playlistList from './playlistListReducer';
 import report from './reportReducer';
 import searchChannelResults from './searchChannelResultsReducer';
 import searchPlaylistResults from './searchPlaylistResultsReducer';
 import searchVideoResults from './searchVideoResultsReducer';
 import topResultsReport from './topResultsReportReducer';
 import totalStats from './totalStatsReducer';
-import video from './videoReducer';
+import videoList from './videoListReducer';
 
 const rootReducer = combineReducers({
     ajaxCallsInProgress,
@@ -21,14 +21,14 @@ const rootReducer = combineReducers({
     filterState,
     graphType,
     channelInfo,
-    playlistInfo,
+    playlistList,
     report,
     searchChannelResults,
     searchPlaylistResults,
     searchVideoResults,
     topResultsReport,
     totalStats,
-    video
+    videoList
 });
 
 export default rootReducer;

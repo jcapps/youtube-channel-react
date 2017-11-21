@@ -1,27 +1,22 @@
 #top-results-table {
+    width: 960px;
     margin: 0 auto;
+    table-layout: fixed;
 
     th, td {
+        padding: 10px;
         text-align: right;
         border-bottom: 1px solid $table-border;
-
-        &:first-child {
-            text-align: left;
-        }
-    }
-
-    th, td {
-        padding: 5px 10px;
-        max-width: 200px;
         word-wrap: break-word;
 
         &:first-child {
             max-width: 350px;
+            width: 350px;
+            text-align: left;
         }
     }
 
     .content-title {
-        padding: 5px 25px 5px 0;
         width: 300px;
         overflow: hidden;
         white-space: nowrap;
