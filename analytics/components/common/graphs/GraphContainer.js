@@ -12,17 +12,35 @@ import GeoMapContainer from './GeoMapContainer';
 import LineGraphContainer from './LineGraphContainer';
 
 class GraphContainer extends React.PureComponent {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        this.state = {
+            filterState: props.filterState
+        };
 
         this.switchToGeoMapContainer = this.switchToGeoMapContainer.bind(this);
         this.switchToLineGraphContainer = this.switchToLineGraphContainer.bind(this);
     }
 
-    shouldComponentUpdate(nextProps) {
+    componentWillReceiveProps(nextProps) {
+        if (
+            !nextProps.isLoading &&
+            JSON.stringify(this.state.filterState) != JSON.stringify(nextProps.filterState)
+        ) {
+            this.setState({filterState: nextProps.filterState});
+        }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
         if (
             !nextProps.isLoading &&
             (JSON.stringify(this.props.dataInfo) != JSON.stringify(nextProps.dataInfo))
+        ) {
+            return true;
+        }
+        if (
+            !nextProps.isLoading &&
+            JSON.stringify(this.state.filterState) != JSON.stringify(nextState.filterState)
         ) {
             return true;
         }
