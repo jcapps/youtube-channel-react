@@ -20,7 +20,10 @@ class GraphContainer extends React.PureComponent {
     }
 
     shouldComponentUpdate(nextProps) {
-        if (!nextProps.isLoading) {
+        if (
+            !nextProps.isLoading &&
+            (JSON.stringify(this.props.dataInfo) != JSON.stringify(nextProps.dataInfo))
+        ) {
             return true;
         }
         return false;
