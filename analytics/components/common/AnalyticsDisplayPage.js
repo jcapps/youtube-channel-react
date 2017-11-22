@@ -142,13 +142,6 @@ export class AnalyticsDisplayPage extends React.PureComponent {
             }
             this.props.actions.getReport(state.timePeriod, state.dateRange, metrics, state.filters, dimensions, sort);
         }
-        if (this.props.metricInfo.canSortTopResults) {
-            let dimensions = 'video';
-            if (state.contentType == ContentTypes.PLAYLISTS) {
-                dimensions = 'playlist';
-            }
-            this.props.actions.getTopResultsReport(state.timePeriod, state.dateRange, metrics, state.filters, dimensions, sort);
-        }
         this.props.actions.getTotalStats(state.timePeriod, state.dateRange, metrics, state.filters);
         this.props.setFilterState(state);
     }
@@ -194,7 +187,6 @@ export class AnalyticsDisplayPage extends React.PureComponent {
         if (this.props.metricInfo.canSortTopResults) {
             return (
                 <TopResultsTable
-                    data={this.props.topResultsData}
                     sort={this.props.metricInfo.metric}
                     isPlaylistMetrics={this.state.playlistAttempted}
                     onChangeFilters={this.getData}
@@ -238,7 +230,6 @@ export class AnalyticsDisplayPage extends React.PureComponent {
 AnalyticsDisplayPage.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     data: PropTypes.object.isRequired,
-    topResultsData: PropTypes.object.isRequired,
     totalStats: PropTypes.object.isRequired,
     metricInfo: PropTypes.object.isRequired,
     nonPlaylistMetrics: PropTypes.array.isRequired,
@@ -254,14 +245,12 @@ AnalyticsDisplayPage.propTypes = {
 export function mapStateToProps(state) {
     const totalAjaxCallsInProgress
         = state.ajaxCallsInProgress.report
-        + state.ajaxCallsInProgress.topResultsReport
         + state.ajaxCallsInProgress.totalStats;
         
     const newFilterStateObject = JSON.parse(JSON.stringify(state.filterState));
     
     return {
         data: state.report,
-        topResultsData: state.topResultsReport,
         totalStats: state.totalStats,
         filterState: newFilterStateObject,
         graphType: state.graphType,
@@ -282,8 +271,7 @@ export const connectOptions = {
         return !(
             (!next.isLoading) || 
             (
-                (prev.data !== next.data) && 
-                (prev.topResultsData !== next.topResultsData) && 
+                (prev.data !== next.data) &&
                 (prev.totalStats !== next.totalStats)
             )
         );
