@@ -63,7 +63,7 @@ class ManipulateGeoMap {
         const mapBottomBound = mapHeight + boundDelta;
         const mapTopBound = -boundDelta;
 
-        // Check whether corners of potential country's bounding box are contained in map
+        // Check whether extremities of potential country's bounding box are contained in map
         if (
             regionLeftTop[0] > mapLeftBound && regionLeftTop[0] < mapRightBound && regionLeftTop[1] > mapTopBound && regionLeftTop[1] < mapBottomBound ||
             regionLeftBottom[0] > mapLeftBound && regionLeftBottom[0] < mapRightBound && regionLeftBottom[1] > mapTopBound && regionLeftBottom[1] < mapBottomBound ||
