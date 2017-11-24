@@ -16,3 +16,7 @@ export const YOUTUBE_INFO = {
 ```
 
 Once the ```node_modules``` have been installed and the ```youtubeInfo.js``` file has been created, run ```npm start``` to launch the application.
+
+## YouTube Analytics
+Viewing the Analytics pages requires authentication with James Capps' credentials.
+At this time, the Analytics tab and its contents are fully-functional *only* on Google Chrome.
