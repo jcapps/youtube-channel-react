@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as playlistActions from '../../actions/playlistActions';
 import PlaylistPlayer from './PlaylistPlayer';
-import VideoThumbnail from './VideoThumbnail';
+import VideoQueue from './VideoQueue';
 
 export class PlaylistPage extends React.PureComponent {
     constructor() {
@@ -74,21 +74,12 @@ export class PlaylistPage extends React.PureComponent {
                 <div id="playlist-page">
                     <h2>{this.props.playlistInfo.snippet.title}</h2>
                     <div id="video-list">
-                        {playlist.map(playlistItem => {
-                            let video = playlistItem.snippet;
-                            if (video.position == nowPlaying) {
-                                return (
-                                    <div className="playlist-video selected" id={nowPlaying} key={nowPlaying} onClick={this.changeVideo}>
-                                        <VideoThumbnail videoId={video.resourceId.videoId} playlistIndex={nowPlaying}/>
-                                    </div>
-                                );
-                            }
-                            return (
-                                <div className="playlist-video" id={video.position} key={video.position} onClick={this.changeVideo}>
-                                    <VideoThumbnail videoId={video.resourceId.videoId} playlistIndex={video.position}/>
-                                </div>
-                            );
-                        })}
+                        <VideoQueue
+                            playlist={playlist}
+                            playlistId={this.props.playlistId}
+                            nowPlayingIndex={nowPlaying}
+                            changeVideo={this.changeVideo}
+                        />
                         {this.renderViewMore()}
                     </div>
                     <PlaylistPlayer 
@@ -143,8 +134,8 @@ export function mergeProps(state, actions, props) {
 export const connectOptions = {
     areMergedPropsEqual: (next, prev) => {
         return !( // Only want to render if the condition below is true. (Returning false causes a re-render.)
-            (!next.isLoading) || 
-            (next.isLoading && next.playlistInfo.id !== next.playlistId)
+            (!next.isLoading) ||
+            (prev.playlistInfo !== next.playlistInfo && prev.playlist !== next.playlist)
         );
     }
 };

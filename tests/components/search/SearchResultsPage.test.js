@@ -6,11 +6,14 @@ import {SearchResultsPage} from '../../../src/components/search/SearchResultsPag
 import PlaylistResult from '../../../src/components/playlist/PlaylistResult';
 import VideoResult from '../../../src/components/video/VideoResult';
 import * as channelActions from '../../../src/actions/channelActions';
+import * as videoActions from '../../../src/actions/videoActions';
+import * as videoTypes from '../../../src/reducers/videoTypes';
 
 describe('Search Results Page', () => {
     let props;
     let mockGetSearchResults;
     let mockGetNextResults;
+    let mockGetVideo;
     beforeEach(() => {
         // arrange
         props = {
@@ -22,7 +25,7 @@ describe('Search Results Page', () => {
             ],
             resultsCount: 10,
             pageToken: {nextPageToken: 'TOKEN'},
-            actions: channelActions
+            actions: Object.assign({}, videoActions, channelActions)
         };
 
         mockGetSearchResults = sinon.stub(props.actions, 'getSearchResults');
@@ -30,10 +33,14 @@ describe('Search Results Page', () => {
 
         mockGetNextResults = sinon.stub(props.actions, 'getNextResults');
         mockGetNextResults.resolves();
+
+        mockGetVideo = sinon.stub(props.actions, 'getVideo');
+        mockGetVideo.resolves();
     });
     afterEach(() => {
         mockGetSearchResults.restore();
         mockGetNextResults.restore();
+        mockGetVideo.restore();
     });
 
     it('Should load results on mount', () => {
@@ -78,10 +85,39 @@ describe('Search Results Page', () => {
         expect(resultsCount.text()).toEqual('Results found: 0');
     });
 
+    it('Should getVideos when receives new results containing videos', () => {
+        // arrange
+        props.results = [];
+
+        // act
+        const component = shallow(<SearchResultsPage {...props}/>);
+        component.setState({
+            isLoading: false,
+            rawResults: props.results
+        });
+        component.setProps({
+            results: [
+                {id: {kind: 'youtube#video', videoId: '0'}},
+                {id: {kind: 'youtube#playlist', playlistId: '1'}}
+            ]
+        });
+        
+        // assert
+        expect(mockGetVideo.calledOnce).toEqual(true);
+        expect(mockGetVideo.getCalls()[0].args)
+            .toEqual(['0', videoTypes.QUEUED]);
+    });
+
     it('Should create list of results', () => {
         // act
         const component = shallow(<SearchResultsPage {...props}/>);
-        component.setState({ isLoading: false });
+        component.setState({
+            isLoading: false,
+            results: [
+                {id: '0', kind: 'youtube#video'},
+                {id: {kind: 'youtube#playlist', playlistId: '1'}}
+            ]
+        });
         const list = component.find('.search-list');
         const videoResult = list.find(VideoResult);
         const playlistResult = list.find(PlaylistResult);
@@ -90,7 +126,7 @@ describe('Search Results Page', () => {
         expect(list.length).toEqual(1);
         expect(videoResult.length).toEqual(1);
         expect(playlistResult.length).toEqual(1);
-        expect(videoResult.props().videoId).toEqual('0');
+        expect(videoResult.props().video).toEqual({id: '0', kind: 'youtube#video'});
         expect(playlistResult.props().playlist).toEqual(props.results[1]);
     });
 

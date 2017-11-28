@@ -15,7 +15,7 @@ export default function videoReducer(state = initialState.video, action) {
                 case videoTypes.QUEUED: {
                     return {
                         current: state.current,
-                        queued: action.video.items[0]
+                        queued: action.video.items
                     };
                 }
                 default: {
@@ -24,7 +24,7 @@ export default function videoReducer(state = initialState.video, action) {
             }
         }
         case types.CLEAR_STORE:
-            return {current: {}, queued: {}};
+            return {current: {}, queued: []};
         default:
             return state;
     }

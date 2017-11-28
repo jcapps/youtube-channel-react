@@ -3,15 +3,14 @@ import expect from 'expect';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
 import {PlaylistPage} from '../../../src/components/playlist/PlaylistPage';
+import VideoQueue from '../../../src/components/playlist/VideoQueue';
 import VideoThumbnail from '../../../src/components/playlist/VideoThumbnail';
 import PlaylistPlayer from '../../../src/components/playlist/PlaylistPlayer';
 import * as playlistActions from '../../../src/actions/playlistActions';
 
 describe('Playlist Page', () => {
     let props;
-    let mockGetPlaylist;
     let mockGetNextVideos;
-    let mockGetPlaylistInfo;
     beforeEach(() => {
         // arrange
         props = {
@@ -33,20 +32,12 @@ describe('Playlist Page', () => {
             actions: playlistActions
         };
 
-        mockGetPlaylist = sinon.stub(props.actions, 'getPlaylist');
-        mockGetPlaylist.resolves();
-        
         mockGetNextVideos = sinon.stub(props.actions, 'getNextVideos');
         mockGetNextVideos.resolves();
-
-        mockGetPlaylistInfo = sinon.stub(props.actions, 'getPlaylistInfo');
-        mockGetPlaylistInfo.resolves();
     });
 
     afterEach(() => {
-        mockGetPlaylist.restore();
         mockGetNextVideos.restore();
-        mockGetPlaylistInfo.restore();
     });
 
     it('Should create an empty div if still loading', () => {
@@ -67,31 +58,15 @@ describe('Playlist Page', () => {
         expect(title).toEqual('Playlist Title');
     });
 
-    it('Should create the video list', () => {
+    it('Should create VideoQueue', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
         component.setState({ isLoading: false });
         const videoList = component.find('#video-list');
-        const videoDivs = videoList.children('div');
-
-        const video1 = props.playlist[0].snippet;
-        const video2 = props.playlist[1].snippet;
+        const videoQueue = videoList.children(VideoQueue);
 
         // assert
-        expect(videoList.length).toEqual(1);
-        expect(videoDivs.length).toEqual(2);
-        expect(videoDivs.at(0).hasClass('playlist-video')).toEqual(true);
-        expect(videoDivs.at(1).hasClass('playlist-video')).toEqual(true);
-        expect(videoDivs.at(0).hasClass('selected')).toEqual(true);
-        expect(videoDivs.at(1).hasClass('selected')).toEqual(false);
-        expect(videoDivs.at(0).prop('id')).toEqual(0);
-        expect(videoDivs.at(1).prop('id')).toEqual(1);
-        expect(videoDivs.at(0).find(VideoThumbnail).length).toEqual(1);
-        expect(videoDivs.at(1).find(VideoThumbnail).length).toEqual(1);
-        expect(videoDivs.at(0).find(VideoThumbnail).prop('videoId')).toEqual(video1.resourceId.videoId);
-        expect(videoDivs.at(1).find(VideoThumbnail).prop('videoId')).toEqual(video2.resourceId.videoId);
-        expect(videoDivs.at(0).find(VideoThumbnail).prop('playlistIndex')).toEqual(video1.position);
-        expect(videoDivs.at(1).find(VideoThumbnail).prop('playlistIndex')).toEqual(video2.position);
+        expect(videoQueue.length).toEqual(1);
     });
 
     it('Should create a "View More" link if nextPageToken exists', () => {
@@ -154,14 +129,10 @@ describe('Playlist Page', () => {
         // act
         const component = shallow(<PlaylistPage {...props}/>);
         component.setState({ isLoading: false });
-        let videoList = component.find('#video-list');
-        const nextVideo = videoList.children('div').at(playlistIndex);
-        const mockTarget = {id: nextVideo.prop('id'), className: 'playlist-video'};
 
-        nextVideo.simulate('click', {target: mockTarget});
+        const mockTarget = {id: playlistIndex, className: 'playlist-video'};
+        component.instance().changeVideo({ target: mockTarget });
 
-        videoList = component.find('#video-list');
-        const videoDivs = videoList.children('div');
         const player = component.find(PlaylistPlayer);
 
         // assert

@@ -12,7 +12,7 @@ export default {
     searchResults: [],
     searchInfo: {totalResults: 0},
     searchPageToken: {prevPageToken: "", nextPageToken: ""},
-    video: {current: {}, queued: {}},
+    video: {current: {}, queued: []},
     videoPageToken: {prevPageToken: "", nextPageToken: ""},
     ajaxCallsInProgress: {
         about: 0,

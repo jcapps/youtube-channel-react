@@ -163,7 +163,7 @@ describe('Store', () => {
         store.dispatch(action);
 
         // assert
-        const expected = {current: {id: 'XXXXX'}, queued: {}};
+        const expected = {current: {id: 'XXXXX'}, queued: []};
         const result = store.getState().video;
         expect(result).toEqual(expected);
     });
@@ -181,7 +181,7 @@ describe('Store', () => {
         store.dispatch(action);
 
         // assert
-        const expected = {current: {}, queued: {id: 'XXXXX'}};
+        const expected = {current: {}, queued: [{id: 'XXXXX'}]};
         const result = store.getState().video;
         expect(result).toEqual(expected);
     });

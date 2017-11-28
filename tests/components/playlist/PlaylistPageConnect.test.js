@@ -140,13 +140,17 @@ describe('Playlist Page Connect', () => {
         expect(result).toEqual(false);
     });
     
-    it('Should correctly check areMergedPropsEqual in connectOptions: return false when isLoading, but playlistId != playlistInfo.id', () => {
+    it('Should correctly check areMergedPropsEqual in connectOptions: return false when isLoading, but playlist and playlistInfo have changed', () => {
         // arrange
-        const prev = {};
+        const prev = {
+            isLoading: true,
+            playlist: [],
+            playlistInfo: {id: 'TEST'}
+        };
         const next = {
             isLoading: true,
-            playlistId: 'TEST',
-            playlistInfo: {id: ''}
+            playlist: [{id: '1'}],
+            playlistInfo: {id: 'NEW_TEST'}
         };
 
         // act
@@ -155,14 +159,20 @@ describe('Playlist Page Connect', () => {
         // assert
         expect(result).toEqual(false);
     });
-    
-    it('Should correctly check areMergedPropsEqual in connectOptions: return true when isLoading and playlistId == playlistInfo.id', () => {
+
+    it('Should correctly check areMergedPropsEqual in connectOptions: return true when isLoading and playlist hasn\'t changed', () => {
         // arrange
-        const prev = {};
+        const playlist = [];
+        const playlistInfo = {id: 'TEST'};
+        const prev = {
+            isLoading: true,
+            playlist,
+            playlistInfo
+        };
         const next = {
             isLoading: true,
-            playlistId: 'TEST',
-            playlistInfo: {id: 'TEST'}
+            playlist,
+            playlistInfo
         };
 
         // act

@@ -1,19 +1,14 @@
 import React from 'react';
 import expect from 'expect';
-import sinon from 'sinon';
 import {mount} from 'enzyme';
 import {VideoThumbnail} from '../../../src/components/playlist/VideoThumbnail';
-import * as videoActions from '../../../src/actions/videoActions';
 
 describe('Video Thumbnail', () => {
     let props;
-    let mockGetVideo;
     beforeEach(() => {
         // arrange
         props = {
-            isLoading: false,
             playlistIndex: 0,
-            videoId: '0',
             video: {
                 snippet: {
                     title: 'Video Title',
@@ -22,41 +17,13 @@ describe('Video Thumbnail', () => {
                     thumbnails: {
                         medium: {
                             url: 'test.url'
-            }}}},
-            actions: videoActions
+            }}}}
         };
-
-        mockGetVideo = sinon.stub(props.actions, 'getVideo');
-        mockGetVideo.resolves();
-    });
-
-    afterEach(() => {
-        mockGetVideo.restore();
-    });
-
-    it('Should get video on mount', () => {
-        // act
-        const component = mount(<VideoThumbnail {...props}/>);
-
-        // assert
-        expect(mockGetVideo.calledOnce).toEqual(true);
-    });
-
-    it('Should create an empty div if still loading', () => {
-        // act
-        const component = mount(<VideoThumbnail {...props}/>);
-        
-        // assert
-        expect(component.html()).toEqual('<div></div>');
     });
 
     it('Should create an image thumbnail', () => {
         // act
         const component = mount(<VideoThumbnail {...props}/>);
-        component.setState({
-            video: props.video,
-            isLoading: false
-        });
         const image = component.find('img');
 
         // assert
@@ -71,10 +38,6 @@ describe('Video Thumbnail', () => {
     it('Should create thumbnail info', () => {
         // act
         const component = mount(<VideoThumbnail {...props}/>);
-        component.setState({
-            video: props.video,
-            isLoading: false
-        });
         const videoTitle = component.find('h3');
         const channelName = component.find('p');
 

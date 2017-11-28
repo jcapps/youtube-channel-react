@@ -1,20 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import * as videoActions from '../../actions/videoActions';
-import * as videoTypes from '../../reducers/videoTypes';
 
 export class VideoResult extends React.PureComponent {
-    componentWillMount() {
-        this.props.actions.getVideo(this.props.videoId, videoTypes.QUEUED);
-    }
-
     render() {
         const video = this.props.video;
-        const isLoading = !video.snippet;
-        if (isLoading) return <div/>;
         return (
             <Link to={"/watch/" + video.id}>
                 <div className="video-result">
@@ -35,30 +25,7 @@ export class VideoResult extends React.PureComponent {
 }
 
 VideoResult.propTypes = {
-    video: PropTypes.object.isRequired,
-    videoId: PropTypes.string.isRequired,
-    actions: PropTypes.object.isRequired
+    video: PropTypes.object.isRequired
 };
 
-export function mapStateToProps(state) {
-    return { video: state.video.queued };
-}
-
-export function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators(videoActions, dispatch) };
-}
-
-export function mergeProps(state, actions, props) {
-    return Object.assign({}, state, actions, props);
-}
-
-export const connectOptions = {
-    areMergedPropsEqual: (next, prev) => {
-        // Only want to render when these two values are the same. (Returning false causes a re-render.)
-        return !(
-            next.videoId == next.video.id
-        );
-    }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps, connectOptions)(VideoResult);
+export default VideoResult;
