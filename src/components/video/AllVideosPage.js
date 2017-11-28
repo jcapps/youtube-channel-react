@@ -19,10 +19,6 @@ export class AllVideosPage extends React.PureComponent {
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
     }
 
-    componentWillMount() {
-        this.getVideos(this.props);
-    }
-
     componentDidMount() {
         document.title = "Videos";
         window.scrollTo(0, 0);
@@ -132,7 +128,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 export function mergeProps(state, actions, props) {
-    if (state.playlist.length == 0) {
+    if (!state.isLoading && state.playlist.length == 0) {
         state.isLoading = true;
         actions.actions.getRecentUploadsPlaylist();
     }

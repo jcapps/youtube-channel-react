@@ -89,7 +89,7 @@ describe('All Videos Page Connect', () => {
         expect(mergedProps).toEqual(expectedProps);
     });
     
-    it('Should mergeProps as well as getRecentUploadsPlaylist and set isLoading to "true" when playlist.length == 0', () => {
+    it('Should mergeProps as well as getRecentUploadsPlaylist and set isLoading to "true" when not loading and playlist.length == 0', () => {
         // arrange
         const dispatch = () => {};
 

@@ -49,14 +49,6 @@ describe('All Videos Page', () => {
         mockGetVideo.restore();
     });
 
-    it('Should getVideos on mount', () => {
-        // act
-        const component = shallow(<AllVideosPage {...props}/>);
-
-        // assert
-        expect(mockGetVideo.calledOnce).toEqual(true);
-    });
-
     it('Should create page heading', () => {
         // act
         const component = shallow(<AllVideosPage {...props}/>);
