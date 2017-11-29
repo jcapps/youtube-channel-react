@@ -49,7 +49,7 @@ describe('All Videos Page', () => {
         mockGetVideo.restore();
     });
 
-    it('Should create an div with loading spinner if still loading', () => {
+    it('Should create a div with loading spinner if still loading', () => {
         // arrange
         props.isLoading = true;
 

@@ -62,13 +62,6 @@ export class SearchResultsPage extends React.PureComponent {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextState.isLoading) {
-            return false;
-        }
-        return true;
-    }
-
     componentWillUnmount() {
         this.props.clearStore();
     }
@@ -95,6 +88,7 @@ export class SearchResultsPage extends React.PureComponent {
     }
 
     loadMoreResults() {
+        this.setState({isLoading: true});
         const nextPageToken = this.props.pageToken.nextPageToken;
         const query = this.props.query;
         this.props.actions.getNextResults(query, nextPageToken);
@@ -133,22 +127,43 @@ export class SearchResultsPage extends React.PureComponent {
         }
     }
 
-    render() {
-        if (this.state.isLoading) return <h3>Searching...</h3>;
+    renderContent() {
         const pageTitle = 'Search results for: ';
         const isResults = this.props.resultsCount > 0;
         let resultsFound = 'no-results';
         if (isResults) {
             resultsFound = 'results-found';
         }
+
         return (
-            <div className="search-results">
+            <div>
                 <h3>
                     <span>{pageTitle}</span>
                     <span className={resultsFound}>{this.props.query}</span>
                 </h3>
                 <h4>Results found: {this.props.resultsCount}</h4>
                 {this.renderResults()}
+            </div>
+        );
+    }
+
+    render() {
+        const loadingSpinner = require('../../images/loading.gif');
+        if (this.props.isLoading) return (
+            <div>
+                <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
+            </div>
+        );
+
+        let hiddenClass = 'hidden';
+        if (this.state.isLoading) {
+            hiddenClass = '';
+        }
+        
+        return (
+            <div className="search-results">
+                {this.renderContent()}
+                <img className={`loading-spinner ${hiddenClass}`} src={loadingSpinner} alt="Loading..." />
             </div>
         );
     }

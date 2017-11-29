@@ -24,15 +24,17 @@ describe('Home Page', () => {
         mockGetVideo.restore();
     });
 
-    it('Should create an empty div if still loading', () => {
+    it('Should create a div with loading spinner if still loading', () => {
         // arrange
         props.mostRecentUpload = {};
 
         // act
         const component = shallow(<HomePage {...props}/>);
+        const children = component.children('');
         
         // assert
-        expect(component.html()).toEqual('<div></div>');
+        expect(children.length).toEqual(1);
+        expect(children.type()).toEqual('img');
     });
 
     it('Should get mostRecentUpload on mount if not already retrieved', () => {

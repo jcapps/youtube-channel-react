@@ -51,6 +51,19 @@ describe('Search Results Page', () => {
         expect(mockGetSearchResults.calledOnce).toEqual(true);
     });
 
+    it('Should create a div with loading spinner if still loading', () => {
+        // arrange
+        props.isLoading = true;
+
+        // act
+        const component = shallow(<SearchResultsPage {...props}/>);
+        const children = component.children('');
+        
+        // assert
+        expect(children.length).toEqual(1);
+        expect(children.type()).toEqual('img');
+    });
+
     it('Should create page heading if results found', () => {
         // act
         const component = shallow(<SearchResultsPage {...props}/>);

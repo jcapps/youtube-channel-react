@@ -30,12 +30,25 @@ export class VideoWatchPage extends React.PureComponent {
         }
     }
 
+    renderContent() {
+        if (!this.state.isLoading) {
+            const video = this.props.video;
+            return <VideoPlayer video={this.props.video}/>;
+        }
+    }
+
     render() {
-        if (this.state.isLoading) return <div/>;
-        const video = this.props.video;
+        const loadingSpinner = require('../../images/loading.gif');
+
+        let hiddenClass = 'hidden';
+        if (this.state.isLoading) {
+            hiddenClass = '';
+        }
+        
         return(
             <div id="videos-watch-page">
-                <VideoPlayer video={this.props.video}/>
+                {this.renderContent()}
+                <img className={`loading-spinner ${hiddenClass}`} src={loadingSpinner} alt="Loading..." />
             </div>
         );
     }

@@ -65,32 +65,49 @@ export class PlaylistPage extends React.PureComponent {
         }
     }
 
-    render() {
-        if (this.state.isLoading) return <div/>;
-        const playlist = this.props.playlist;
-        const nowPlaying = this.state.playlistIndex;
-        if (playlist.length > nowPlaying) {
-            return(
-                <div id="playlist-page">
-                    <h2>{this.props.playlistInfo.snippet.title}</h2>
-                    <div id="video-list">
-                        <VideoQueue
-                            playlist={playlist}
+    renderContent() {
+        if (!this.state.isLoading) {
+            const playlist = this.props.playlist;
+            const nowPlaying = this.state.playlistIndex;
+            if (playlist.length > nowPlaying) {
+                return(
+                    <div>
+                        <h2>{this.props.playlistInfo.snippet.title}</h2>
+                        <div id="video-list">
+                            <VideoQueue
+                                playlist={playlist}
+                                playlistId={this.props.playlistId}
+                                nowPlayingIndex={nowPlaying}
+                                changeVideo={this.changeVideo}
+                            />
+                            {this.renderViewMore()}
+                        </div>
+                        <PlaylistPlayer 
+                            videoId={playlist[nowPlaying].snippet.resourceId.videoId}
+                            playlistIndex={nowPlaying}
                             playlistId={this.props.playlistId}
-                            nowPlayingIndex={nowPlaying}
-                            changeVideo={this.changeVideo}
-                        />
-                        {this.renderViewMore()}
+                            updatePlaylist={this.updatePlaylist}/>
                     </div>
-                    <PlaylistPlayer 
-                        videoId={playlist[nowPlaying].snippet.resourceId.videoId}
-                        playlistIndex={nowPlaying}
-                        playlistId={this.props.playlistId}
-                        updatePlaylist={this.updatePlaylist}/>
-                </div>
-            );
+                );
+            }
+            return <div>(No videos found for this playlist.)</div>;
         }
-        return <div>(No videos found for this playlist.)</div>;
+    }
+
+    render() {
+        const loadingSpinner = require('../../images/loading.gif');
+        
+        let hiddenClass = 'hidden';
+        if (this.state.isLoading) {
+            hiddenClass = '';
+        }
+
+        return(
+            <div id="playlist-page">
+                {this.renderContent()}
+                <img className={`loading-spinner ${hiddenClass}`} src={loadingSpinner} alt="Loading..." />
+            </div>
+        );
     }
 }
 

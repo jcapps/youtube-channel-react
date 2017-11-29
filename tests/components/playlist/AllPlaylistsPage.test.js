@@ -44,6 +44,19 @@ describe('All Playlists Page', () => {
         expect(mockGetAllPlaylists.calledOnce).toEqual(true);
     });
 
+    it('Should create a div with loading spinner if still loading', () => {
+        // arrange
+        props.isLoading = true;
+
+        // act
+        const component = shallow(<AllPlaylistsPage {...props}/>);
+        const children = component.children('');
+        
+        // assert
+        expect(children.length).toEqual(1);
+        expect(children.type()).toEqual('img');
+    });
+
     it('Should create page heading', () => {
         // act
         const component = shallow(<AllPlaylistsPage {...props}/>);

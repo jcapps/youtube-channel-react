@@ -30,6 +30,7 @@ export class AllPlaylistsPage extends React.PureComponent {
     }
 
     loadMorePlaylists() {
+        this.setState({ isLoading: true });
         const nextPageToken = this.props.playlistPageToken.nextPageToken;
         this.props.actions.getNextPlaylists(nextPageToken);
     }
@@ -44,10 +45,10 @@ export class AllPlaylistsPage extends React.PureComponent {
         }
     }
 
-    render() {
+    renderContent() {
         const playlists = this.props.playlists;
         return (
-            <div className="search-results">
+            <div>
                 <h2>Playlists</h2>
                 <div className="search-list">
                     {playlists.map(playlist =>
@@ -55,6 +56,27 @@ export class AllPlaylistsPage extends React.PureComponent {
                     )}
                     {this.renderViewMore()}
                 </div>
+            </div>
+        );
+    }
+
+    render() {
+        const loadingSpinner = require('../../images/loading.gif');
+        if (this.props.isLoading) return (
+            <div>
+                <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
+            </div>
+        );
+
+        let hiddenClass = 'hidden';
+        if (this.state.isLoading) {
+            hiddenClass = '';
+        }
+
+        return (
+            <div className="search-results">
+                {this.renderContent()}
+                <img className={`loading-spinner ${hiddenClass}`} src={loadingSpinner} alt="Loading..." />
             </div>
         );
     }

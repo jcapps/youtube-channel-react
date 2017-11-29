@@ -40,12 +40,17 @@ describe('Playlist Page', () => {
         mockGetNextVideos.restore();
     });
 
-    it('Should create an empty div if still loading', () => {
+    it('Should create a div with loading spinner if still loading', () => {
+        // arrange
+        props.isLoading = true;
+
         // act
         const component = shallow(<PlaylistPage {...props}/>);
+        const children = component.children('');
         
         // assert
-        expect(component.html()).toEqual('<div></div>');
+        expect(children.length).toEqual(1);
+        expect(children.type()).toEqual('img');
     });
 
     it('Should create playlist title', () => {

@@ -9,7 +9,14 @@ export class AboutPage extends React.PureComponent {
     }
 
     render() {
-        if (this.props.isLoading) return <div/>;
+        if (this.props.isLoading) {
+            const loadingSpinner = require('../../images/loading.gif');
+            return (
+                <div>
+                    <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
+                </div>
+            );
+        }
         if (this.props.channel && this.props.channel.snippet) {
             let profilePicUrl = this.props.channel.snippet.thumbnails.medium.url;
             let description = this.props.channel.snippet.description.split("\n");

@@ -32,12 +32,29 @@ export class HomePage extends React.PureComponent {
         }
     }
 
+    renderContent() {
+        if (!this.state.isLoading) {
+            return (
+                <div>
+                    <h2>Most Recent Upload</h2>
+                    <VideoPlayer video={this.props.mostRecentUpload}/>
+                </div>
+            );
+        }
+    }
+
     render() {
-        if (this.state.isLoading) return <div/>;
+        const loadingSpinner = require('../../images/loading.gif');
+        
+        let hiddenClass = 'hidden';
+        if (this.state.isLoading) {
+            hiddenClass = '';
+        }
+
         return(
             <div id="home-page">
-                <h2>Most Recent Upload</h2>
-                <VideoPlayer video={this.props.mostRecentUpload}/>
+                {this.renderContent()}
+                <img className={`loading-spinner ${hiddenClass}`} src={loadingSpinner} alt="Loading..." />
             </div>
         );
     }

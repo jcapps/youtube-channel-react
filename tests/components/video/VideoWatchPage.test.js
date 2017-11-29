@@ -50,14 +50,16 @@ describe('Video Watch Page', () => {
         expect(player.length).toEqual(1);
     });
 
-    it('Should create an empty div if still loading', () => {
+    it('Should create a div with loading spinner if still loading', () => {
         // arrange
         props.isLoading = true;
 
         // act
         const component = shallow(<VideoWatchPage {...props}/>);
+        const children = component.children('');
         
         // assert
-        expect(component.text()).toEqual('');
+        expect(children.length).toEqual(1);
+        expect(children.type()).toEqual('img');
     });
 });

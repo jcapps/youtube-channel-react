@@ -71,6 +71,21 @@ export class AllVideosPage extends React.PureComponent {
         }
     }
 
+    renderContent() {
+        const videoList = this.state.videoList;
+        return (
+            <div>
+                <h2>Videos</h2>
+                <div className="search-list">
+                    {videoList.map((video, i) => {
+                        return <VideoResult video={video} key={i}/>;
+                    })}
+                    {this.renderViewMore()}
+                </div>
+            </div>
+        );
+    }
+
     render() {
         const loadingSpinner = require('../../images/loading.gif');
         if (this.props.isLoading) return (
@@ -84,16 +99,9 @@ export class AllVideosPage extends React.PureComponent {
             hiddenClass = '';
         }
         
-        const videoList = this.state.videoList;
         return (
             <div className="search-results">
-                <h2>Videos</h2>
-                <div className="search-list">
-                    {videoList.map((video, i) => {
-                        return <VideoResult video={video} key={i}/>;
-                    })}
-                    {this.renderViewMore()}
-                </div>
+                {this.renderContent()}
                 <img className={`loading-spinner ${hiddenClass}`} src={loadingSpinner} alt="Loading..." />
             </div>
         );
