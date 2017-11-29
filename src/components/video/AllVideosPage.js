@@ -36,13 +36,6 @@ export class AllVideosPage extends React.PureComponent {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextState.isLoading) {
-            return false;
-        }
-        return true;
-    }
-
     componentWillUnmount() {
         this.props.clearStore();
     }
@@ -62,6 +55,7 @@ export class AllVideosPage extends React.PureComponent {
     }
 
     loadMoreVideos() {
+        this.setState({isLoading: true});
         const nextPageToken = this.props.videoPageToken.nextPageToken;
         const id = this.props.playlistId;
         this.props.actions.getNextVideos(id, nextPageToken);
@@ -78,7 +72,17 @@ export class AllVideosPage extends React.PureComponent {
     }
 
     render() {
-        if (this.state.isLoading) return <div/>;
+        const loadingSpinner = require('../../images/loading.gif');
+        if (this.props.isLoading) return (
+            <div>
+                <img className="loading-spinner" src={loadingSpinner} alt="Loading..." />
+            </div>
+        );
+
+        let hiddenClass = 'hidden';
+        if (this.state.isLoading) {
+            hiddenClass = '';
+        }
         
         const videoList = this.state.videoList;
         return (
@@ -90,6 +94,7 @@ export class AllVideosPage extends React.PureComponent {
                     })}
                     {this.renderViewMore()}
                 </div>
+                <img className={`loading-spinner ${hiddenClass}`} src={loadingSpinner} alt="Loading..." />
             </div>
         );
     }

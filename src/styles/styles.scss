@@ -43,6 +43,14 @@ html, #app {
         width: 100%;
         text-align: center;
     }
+    
+    .loading-spinner {
+        position: fixed;
+        height: 50px;
+        width: 50px;
+        top: calc(50% - 25px + 50px); // 25px = half height of spinner, 50px = half height of header
+        left: calc(50% - 25px); // 25px = half width of spinner
+    }
 }
 
 .toastr-center {

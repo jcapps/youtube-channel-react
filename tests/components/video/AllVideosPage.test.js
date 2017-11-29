@@ -49,6 +49,19 @@ describe('All Videos Page', () => {
         mockGetVideo.restore();
     });
 
+    it('Should create an div with loading spinner if still loading', () => {
+        // arrange
+        props.isLoading = true;
+
+        // act
+        const component = shallow(<AllVideosPage {...props}/>);
+        const children = component.children('');
+        
+        // assert
+        expect(children.length).toEqual(1);
+        expect(children.type()).toEqual('img');
+    });
+
     it('Should create page heading', () => {
         // act
         const component = shallow(<AllVideosPage {...props}/>);
