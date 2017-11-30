@@ -10,7 +10,10 @@ import * as playlistActions from '../../../src/actions/playlistActions';
 
 describe('Playlist Page', () => {
     let props;
+    let mockGetPlaylist;
+    let mockGetPlaylistInfo;
     let mockGetNextVideos;
+
     beforeEach(() => {
         // arrange
         props = {
@@ -31,13 +34,30 @@ describe('Playlist Page', () => {
             playlistIndex: 0,
             actions: playlistActions
         };
+        
+        mockGetPlaylist = sinon.stub(playlistActions, 'getPlaylist');
+        mockGetPlaylist.resolves();
+
+        mockGetPlaylistInfo = sinon.stub(playlistActions, 'getPlaylistInfo');
+        mockGetPlaylistInfo.resolves();
 
         mockGetNextVideos = sinon.stub(props.actions, 'getNextVideos');
         mockGetNextVideos.resolves();
     });
 
     afterEach(() => {
+        mockGetPlaylist.restore();
+        mockGetPlaylistInfo.restore();
         mockGetNextVideos.restore();
+    });
+
+    it ('Should getPlaylist and getPlaylistInfo on mount', () => {
+        // act
+        const component = shallow(<PlaylistPage {...props}/>);
+        
+        // assert
+        expect(mockGetPlaylist.calledOnce).toEqual(true);
+        expect(mockGetPlaylistInfo.calledOnce).toEqual(true);
     });
 
     it('Should create a div with loading spinner if still loading', () => {
@@ -68,7 +88,7 @@ describe('Playlist Page', () => {
         const component = shallow(<PlaylistPage {...props}/>);
         component.setState({ isLoading: false });
         const videoList = component.find('#video-list');
-        const videoQueue = videoList.children(VideoQueue);
+        const videoQueue = videoList.find(VideoQueue);
 
         // assert
         expect(videoQueue.length).toEqual(1);
@@ -127,6 +147,19 @@ describe('Playlist Page', () => {
         expect(component.text()).toEqual('(No videos found for this playlist.)');
     });
 
+    it('Should getPlaylist and getPlaylistInfo when receives new playlistId', () => {
+        // act
+        const component = shallow(<PlaylistPage {...props}/>);
+
+        mockGetPlaylist.reset();
+        mockGetPlaylistInfo.reset();
+        component.setProps({ playlistId: '2' });
+        
+        // assert
+        expect(mockGetPlaylist.calledOnce).toEqual(true);
+        expect(mockGetPlaylistInfo.calledOnce).toEqual(true);
+    });
+    
     it('Should change video on VideoThumbnail click', () => {
         // arrange
         const playlistIndex = 1;

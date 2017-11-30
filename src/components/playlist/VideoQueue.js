@@ -35,13 +35,6 @@ export class VideoQueue extends React.PureComponent {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextState.isLoading && this.props.playlistId == nextProps.playlistId) {
-            return false;
-        }
-        return true;
-    }
-
     getVideos(props) {
         this.setState({isLoading: true});
 
@@ -62,27 +55,44 @@ export class VideoQueue extends React.PureComponent {
         this.props.actions.getVideo(videoIdString, videoTypes.QUEUED);
     }
 
-    render() {
-        if (this.state.isLoading) return <div/>;
-
+    renderContent() {
         const videoList = this.state.videoList;
         const nowPlayingIndex = this.props.nowPlayingIndex;
+
+        return videoList.map((video, i) => {
+            if (i == nowPlayingIndex) {
+                return (
+                    <div className="playlist-video selected" id={i} key={i} onClick={this.props.changeVideo}>
+                        <VideoThumbnail video={video} playlistIndex={i}/>
+                    </div>
+                );
+            }
+            return (
+                <div className="playlist-video" id={i} key={i} onClick={this.props.changeVideo}>
+                    <VideoThumbnail video={video} playlistIndex={i}/>
+                </div>
+            );
+        });
+    }
+
+    render() {
+        const loadingSpinner = require('../../images/loading.gif');
+
+        if (this.state.videoList.length == 0) return (
+            <div>
+                <img id="playlist-loading-spinner" src={loadingSpinner} alt="Loading..." />
+            </div>
+        );
+
+        let hiddenClass = 'hidden';
+        if (this.state.isLoading) {
+            hiddenClass = '';
+        }
+
         return (
             <div>
-                {videoList.map((video, i) => {
-                    if (i == nowPlayingIndex) {
-                        return (
-                            <div className="playlist-video selected" id={i} key={i} onClick={this.props.changeVideo}>
-                                <VideoThumbnail video={video} playlistIndex={i}/>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div className="playlist-video" id={i} key={i} onClick={this.props.changeVideo}>
-                            <VideoThumbnail video={video} playlistIndex={i}/>
-                        </div>
-                    );
-                })}
+                {this.renderContent()}
+                <img id="playlist-loading-spinner" className={`${hiddenClass}`} src={loadingSpinner} alt="Loading..." />
             </div>
         );
     }

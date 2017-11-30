@@ -65,7 +65,8 @@ export function mergeProps(state, actions, props) {
 export const connectOptions = {
     areMergedPropsEqual: (next, prev) => {
         return !( // if the condition below is true, then return false to render
-            !next.isLoading
+            (prev.isLoading && !next.isLoading) ||
+            (!next.isLoading && (prev.videoId != next.videoId))
         );
     }
 };

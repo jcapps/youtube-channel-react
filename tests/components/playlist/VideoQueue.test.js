@@ -38,12 +38,17 @@ describe('Video Queue', () => {
         mockGetVideo.restore();
     });
 
-    it('Should create an empty div if still loading', () => {
+    it('Should create a div with loading spinner if still loading', () => {
+        // arrange
+        props.videoList = [];
+
         // act
         const component = shallow(<VideoQueue {...props}/>);
+        const children = component.children('');
         
         // assert
-        expect(component.html()).toEqual('<div></div>');
+        expect(children.length).toEqual(1);
+        expect(children.type()).toEqual('img');
     });
 
     it('Should getVideos in queue', () => {

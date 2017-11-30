@@ -1,11 +1,9 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import expect from 'expect';
-import sinon from 'sinon';
 import {
     mapStateToProps,
     mapDispatchToProps,
-    mergeProps,
     connectOptions
 } from '../../../src/components/playlist/PlaylistPage';
 import initialState from '../../../src/reducers/initialState';
@@ -14,8 +12,6 @@ import * as playlistActions from '../../../src/actions/playlistActions';
 describe('Playlist Page Connect', () => {
     let ownProps;
     let state;
-    let mockGetPlaylist;
-    let mockGetPlaylistInfo;
 
     beforeEach(() => {
         // arrange
@@ -24,17 +20,6 @@ describe('Playlist Page Connect', () => {
         };
 
         state = initialState;
-
-        mockGetPlaylist = sinon.stub(playlistActions, 'getPlaylist');
-        mockGetPlaylist.resolves();
-
-        mockGetPlaylistInfo = sinon.stub(playlistActions, 'getPlaylistInfo');
-        mockGetPlaylistInfo.resolves();
-    });
-
-    afterEach(() => {
-        mockGetPlaylist.restore();
-        mockGetPlaylistInfo.restore();
     });
 
     it('Should mapStateToProps', () => {
@@ -69,64 +54,13 @@ describe('Playlist Page Connect', () => {
         expect(mappedProps).toEqual(expectedProps);
     });
 
-    it('Should mergeProps', () => {
+    it('Should correctly check areStatePropsEqual in connectOptions: return false when finished loading', () => {
         // arrange
-        const dispatch = () => {};
-
-        const stateProps = {
-            playlist: state.playlist,
-            playlistInfo: {id: ownProps.match.params.id},
-            playlistId: ownProps.match.params.id,
-            videoPageToken: state.videoPageToken,
-            playlistIndex: state.playlistIndex,
-            isLoading: state.ajaxCallsInProgress.playlist > 0
+        const prev = {
+            isLoading: true,
+            playlistId: '',
+            playlistInfo: {id: ''}
         };
-        const actionProps = {
-            actions: bindActionCreators(playlistActions, dispatch)
-        };
-        const props = {};
-
-        // act
-        const mergedProps = mergeProps(stateProps, actionProps, props);
-
-        const expectedProps = Object.assign({}, stateProps, actionProps, props);
-        
-        // assert
-        expect(mergedProps).toEqual(expectedProps);
-    });
-    
-    it('Should mergeProps as well as getPlaylist, getPlaylistInfo, and set isLoading to "true" when playlistId != playlistInfo.id', () => {
-        // arrange
-        const dispatch = () => {};
-
-        const stateProps = {
-            playlist: state.playlist,
-            playlistInfo: state.playlistInfo,
-            playlistId: ownProps.match.params.id,
-            videoPageToken: state.videoPageToken,
-            playlistIndex: state.playlistIndex,
-            isLoading: state.ajaxCallsInProgress.playlist > 0
-        };
-        const actionProps = {
-            actions: bindActionCreators(playlistActions, dispatch)
-        };
-        const props = {};
-
-        // act
-        const mergedProps = mergeProps(stateProps, actionProps, props);
-
-        stateProps.isLoading = true;
-        const expectedProps = Object.assign({}, stateProps, actionProps, props);
-
-        // assert
-        expect(mergedProps).toEqual(expectedProps);
-        expect(mockGetPlaylist.calledOnce).toEqual(true);
-        expect(mockGetPlaylistInfo.calledOnce).toEqual(true);
-    });
-
-    it('Should correctly check areMergedPropsEqual in connectOptions: return false when finished loading', () => {
-        // arrange
-        const prev = {};
         const next = {
             isLoading: false,
             playlistId: '',
@@ -134,13 +68,13 @@ describe('Playlist Page Connect', () => {
         };
 
         // act
-        const result = connectOptions.areMergedPropsEqual(next, prev);
+        const result = connectOptions.areStatePropsEqual(next, prev);
 
         // assert
         expect(result).toEqual(false);
     });
     
-    it('Should correctly check areMergedPropsEqual in connectOptions: return false when isLoading, but playlist and playlistInfo have changed', () => {
+    it('Should correctly check areStatePropsEqual in connectOptions: return false when isLoading, but playlist and playlistInfo have changed', () => {
         // arrange
         const prev = {
             isLoading: true,
@@ -154,13 +88,13 @@ describe('Playlist Page Connect', () => {
         };
 
         // act
-        const result = connectOptions.areMergedPropsEqual(next, prev);
+        const result = connectOptions.areStatePropsEqual(next, prev);
 
         // assert
         expect(result).toEqual(false);
     });
 
-    it('Should correctly check areMergedPropsEqual in connectOptions: return true when isLoading and playlist hasn\'t changed', () => {
+    it('Should correctly check areStatePropsEqual in connectOptions: return true when isLoading and playlist hasn\'t changed', () => {
         // arrange
         const playlist = [];
         const playlistInfo = {id: 'TEST'};
@@ -176,7 +110,7 @@ describe('Playlist Page Connect', () => {
         };
 
         // act
-        const result = connectOptions.areMergedPropsEqual(next, prev);
+        const result = connectOptions.areStatePropsEqual(next, prev);
 
         // assert
         expect(result).toEqual(true);

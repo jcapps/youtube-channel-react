@@ -113,8 +113,32 @@ describe('Playlist Player Connect', () => {
 
     it('Should correctly check areMergedPropsEqual in connectOptions: return false when finished loading', () => {
         // arrange
-        const prev = {};
-        const next = { isLoading: false };
+        const prev = {
+            isLoading: true,
+            videoId: '1'
+        };
+        const next = {
+            isLoading: false,
+            videoId: '1'
+        };
+
+        // act
+        const result = connectOptions.areMergedPropsEqual(next, prev);
+
+        // assert
+        expect(result).toEqual(false);
+    });
+    
+    it('Should correctly check areMergedPropsEqual in connectOptions: return false when not loading and videoId has changed', () => {
+        // arrange
+        const prev = {
+            isLoading: false,
+            videoId: '1'
+        };
+        const next = {
+            isLoading: false,
+            videoId: '2'
+        };
 
         // act
         const result = connectOptions.areMergedPropsEqual(next, prev);
@@ -125,8 +149,14 @@ describe('Playlist Player Connect', () => {
     
     it('Should correctly check areMergedPropsEqual in connectOptions: return true when isLoading', () => {
         // arrange
-        const prev = {};
-        const next = { isLoading: true };
+        const prev = {
+            isLoading: false,
+            videoId: '1'
+        };
+        const next = {
+            isLoading: true,
+            videoId: '1'
+        };
 
         // act
         const result = connectOptions.areMergedPropsEqual(next, prev);

@@ -18,20 +18,34 @@ export class PlaylistPage extends React.PureComponent {
         this.loadMoreVideos = this.loadMoreVideos.bind(this);
     }
 
+    componentWillMount() {
+        this.props.actions.getPlaylistInfo(this.props.playlistId);
+        this.props.actions.getPlaylist(this.props.playlistId);
+    }
+
     componentDidMount() {
         window.scrollTo(0, 0);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.isLoading) {
+        if (this.props.playlistId != nextProps.playlistId) {
             this.setState({ isLoading: true });
-        } else {
+            this.props.actions.getPlaylistInfo(nextProps.playlistId);
+            this.props.actions.getPlaylist(nextProps.playlistId);
+        } else if (!nextProps.isLoading) {
             document.title = nextProps.playlistInfo.snippet.title;
             this.setState({
                 playlistIndex: nextProps.playlistIndex,
                 isLoading: false
             });
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (!nextState.isLoading) {
+            return true;
+        }
+        return false;
     }
 
     changeVideo(e) {
@@ -74,13 +88,15 @@ export class PlaylistPage extends React.PureComponent {
                     <div>
                         <h2>{this.props.playlistInfo.snippet.title}</h2>
                         <div id="video-list">
-                            <VideoQueue
-                                playlist={playlist}
-                                playlistId={this.props.playlistId}
-                                nowPlayingIndex={nowPlaying}
-                                changeVideo={this.changeVideo}
-                            />
-                            {this.renderViewMore()}
+                            <div id="video-queue-container">
+                                <VideoQueue
+                                    playlist={playlist}
+                                    playlistId={this.props.playlistId}
+                                    nowPlayingIndex={nowPlaying}
+                                    changeVideo={this.changeVideo}
+                                />
+                                {this.renderViewMore()}
+                            </div>
                         </div>
                         <PlaylistPlayer 
                             videoId={playlist[nowPlaying].snippet.resourceId.videoId}
@@ -139,22 +155,17 @@ export function mapDispatchToProps(dispatch) {
     };
 }
 
-export function mergeProps(state, actions, props) {
-    if (state.playlistId != state.playlistInfo.id) {
-        state.isLoading = true;
-        actions.actions.getPlaylistInfo(state.playlistId);
-        actions.actions.getPlaylist(state.playlistId);
-    }
-    return Object.assign({}, state, actions, props);
-}
-
 export const connectOptions = {
-    areMergedPropsEqual: (next, prev) => {
+    areStatePropsEqual: (next, prev) => {
         return !( // Only want to render if the condition below is true. (Returning false causes a re-render.)
-            (!next.isLoading) ||
-            (prev.playlistInfo !== next.playlistInfo && prev.playlist !== next.playlist)
+            (prev.isLoading && !next.isLoading) ||
+            ( // Retrieving next videos in playlist
+                next.playlist.length > 0 &&
+                prev.playlistInfo !== next.playlistInfo &&
+                prev.playlist !== next.playlist
+            )
         );
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps, connectOptions)(PlaylistPage);
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(PlaylistPage);
