@@ -25,7 +25,7 @@ export class AllVideosPage extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.state.isLoading && !nextProps.isLoading) {
+        if (JSON.stringify(this.props.videoList) != JSON.stringify(nextProps.videoList)) {
             this.setState({
                 videoList: this.state.videoList.concat(nextProps.videoList),
                 isLoading: false
