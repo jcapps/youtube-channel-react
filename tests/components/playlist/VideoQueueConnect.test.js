@@ -4,7 +4,6 @@ import expect from 'expect';
 import {
     mapStateToProps,
     mapDispatchToProps,
-    mergeProps,
     connectOptions
 } from '../../../src/components/playlist/VideoQueue';
 import initialState from '../../../src/reducers/initialState';
@@ -46,29 +45,7 @@ describe('Video Queue Connect', () => {
         expect(mappedProps).toEqual(expectedProps);
     });
 
-    it('Should mergeProps', () => {
-        // arrange
-        const dispatch = () => {};
-
-        const stateProps = {
-            videoList: state.video.queued,
-            isLoading: state.ajaxCallsInProgress.watch > 0
-        };
-        const actionProps = {
-            actions: bindActionCreators(videoActions, dispatch)
-        };
-        const props = {};
-
-        // act
-        const mergedProps = mergeProps(stateProps, actionProps, props);
-
-        const expectedProps = Object.assign({}, stateProps, actionProps, props);
-        
-        // assert
-        expect(mergedProps).toEqual(expectedProps);
-    });
-    
-    it('Should correctly check areMergedPropsEqual in connectOptions: return true when '
+    it('Should correctly check areStatePropsEqual in connectOptions: return true when '
         + 'isLoading and playlist hasn\'t changed', () => {
         // arrange
         const videoList = [];
@@ -89,13 +66,13 @@ describe('Video Queue Connect', () => {
         };
 
         // act
-        const result = connectOptions.areMergedPropsEqual(next, prev);
+        const result = connectOptions.areStatePropsEqual(next, prev);
 
         // assert
         expect(result).toEqual(true);
     });
 
-    it('Should correctly check areMergedPropsEqual in connectOptions: return false when finished loading', () => {
+    it('Should correctly check areStatePropsEqual in connectOptions: return false when finished loading', () => {
         // arrange
         const videoList = [{id: '1'}, {id: '2'}];
         const playlist = [{id: '1'}, {id: '2'}];
@@ -115,13 +92,13 @@ describe('Video Queue Connect', () => {
         };
 
         // act
-        const result = connectOptions.areMergedPropsEqual(next, prev);
+        const result = connectOptions.areStatePropsEqual(next, prev);
 
         // assert
         expect(result).toEqual(false);
     });
 
-    it('Should correctly check areMergedPropsEqual in connectOptions: return false when playlist is updated', () => {
+    it('Should correctly check areStatePropsEqual in connectOptions: return false when playlist is updated', () => {
         // arrange
         const videoList = [{id: '1'}, {id: '2'}];
         const playlist1 = [{id: '1'}, {id: '2'}];
@@ -142,13 +119,13 @@ describe('Video Queue Connect', () => {
         };
 
         // act
-        const result = connectOptions.areMergedPropsEqual(next, prev);
+        const result = connectOptions.areStatePropsEqual(next, prev);
 
         // assert
         expect(result).toEqual(false);
     });
 
-    it('Should correctly check areMergedPropsEqual in connectOptions: return false when playlist is changed', () => {
+    it('Should correctly check areStatePropsEqual in connectOptions: return false when playlist is changed', () => {
         // arrange
         const videoList = [{id: '1'}, {id: '2'}];
         const playlist = [{id: '1'}, {id: '2'}];
@@ -169,7 +146,7 @@ describe('Video Queue Connect', () => {
         };
 
         // act
-        const result = connectOptions.areMergedPropsEqual(next, prev);
+        const result = connectOptions.areStatePropsEqual(next, prev);
 
         // assert
         expect(result).toEqual(false);

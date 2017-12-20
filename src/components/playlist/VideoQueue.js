@@ -119,12 +119,8 @@ export function mapDispatchToProps(dispatch) {
     return { actions: bindActionCreators(videoActions, dispatch) };
 }
 
-export function mergeProps(state, actions, props) {
-    return Object.assign({}, state, actions, props);
-}
-
 export const connectOptions = {
-    areMergedPropsEqual: (next, prev) => {
+    areStatePropsEqual: (next, prev) => {
         return !(
             (!next.isLoading && prev.videoList !== next.videoList) ||
             (prev.playlist !== next.playlist) ||
@@ -133,4 +129,4 @@ export const connectOptions = {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps, connectOptions)(VideoQueue);
+export default connect(mapStateToProps, mapDispatchToProps, null, connectOptions)(VideoQueue);
